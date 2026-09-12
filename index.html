@@ -1817,7 +1817,7 @@ window.CLOUD = {
   playSku: 'pass_3m',              // Google Play 인앱 상품 ID (Play Console 에서 같은 ID로 생성)
   vapidPublic: 'BHC4YqEAptlfwwCFv6Gx2_BbJaG55AF8ebFossqKfMNbw4PUDW90Tpt70WZptgQJ59ccbbcvLHiZ9Mki6rxjdd4',   // 웹푸시 공개키 (비밀키는 Supabase 함수 시크릿 VAPID_PRIVATE_KEY)
   pushHour: 20,                    // 매일 알림 시각 (KST)
-  price: 112500, planName: '3개월 이용권', planDays: 90
+  price: 112500, pricePlay: 120000, planMonths: 3, planName: '3개월 이용권', planDays: 90
 };
 
 /* ===== 10_data.js ===== */
@@ -10747,6 +10747,21 @@ window.koOf = function (en) {
   };
   function playOK() { return !!(window.playBilling && window.playBilling.available()); }
   function priceText() { var p = window.playBilling && window.playBilling.price; if (playOK() && p && p.value) return Number(p.value).toLocaleString() + (p.currency === 'KRW' ? '원' : ' ' + p.currency); return Number(C.price || 112500).toLocaleString() + '원'; }
+  /* 가격 카드: 월 환산액을 크게, 3개월 총액과 채널별 가격을 작게 */
+  function priceInfo() {
+    var p = window.playBilling && window.playBilling.price, play = playOK();
+    var total = (play && p && p.value) ? Number(p.value) : (play ? (C.pricePlay || C.price || 120000) : (C.price || 112500));
+    var months = C.planMonths || 3;
+    return { total: total, monthly: Math.round(total / months), months: months, play: play };
+  }
+  function priceBox(extraSub) {
+    var pi = priceInfo(), won = function (n) { return Number(n).toLocaleString() + '원'; };
+    return '<div style="display:inline-block;border:1px solid var(--line);border-radius:14px;padding:14px 22px;background:var(--panel2)">'
+      + '<b style="font-size:30px;font-family:var(--mono)">' + won(pi.monthly) + '</b><span style="color:var(--mut)"> / 1개월</span>'
+      + '<div class="sub" style="margin:6px 0 0">*' + pi.months + '개월 이용권 ' + won(pi.total) + ' 일시 결제' + (extraSub ? ' · ' + extraSub : '') + '</div>'
+      + '<div class="sub" style="margin:4px 0 0;font-size:12px;opacity:.85">데스크톱(홈페이지) 결제 ' + won(C.price || 112500) + ' · Google Play 결제 ' + won(C.pricePlay || 120000) + '</div>'
+      + '</div>';
+  }
   function buyBtnHTML(label) { if (playOK()) return '<button class="btn" id="pwBuyPlay">' + label + ' (Google Play)</button>'; if (window.IS_STORE_APP) return ''; return '<button class="btn" id="pwBuy">' + label + '</button>'; }
   function wireBuy(m) {
     if ($('pwBuy')) $('pwBuy').onclick = function () { openExternal(window.buyUrl()); };
@@ -10764,7 +10779,7 @@ window.koOf = function (en) {
       m.querySelector('.modal').innerHTML = '<div style="text-align:center;padding:4px 0 6px"><div style="font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--ac)">OCANSPIC PASS</div>'
         + '<h3 style="font-size:21px;margin:8px 0 6px">이용권이 끝났습니다</h3>'
         + '<p style="color:var(--mut);margin:0 0 14px;line-height:1.7">' + esc(fmtDate(st.ends)) + '에 종료됐습니다. 학습 기록·오답 노트·시험 기록은 그대로 남아 있으니, 연장하면 바로 이어서 할 수 있습니다.<br>연장은 오늘부터 ' + (C.planDays || 90) + '일이 새로 붙습니다.</p>'
-        + (window.IS_STORE_APP && !playOK() ? '</div>' : '<div style="display:inline-block;border:1px solid var(--line);border-radius:14px;padding:14px 22px;background:var(--panel2)"><b style="font-size:26px;font-family:var(--mono)">' + priceText() + '</b><span style="color:var(--mut)"> / ' + esc(C.planName || '3개월') + '</span></div></div>')
+        + (window.IS_STORE_APP && !playOK() ? '</div>' : priceBox() + '</div>')
         + (window.IS_STORE_APP && !playOK() ? '<p style="color:var(--mut);font-size:13px;margin:12px 0 0">이 앱에서는 이용권을 구매·연장할 수 없습니다. 연장한 계정으로 로그인하면 이어서 할 수 있습니다.</p>' : '')
         + '<div class="dctl" style="margin-top:16px;justify-content:center">' + buyBtnHTML('연장하기') + '<button class="btn ghost sm" id="pwHave">이미 연장했어요</button><button class="btn ghost sm" id="pwClose">닫기</button></div>';
       m.classList.add('on');
@@ -10779,7 +10794,7 @@ window.koOf = function (en) {
           + '<p style="color:var(--mut);margin:0 0 14px;line-height:1.7">디데이를 잡고, 표현 3개를 통과하고, 자기소개까지 직접 만들었습니다. 이제 그 자기소개로 <b>첫 모의고사</b>를 보는 것부터 진짜 시작입니다.<br>이용권 하나로 모의고사·필수표현 1,400개·무한 트레이닝·듣기·자율학습이 전부 열리고, 오늘의 퀘스트가 디데이까지 매일 이어집니다.</p>'
         : '<h3 style="font-size:21px;margin:8px 0 6px">' + esc(what || '이 기능') + eun(what || '이 기능') + ' 이용권으로 열립니다</h3>'
           + '<p style="color:var(--mut);margin:0 0 14px;line-height:1.7">체험은 온보딩 퀘스트 다섯 개(디데이 · 가이드 · 필수표현 3개 · 사전 질문 · 자기소개)까지입니다.<br>그다음 — 모의고사, 필수표현 1,400개, 무한 트레이닝, 듣기, 오답 노트, 자율학습 — 은 이용권 하나로 전부 열립니다.</p>')
-      + (window.IS_STORE_APP && !playOK() ? '</div>' : '<div style="display:inline-block;border:1px solid var(--line);border-radius:14px;padding:14px 22px;background:var(--panel2)"><b style="font-size:26px;font-family:var(--mono)">' + priceText() + '</b><span style="color:var(--mut)"> / ' + esc(C.planName || '3개월') + '</span><div class="sub" style="margin:4px 0 0">' + (playOK() ? 'Google Play 결제' : '하루 약 ' + Math.round((C.price || 112500) / (C.planDays || 90)).toLocaleString() + '원 · 카드 · 네이버페이 · 카카오페이 · 토스페이 · 무통장') + '</div></div></div>')
+      + (window.IS_STORE_APP && !playOK() ? '</div>' : priceBox(playOK() ? 'Google Play 결제' : '카드 · 네이버페이 · 카카오페이 · 토스페이 · 무통장') + '</div>')
       + (window.IS_STORE_APP && !playOK() ? '<p style="color:var(--mut);font-size:13px;margin:12px 0 0">이 앱에서는 이용권을 구매할 수 없습니다. 이용권이 있는 계정으로 로그인하면 모든 기능이 열립니다.</p>' : '')
       + '<div class="dctl" style="margin-top:16px;justify-content:center">' + buyBtnHTML('이용권 구매하기') + '<button class="btn ghost sm" id="pwHave">이미 구매했어요</button><button class="btn ghost sm" id="pwClose">닫기</button></div>';
     m.classList.add('on');
