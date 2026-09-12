@@ -1,6 +1,15 @@
-"sha256_cert_fingerprints": [
-  "C6:ED:46:91:89:8C:24:5F:A5:1A:D8:93:09:03:CA:ED:5E:10:FA:C4:06:A3:D1:90:DE:1B:E8:C9:B3:7B:1D:A5",
-  "62:1A:A4:20:65:76:BC:B9:D9:8B:15:99:5C:F7:31:71:82:48:C3:B5:2D:A8:5D:ED:24:41:32:1F:FE:36:53:80",
-  "여기에_양자내성키_SHA256",
-  "여기에_이전키_SHA256"
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "kr.co.vibivi.ocanspic",
+      "sha256_cert_fingerprints": [
+        "C6:ED:46:91:89:8C:24:5F:A5:1A:D8:93:09:03:CA:ED:5E:10:FA:C4:06:A3:D1:90:DE:1B:E8:C9:B3:7B:1D:A5",
+        "62:1A:A4:20:65:76:BC:B9:D9:8B:15:99:5C:F7:31:71:82:48:C3:B5:2D:A8:5D:ED:24:41:32:1F:FE:36:53:80",
+        "89:09:D7:04:82:A0:47:29:03:A3:A4:BD:17:5A:D4:A8:95:DB:65:88:03:52:FB:8B:F0:AC:2D:0A:5B:EA:4A:05",
+        "여기에_양자내성키_SHA256"
+      ]
+    }
+  }
 ]
