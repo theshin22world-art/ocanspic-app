@@ -1,0 +1,13 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "kr.co.vibivi.ocanspic",
+      "sha256_cert_fingerprints": [
+        "C6:ED:46:91:89:8C:24:5F:A5:1A:D8:93:09:03:CA:ED:5E:10:FA:C4:06:A3:D1:90:DE:1B:E8:C9:B3:7B:1D:A5",
+        "PLAY_CONSOLE_앱_서명_키_SHA256_지문_여기에"
+      ]
+    }
+  }
+]
