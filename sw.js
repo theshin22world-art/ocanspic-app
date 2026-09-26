@@ -1,5 +1,5 @@
 /* 오캔스픽 PWA 서비스 워커 — 앱 껍데기만 캐시. 앱 본문(index.html)은 항상 네트워크 우선(새 버전 즉시 반영), 오프라인이면 캐시. */
-const VER = 'ocan-v2';
+const VER = 'ocan-v3';
 const SHELL = ['/', '/manifest.webmanifest', '/icons/icon-192.png', '/icons/icon-512.png'];
 self.addEventListener('install', (e) => { e.waitUntil(caches.open(VER).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting())); });
 self.addEventListener('activate', (e) => { e.waitUntil(caches.keys().then((ks) => Promise.all(ks.filter((k) => k !== VER).map((k) => caches.delete(k)))).then(() => self.clients.claim())); });
