@@ -1223,17 +1223,17 @@ img.wm{height:34px;width:auto;display:inline-block;vertical-align:middle}img.wm-
 .lg-email .lgbtn{border-radius:12px;padding:12px 22px;min-width:96px}
 .lgauto{display:inline-flex;align-items:center;gap:8px;margin-top:14px;color:var(--mut);font-size:13.5px;cursor:pointer;user-select:none}
 .lgauto input{position:absolute;opacity:0;width:0;height:0}
-.lgauto span{width:18px;height:18px;border-radius:5px;border:1.5px solid var(--line2);display:grid;place-items:center;font-size:12px;color:transparent;background:var(--panel)}
+.lgauto span{width:18px;height:18px;border-radius:0;border:1.5px solid var(--line2);display:grid;place-items:center;background:var(--panel)}
 .lgauto input:checked+span{background:var(--acbg);border-color:var(--acbg);color:var(--actx)}
-.lgauto input:checked+span::after{content:'✓'}
+.lgauto input:checked+span::after{content:'';width:4px;height:8px;border:solid currentColor;border-width:0 2px 2px 0;transform:translateY(-1px) rotate(45deg)}
 .admlist{display:grid;gap:8px}.admlist .btn{text-align:left;justify-content:flex-start}.admlist .btn .sub{margin:0 0 0 6px;font-size:12px}
 .lgresume{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:18px;padding:10px 14px;border:1px solid var(--line);border-radius:12px;background:var(--panel2);font-size:13px;color:var(--mut)}
 .lgresume b{color:var(--tx)}
 html[data-theme="light"] img.wm-dark{display:none}html[data-theme="light"] img.wm-light{display:inline-block}
-.lg-btns{display:flex;flex-direction:column;gap:10px}
-.lgb{display:flex;align-items:center;justify-content:center;gap:10px;height:52px;border-radius:14px;border:1px solid var(--line);background:var(--panel);color:var(--tx);font-size:15px;font-weight:600;transition:.15s;position:relative}
+.lg-btns{display:flex;flex-direction:column;gap:9px;max-width:320px;margin:0 auto}
+.lgb{display:flex;align-items:center;justify-content:center;gap:10px;height:44px;border-radius:99px;border:1px solid var(--line);background:var(--panel);color:var(--tx);font-size:14.5px;font-weight:600;transition:.15s;position:relative}
 .lgb:hover{transform:translateY(-1px);filter:brightness(1.05)}
-.lgb .lgi{position:absolute;left:18px;width:22px;height:22px;display:grid;place-items:center;font-weight:900}
+.lgb .lgi{position:absolute;left:16px;width:22px;height:22px;display:grid;place-items:center;font-weight:900}
 .lgb.naver{background:#03C75A;border-color:#03C75A;color:#fff}
 .lgb.google{background:#fff;border-color:#e2e6ee;color:#1f1f1f}
 .lgb.apple{background:#000;border-color:#000;color:#fff}
@@ -5224,25 +5224,25 @@ window.SPK_ICON = '<svg class="spkic" viewBox="0 0 1024 1024" aria-hidden="true"
       var i = 0; var next = function () { if (i >= list.length) return Promise.resolve(true); var n = list[i++]; return pkInstall(n).catch(function () {}).then(next); };
       return next().then(function (ok) { if (ok && opts.toast !== false && window.toast) window.toast('고품질 음성 준비 완료'); return ok; });
     },
-    installCore: function () {
-      if (!pkWant() || !pkBase() || PK.packs.core) return Promise.resolve(false);
-      var shown = false;
-      return pkInstall('core', function (f) { if (!shown && window.toast) { shown = true; window.toast('처음 한 번, 고품질 영어 음성을 내려받습니다 (약 20MB)…'); } })
-        .then(function () { if (window.toast) window.toast('고품질 영어 음성 준비 완료'); if (window.renderEnvWarn) window.renderEnvWarn(); return true; })
-        .catch(function (e) { console.warn('tts core pack', e); return false; });
+    installCore: function (onProgress) {   /* onProgress(비율 0~1, 받은 바이트): 79_upgrade 첫 음성 팝업 */
+      if (!pkWant() || !pkBase()) return Promise.resolve(false);
+      if (PK.packs.core) { pkFollow(); return Promise.resolve(true); }
+      return pkInstall('core', onProgress || function () {})
+        .then(function () { if (window.toast) window.toast('고품질 영어 음성 준비 완료'); try { if (window.renderEnvWarn) window.renderEnvWarn(); } catch (e) {} pkFollow(); return true; })
+        .catch(function (e) { console.warn('tts core pack', e); throw e; });
     },
     wanted: pkWant,
     ready: function () { return PK.ready; },
     find: pkFind
   };
+  /* core 다음: 교재 팩 + 설문 주제의 질문 팩(모의고사·듣기)도 미리, 조용히 */
+  function pkFollow() {
+    try { var sv = window.store && window.store.get().survey; var tps = sv && window.surveyTopics ? window.surveyTopics(sv) : []; window.ttsPack.ensure(['guide'].concat(tps.map(function (t) { return 'q/' + t; })).concat(['q/_roleplay']), { toast: false }); } catch (e) {}
+  }
+  /* 이미 core 가 있는 기기만 부팅 때 나머지를 조용히 받는다. 처음 받는 core 는 79_upgrade «영어 음성» 팝업의 확인으로 */
   pkLoadStored().then(function () {
-    if (!pkWant()) return;
-    setTimeout(function () {
-      window.ttsPack.installCore().then(function () {
-        /* 설문 주제의 질문 팩(모의고사·듣기)도 미리: 조용히 */
-        try { var sv = window.store && window.store.get().survey; var tps = sv && window.surveyTopics ? window.surveyTopics(sv) : []; window.ttsPack.ensure(['guide'].concat(tps.map(function (t) { return 'q/' + t; })).concat(['q/_roleplay']), { toast: false }); } catch (e) {}
-      });
-    }, 4000);
+    if (!pkWant() || !PK.packs.core) return;
+    setTimeout(pkFollow, 4000);
   });
 
   /* 팩 재생 */
@@ -10053,7 +10053,7 @@ window.koOf = function (en) {
     var t = window.ttsStatus();
     if (t.supported && !t.usable) {
       msgs.push({ c: 'red', h: '<b>영어 음성이 설치돼 있지 않아 문제 음성을 재생하지 않습니다.</b> 그대로 재생하면 한국어 음성이 영어를 한글 발음으로 읽어버리기 때문입니다. 설정 → 문제 음성에서 해결 방법을 확인하세요.' });
-    } else if (t.usable && window.ttsRank(t.voice) < 40) {
+    } else if (t.usable && t.voice && !(window.ttsPack && window.ttsPack.wanted()) && window.ttsRank(t.voice) < 40) {
       msgs.push({ c: '', h: '<b>지금 쓰는 영어 음성의 품질이 낮습니다</b> (' + t.voice.name + '). 설정 → 문제 음성에서 더 자연스러운 음성으로 바꿀 수 있습니다.' });
     }
     if (!msgs.length) { $('envWarn').innerHTML = ''; return; }
@@ -13863,7 +13863,7 @@ window.koOf = function (en) {
 
   function start() {
     document.documentElement.classList.add('ob-on');
-    var A = window.auth, nm = A ? A.name() : '';
+    var A = window.auth, nm = A ? (A.name() || (A.nameOk(String(A.suggestName || '')) ? String(A.suggestName).trim() : '')) : '';
     $('obNick').value = nm; $('obB1').disabled = !(A && A.nameOk(nm));
     ['obDate', 'obHour'].forEach(function (id) { $(id).classList.remove('on'); });
     ['obDateMe', 'obHourMe'].forEach(function (id) { var w = $(id); w.style.display = 'none'; delete w.dataset.text; });
@@ -13933,7 +13933,7 @@ window.koOf = function (en) {
   A.cloudSignedIn = function (u, silent) {
     var had = load();
     save({ id: u.id, provider: u.provider, email: u.email || '', at: Date.now() });
-    if (u.name && !A.name()) A.setName(u.name);
+    if (u.name) A.suggestName = u.name;   /* 공급자 이름은 저장하지 않고 상담실 온보딩 닉네임 칸에 미리 채울 후보로만 */
     paintHello();
     var onLogin = $('sc-login').classList.contains('on') || $('sc-name').classList.contains('on');
     /* 자동 로그인을 끈 상태에서 세션만 복원된 경우: 로그인 화면에 머물고 «이어서 시작»만 보여 준다 */
@@ -13951,7 +13951,7 @@ window.koOf = function (en) {
   function finishSignIn(u) {
     save({ id: u.id, provider: u.provider, email: u.email || '', at: Date.now() });
     setAutoLogin(autoBox());
-    if (u.name && !A.name()) A.setName(u.name);
+    if (u.name) A.suggestName = u.name;   /* 공급자 이름은 저장하지 않고 상담실 온보딩 닉네임 칸에 미리 채울 후보로만 */
     if (A.needsName()) nav('sc-ob');
     else { window.refreshTitleBar && window.refreshTitleBar(); nav('sc-title'); }
   }
@@ -15771,21 +15771,34 @@ window.koOf = function (en) {
     };
   };
 
-  /* ================= 모바일: 영어 음성 품질 안내는 처음 한 번 팝업으로 ================= */
-  function voiceQualityPopup() {
-    if (!window.IS_MOBILE || flags.get('voiceQ') || window.cloudBooting) return;
-    try {
-      var t = window.ttsStatus && window.ttsStatus(); if (!t || !t.usable || !t.voice) return;
-      if (window.ttsRank(t.voice) >= 40) return;
-      if (document.querySelector('.mask.on')) return;
-      flags.set('voiceQ', Date.now());
-      popup(mk('영어 음성') + '<p style="margin:0;line-height:1.8"><b>지금 쓰는 영어 음성의 품질이 낮습니다</b> (' + esc(t.voice.name) + ').<br>설정 → 문제 음성에서 더 자연스러운 음성으로 바꿀 수 있습니다.</p>'
-        + '<div class="dctl" style="margin-top:16px"><button class="btn ghost sm" id="upLater">닫기</button><button class="btn" id="upGo">설정 열기</button></div>');
-      $('upLater').onclick = popupClose;
-      $('upGo').onclick = function () { popupClose(); window.openSettings && window.openSettings('conv'); };
-    } catch (e) {}
+  /* ================= 앱·모바일: 고품질 영어 음성은 처음 한 번 알리고 «확인»으로 바로 내려받는다 (45_tts ttsPack) =================
+     X 로 닫으면 이번 실행에서는 다시 묻지 않고, 다음 실행 때 타이틀에서 다시 묻는다. 받는 중에 닫아도 받기는 계속된다. */
+  var vpAsked = false, vpBusy = false;
+  function voicePackPopup(tries) {
+    var P = window.ttsPack; tries = tries || 0;
+    if (vpAsked || vpBusy || !P || !P.wanted() || P.has('core')) return;
+    var title = $('sc-title'); if (!title || !title.classList.contains('on')) return;
+    if (!P.ready() || window.cloudBooting || document.querySelector('.mask.on')) { if (tries < 20) setTimeout(function () { voicePackPopup(tries + 1); }, 3000); return; }
+    vpAsked = true;
+    popup('<button class="mx" type="button" id="vpX" aria-label="닫기"></button>' + mk('영어 음성')
+      + '<p style="margin:0;line-height:1.8">처음 한 번, 문제를 읽어 줄 고품질 영어 음성을 내려받습니다 (약 20MB).</p>'
+      + '<p id="vpSt" style="margin:10px 0 0;color:var(--mut);font-size:13.5px;display:none"></p>'
+      + '<div class="dctl" style="margin-top:16px"><button class="btn" id="vpGo">확인</button></div>');
+    $('vpX').onclick = popupClose;
+    $('vpGo').onclick = function () {
+      var st = $('vpSt'), go = $('vpGo');
+      st.style.display = ''; st.textContent = '내려받는 중…'; go.disabled = true; vpBusy = true;
+      P.installCore(function (f, got) {
+        var el = $('vpSt'); if (el) el.textContent = '내려받는 중… ' + (f > 0 ? Math.min(99, Math.round(f * 100)) + '%' : (got / 1048576).toFixed(1) + 'MB');
+      }).then(function () {
+        vpBusy = false; if ($('vpSt')) popupClose();
+      }, function () {
+        vpBusy = false; var el = $('vpSt'), b = $('vpGo'); if (!el || !b) return;
+        el.textContent = '내려받지 못했습니다. 인터넷 연결을 확인한 뒤 다시 눌러 주세요.'; b.disabled = false; b.textContent = '다시 시도';
+      });
+    };
   }
-  document.addEventListener('opic:nav', function (e) { if (e.detail && e.detail.id === 'sc-title') setTimeout(voiceQualityPopup, 3500); });
+  document.addEventListener('opic:nav', function (e) { if (e.detail && e.detail.id === 'sc-title') setTimeout(voicePackPopup, 3500); });
 
   /* ================= 모의고사 AI 채점 (DeepSeek · Supabase Edge Function «grade») ================= */
   function aiEnabled() { return !!(window.cloud && window.cloud.enabled && window.cloud.sb); }
