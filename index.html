@@ -159,14 +159,20 @@ button:disabled{cursor:not-allowed}
 /* ---- result ---- */
 .scorehero{text-align:center;padding:26px 20px}
 .bigscore{font-size:58px;font-weight:800;letter-spacing:-.05em;line-height:1}
-.lvpill{display:inline-block;padding:6px 18px;border-radius:99px;font-weight:700;font-size:17px;
-  background:rgba(var(--ac-rgb),.16);color:var(--ac);border:1px solid rgba(var(--ac-rgb),.4);margin-top:12px}
-.lvpill.ih{background:rgba(var(--ok-rgb),.14);color:var(--ac2);border-color:rgba(var(--ok-rgb),.42)}
+.lvpill{display:inline-block;padding:0;border:0;background:none;font-weight:600;font-size:17px;color:var(--tx);margin-top:12px}
+.lvpill .mono{font-family:var(--mono);letter-spacing:.02em}
+html[data-theme="light"] .lvpill{color:#000}
 .bars{display:grid;gap:11px;margin-top:6px}
 .bar{display:grid;grid-template-columns:104px 1fr 42px;gap:11px;align-items:center;font-size:13px}
 .bar .t{color:var(--mut)}
 .bar .g{height:8px;background:var(--hover);border-radius:99px;overflow:hidden}
-.bar .g i{display:block;height:100%;border-radius:99px;transition:width .5s}
+.bar .g i{display:block;height:100%;border-radius:99px;transition:width .7s cubic-bezier(.2,.8,.2,1)}
+.bar .t .w{font-size:11px;color:var(--dim)}
+/* 결과 화면: 보조 글씨 더 진하게 · 게이지 트랙 연회색 · 강점/보완 상자 직각 */
+#sc-result .sub,#sc-result .bar .t,#sc-result .bar .t .w,#sc-result .stat small{color:var(--tx2)}
+html[data-theme="light"] #sc-result .sub,html[data-theme="light"] #sc-result .bar .t,html[data-theme="light"] #sc-result .bar .t .w,html[data-theme="light"] #sc-result .stat small{color:#3A3C58}
+html[data-theme="light"] #sc-result .bar .g{background:#ECECEF}
+#sc-result .note.blue{border-radius:0}
 .bar .v{text-align:right;font-family:var(--mono);font-size:12.5px}
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(112px,1fr));gap:10px;margin-top:16px}
 .stat{background:var(--panel2);border:1px solid var(--line);border-radius:11px;padding:12px 13px}
@@ -955,8 +961,9 @@ html[data-theme="dark"] .pback,html:not([data-theme]) .pback{background:rgba(255
 .calgrid .dd.sel.su,.calgrid .dd.sel.sa{color:#fff}
 /* ---- 실시간 시계 ---- */
 .cn-title{display:block;margin-top:8px;font-size:calc(1em + 4pt)}
-.clock{font-family:var(--mono);font-size:12.5px;color:var(--ac2);background:rgba(var(--ok-rgb),.12);border:1px solid rgba(var(--ok-rgb),.3);
-  border-radius:8px;padding:3px 9px;margin-right:10px;font-weight:600;letter-spacing:.02em;vertical-align:middle}
+.clock{font-family:var(--mono);font-size:15px;color:var(--tx);background:none;border:0;
+  border-radius:0;padding:0;margin-right:10px;font-weight:600;letter-spacing:.02em;vertical-align:middle}
+html[data-theme="light"] .clock{color:#000}
 
 /* ---- title tiles ---- */
 .menu2{display:grid;grid-template-columns:1fr 1fr;gap:18px;max-width:640px;margin:30px auto 0}
@@ -1230,6 +1237,7 @@ html[data-theme="light"] img.wm-dark{display:none}html[data-theme="light"] img.w
 .lgb.naver{background:#03C75A;border-color:#03C75A;color:#fff}
 .lgb.google{background:#fff;border-color:#e2e6ee;color:#1f1f1f}
 .lgb.apple{background:#000;border-color:#000;color:#fff}
+.lgb.kakao{background:#FEE500;border-color:#FEE500;color:#191919}
 .lgb.email{background:transparent;border:1px dashed var(--line2);color:var(--mut);font-weight:500}
 .lg-email{display:flex;gap:8px;margin-top:12px}
 .lg-email input{flex:1;background:var(--input);border:1px solid var(--line);border-radius:12px;padding:12px 14px;color:var(--tx);font:inherit;font-size:15px}
@@ -1701,8 +1709,8 @@ html[data-theme="dark"] .pop-dots span,html:not([data-theme]) .pop-dots span{bac
 html[data-theme="dark"] .pop-dots span:first-child,html:not([data-theme]) .pop-dots span:first-child{background:#8f82ca}
 .pop-green{color:#719148}
 html[data-theme="dark"] .pop-green,html:not([data-theme]) .pop-green{color:#b9d593}
-#dlgMask .modal.popmk{padding:44px 36px}
-#dlgMask .popact{margin-top:28px}
+#dlgMask .modal.popmk{padding:37px 31px}
+#dlgMask .popact{margin-top:24px}
 #dlgYes,#dlgNo{padding:11px 23px;font-size:13px;height:auto;min-width:99px;border-radius:99px}
 #dlgYes{border:1.5px solid transparent}
 html[data-theme="light"] #dlgYes{background:#20213b;border-color:#20213b;color:#fff}
@@ -1713,7 +1721,7 @@ html[data-theme="light"] #dlgNo{background:#fff;border:1.5px solid #dddae9;color
   .pop-eyebrow{margin-bottom:20px}
   .popact{margin-top:24px;gap:9px}
   .popact .btn{min-height:41px;padding:11px 20px;font-size:12.5px}
-  #dlgMask .modal.popmk{padding:34px 24px}
+  #dlgMask .modal.popmk{padding:29px 20px}
 }
 
 
@@ -2007,7 +2015,12 @@ html[data-theme="light"] #sc-consult #cBody .recy-en{border-left-color:#dcdae6}
 .mynote .nctl{gap:6px;align-items:center;flex-wrap:wrap}
 .mynote .nfs{font-family:var(--mono);font-size:12.5px;color:var(--mut);min-width:22px;text-align:center}
 .mynote .a4wrap{display:flex;justify-content:center;margin-top:4px}
-.mynote .a4{position:relative;width:100%;max-width:640px;aspect-ratio:210/297;background:#fff;border:1px solid var(--line);box-sizing:border-box}
+.mynote .ntitle{flex:1;min-width:0;max-width:360px;height:38px;border:0;border-radius:10px;background:var(--panel2);padding:0 14px;font:inherit;font-size:15px;font-weight:600;color:var(--tx);outline:0;user-select:text;-webkit-user-select:text}
+html[data-theme="light"] .mynote .ntitle{background:#F2F1FA}
+.mynote .ntitle::placeholder{color:var(--dim);font-weight:500}
+.mynote .nico{width:30px;height:30px;border:0;background:none;color:var(--mut);font-size:12px;cursor:pointer;padding:0;display:grid;place-items:center}
+.mynote .nico:hover{color:var(--tx)}
+.mynote .a4{position:relative;width:100%;max-width:800px;aspect-ratio:210/297;background:#fff;border:1px solid var(--line);box-sizing:border-box}
 html:not([data-theme="light"]) .mynote .a4{background:#ECEEF2;border-color:#3a4450}
 .ntext{position:absolute;inset:0;width:100%;height:100%;box-sizing:border-box;border:0;outline:0;resize:none;background:transparent;color:#1a1a1a;padding:7% 7.5%;font-family:inherit;line-height:1.75;overflow:auto;-webkit-appearance:none;border-radius:0}
 .ntext::placeholder{color:#a0a4ad}
@@ -2015,6 +2028,73 @@ html:not([data-theme="light"]) .mynote .a4{background:#ECEEF2;border-color:#3a44
 .mynote .npg{font-family:var(--mono);font-size:13px;color:var(--mut)}
 .ntoast{position:fixed;left:50%;bottom:28px;z-index:3000;transform:translate(-50%,20px);background:rgba(16,17,21,.72);-webkit-backdrop-filter:blur(16px) saturate(1.5);backdrop-filter:blur(16px) saturate(1.5);color:#fff;padding:10px 18px;border-radius:12px;font-size:13.5px;font-weight:500;border:1px solid rgba(255,255,255,.12);box-shadow:0 8px 28px rgba(0,0,0,.35);opacity:0;pointer-events:none;transition:.22s;white-space:nowrap}
 .ntoast.on{opacity:1;transform:translate(-50%,0)}
+/* 마이크 점검: 예문 박스 각진 모서리, 인식 문장 박스 테두리 없음 */
+#sc-check .tr{border-radius:0}
+#sc-check .live{border:0}
+#sc-check #ckBack,#sc-check #ckNext{min-width:102px}
+/* 나만의 답안: 내 서베이 한 줄 */
+.mysv{color:#000;font-size:14px;line-height:1.7;margin:-6px 0 18px;word-break:keep-all}
+html:not([data-theme="light"]) .mysv{color:var(--tx)}
+/* 진단 리포트 › 상담 기록 */
+#cBody .kvs>div{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);font-size:14.5px}
+#cBody .kvs>div:last-child{border-bottom:0}
+#cBody .kvs span{color:var(--mut)}#cBody .kvs b{font-weight:600;text-align:right}
+/* ===== 상담실 온보딩 (sc-ob): 테마와 무관하게 밝은 화면. 목업 onboard-consult-mock.html 과 같은 수치 ===== */
+html.ob-on body{background:#f6f7fb}
+#sc-ob{color:#1E2033;word-break:keep-all;user-select:none}
+#sc-ob.on{display:block;animation:none}
+#sc-ob .obph{max-width:430px;min-height:calc(100dvh - 108px);margin:0 auto;display:flex;flex-direction:column;padding:16px 22px 22px}
+#sc-ob .obtop{display:flex;align-items:center;gap:16px;height:58px;flex:none;background:#fff;margin:-16px -22px 0;padding:0 20px;border-bottom:1px solid #e8e9f1;box-shadow:0 2px 8px rgba(20,22,32,.04)}
+#sc-ob .obx{width:40px;height:40px;border-radius:50%;background:#f3f4f8;border:0;display:grid;place-items:center;cursor:pointer;color:#1E2033;flex:none;padding:0}
+#sc-ob .obx svg{width:20px;height:20px}
+#sc-ob .obbar{flex:1;height:8px;border-radius:999px;background:#DEDCEA;overflow:hidden;position:relative}
+#sc-ob .obbar i{position:absolute;inset:0;display:block;background:linear-gradient(90deg,#5A2FE4,#6E62F7);border-radius:999px;clip-path:inset(0 100% 0 0 round 999px);transition:clip-path .45s ease}
+#sc-ob .obs{display:none;flex:1;flex-direction:column}
+#sc-ob .obs.on{display:flex}
+#sc-ob .obask{display:flex;flex-direction:column;align-items:flex-start;margin-top:22px;max-width:84%}
+#sc-ob .obask.cont{margin-top:8px}
+#sc-ob .obav{width:57px;height:57px;margin:0 0 6px -2px;display:grid;place-items:center;flex:none}
+#sc-ob .obav svg{width:57px;height:48px;display:block}
+.obav.odsmile{width:84px;height:72px;margin:0 auto 4px;display:grid;place-items:center}.obav.odsmile svg{width:84px;height:70px;display:block}
+#sc-ob .obbub{background:#fff;border:1px solid #e8e9f1;border-radius:18px;border-top-left-radius:8px;padding:8px 14px;font-size:15px;line-height:1.5;color:#1b1d26;box-shadow:0 2px 8px rgba(20,22,32,.06);position:relative}
+#sc-ob .ghost{visibility:hidden}
+#sc-ob .obbub .typed,#sc-ob .obmbub .typed{position:absolute;left:14px;right:14px;top:8px}
+#sc-ob .obbub0 .typed{position:absolute;left:22px;right:22px;top:18px}
+#sc-ob .oblab{font-size:15px;color:#6E6D80;margin:34px 0 10px}
+#sc-ob .obinp{width:100%;height:60px;border-radius:18px;border:2px solid #E6E4F0;background:#fff;padding:0 18px;font:inherit;font-size:18px;color:#1E2033;outline:0;user-select:text;-webkit-user-select:text}
+#sc-ob .obinp:focus{border-color:#6B5FD0}
+#sc-ob .obopts{display:flex;flex-direction:column;gap:14px;margin-top:14px}
+#sc-ob .obopt{background:#fff;border:2px solid transparent;border-radius:20px;padding:24px 22px;font-size:17px;text-align:left;cursor:pointer;box-shadow:0 2px 10px rgba(30,32,51,.05);color:#1E2033;font-family:inherit;line-height:1.5}
+#sc-ob .obopt.on{border-color:#6B5FD0}
+#sc-ob .obopt small{display:block;color:#6E6D80;font-size:14px;margin-top:6px}
+#sc-ob .obsp{flex:1}
+#sc-ob .obcta{width:100%;height:60px;border:0;border-radius:999px;background:#1E2033;color:#fff;font:inherit;font-size:18px;font-weight:700;cursor:pointer;margin-top:18px}
+#sc-ob .obcta:disabled{background:#E3E1EC;color:#A5A4B8;cursor:default}
+#sc-ob .obme{display:flex;justify-content:flex-end;margin-top:14px}
+#sc-ob .obmbub{max-width:84%;background:#EDEEF3;color:#1b1d26;border:1px solid #E0E1EA;border-radius:18px;border-top-right-radius:8px;padding:8px 14px;font:inherit;font-size:15px;line-height:1.5;text-align:left;position:relative;box-shadow:0 2px 8px rgba(20,22,32,.06)}
+#sc-ob button.obmbub.yes{background:#20213B;color:#fff;border-color:#20213B;padding:12px 18px;text-align:center;cursor:pointer}
+#sc-ob button.obmbub.yes small{display:block;font-size:12.5px;opacity:.75;margin-top:3px;font-weight:500}
+#sc-ob button.obmbub.yes .t{position:relative;display:inline-block;white-space:nowrap}
+#sc-ob button.obmbub.yes .t .typed{position:absolute;left:0;top:0;right:auto;white-space:nowrap}
+#sc-ob .wob{animation:obwob .7s ease-in-out 1;transform-origin:50% 50%}
+@keyframes obwob{0%,100%{transform:rotate(0)}20%{transform:rotate(-7deg)}45%{transform:rotate(6deg)}70%{transform:rotate(-3deg)}88%{transform:rotate(1.5deg)}}
+#sc-ob .obhello{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:22px;padding-top:10px}
+#sc-ob .obbub0{background:#fff;border-radius:22px;padding:18px 22px;font-size:16.2px;line-height:1.6;box-shadow:0 4px 18px rgba(30,32,51,.08);width:100%;position:relative}
+#sc-ob .obbub0:after{content:"";position:absolute;left:50%;bottom:-9px;width:18px;height:18px;background:#fff;transform:translateX(-50%) rotate(45deg);border-radius:4px}
+#sc-ob .obodal{width:122px;height:auto;display:block;margin-top:8px}
+/* 수염 꿈실 (기존 오달이와 같은 리듬) · 팔 흔들기 무한 */
+#sc-ob .wk,.odsmile .wk{transform-box:view-box;animation:3.6s ease-in-out infinite}
+#sc-ob .wL1,.odsmile .wL1{transform-origin:311px 284px;animation-name:obtwL}
+#sc-ob .wL2,.odsmile .wL2{transform-origin:316px 306px;animation-name:obtwL;animation-delay:.08s}
+#sc-ob .wR1,.odsmile .wR1{transform-origin:508px 286px;animation-name:obtwR}
+#sc-ob .wR2,.odsmile .wR2{transform-origin:503px 305px;animation-name:obtwR;animation-delay:.08s}
+@keyframes obtwL{0%,18%,100%{transform:rotate(0)}3%{transform:rotate(4deg)}6%{transform:rotate(-3.5deg)}9%{transform:rotate(3deg)}12%{transform:rotate(-2deg)}15%{transform:rotate(.6deg)}}
+@keyframes obtwR{0%,18%,100%{transform:rotate(0)}3%{transform:rotate(-4deg)}6%{transform:rotate(3.5deg)}9%{transform:rotate(-3deg)}12%{transform:rotate(2deg)}15%{transform:rotate(-.6deg)}}
+#sc-ob .obodal .arm{transform-box:view-box;transform-origin:590px 500px}
+#sc-ob .obodal.wave .arm{animation:obwave 1.4s cubic-bezier(.45,0,.35,1) .35s infinite both}
+@keyframes obwave{0%{transform:rotate(-8deg)}43%{transform:rotate(22deg)}57%{transform:rotate(22deg)}100%{transform:rotate(-8deg)}}
+/* 목표 날짜 창: 상담실에서 열 때는 취소·지우기 대신 우상단 X */
+#ddMask .modal{position:relative}
 </style>
 
 <style id="ocFonts">
@@ -2041,6 +2121,7 @@ html:not([data-theme="light"]) .mynote .a4{background:#ECEEF2;border-color:#3a44
         <button class="lgb naver" data-provider="naver"><span class="lgi">N</span>네이버로 로그인</button>
         <button class="lgb google" data-provider="google"><span class="lgi"><svg viewBox="0 0 48 48" width="20" height="20"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9 3.5l6.7-6.7C35.6 2.5 30.2 0 24 0 14.6 0 6.5 5.4 2.6 13.3l7.8 6C12.3 13.6 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.5 5.8c4.4-4 7.1-10 7.1-17.5z"/><path fill="#FBBC05" d="M10.4 28.7c-.5-1.5-.8-3-.8-4.7s.3-3.2.8-4.7l-7.8-6C.9 16.5 0 20.1 0 24s.9 7.5 2.6 10.7l7.8-6z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.5-5.8c-2.1 1.4-4.9 2.3-8.4 2.3-6.3 0-11.7-4.1-13.6-9.8l-7.8 6C6.5 42.6 14.6 48 24 48z"/></svg></span>Google로 로그인</button>
         <button class="lgb apple" data-provider="apple"><span class="lgi"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M16.4 12.7c0-2.5 2-3.6 2.1-3.7-1.2-1.7-3-1.9-3.6-2-1.5-.2-3 .9-3.8.9s-2-.9-3.3-.9C6.1 7 4.5 8 3.6 9.6c-1.9 3.2-.5 8 1.3 10.6.9 1.3 1.9 2.7 3.3 2.7 1.3-.1 1.8-.9 3.4-.9s2 .9 3.4.8c1.4 0 2.3-1.3 3.2-2.6 1-1.5 1.4-2.9 1.4-3-.1 0-2.8-1.1-2.8-4.5zM14 5.5c.7-.9 1.2-2.1 1-3.3-1 .1-2.3.7-3 1.6-.7.8-1.2 2-1.1 3.2 1.2.1 2.4-.6 3.1-1.5z"/></svg></span>Apple로 로그인</button>
+        <button class="lgb kakao" data-provider="kakao" style="display:none"><span class="lgi"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M12 3C6.5 3 2 6.6 2 11c0 2.8 1.8 5.2 4.6 6.6L5.5 21l4.3-2.6c.7.1 1.4.2 2.2.2 5.5 0 10-3.6 10-8S17.5 3 12 3z"/></svg></span>카카오로 로그인</button>
         <button class="lgb email" data-provider="email">이메일로 가입 또는 로그인</button>
       </div>
       <div class="lg-email" id="lgEmailBox" style="display:none">
@@ -2067,6 +2148,64 @@ html:not([data-theme="light"]) .mynote .a4{background:#ECEEF2;border-color:#3a44
       <p class="lg-foot" id="nmHint">2~12자, 한글·영문·숫자 (띄어쓰기 없이) · 목표 피드에 보이는 이름이에요</p>
     </div>
   </section>
+
+<!-- ===== 상담실 온보딩: 첫 로그인 직후 (73b_obconsult.js) ===== -->
+  <section id="sc-ob" class="screen">
+    <div class="obph">
+      <div class="obtop" id="obTop" style="visibility:hidden"><button class="obx" id="obX" aria-label="이전"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button><div class="obbar"><i id="obBar"></i></div></div>
+
+      <!-- 0 인사 -->
+      <section class="obs on" id="ob0">
+        <div class="obhello">
+          <div class="obbub0" data-type="안녕! 난 오달이야. 오픽 달인이라서 오달! 앞으로 2주 동안 나랑 같이 공부하게 될거야. 너한테 맞는 계획 짜려고 하는데 몇 개만 물어볼게"></div>
+          <svg class="obodal" viewBox="25 30 790 1050" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><clipPath id="obArmClip"><rect x="548" y="250" width="275" height="460"/></clipPath></defs><ellipse cx="405" cy="1064" rx="250" ry="27" fill="rgba(30,32,51,.13)"/><g clip-path="url(#obArmClip)"><g class="arm"><path fill="#676777" d="M692.345 324.101C703.377 324.324 710.504 328.598 715.709 338.143C722.65 335.314 727.873 333.693 735.392 336.64C741.405 339.054 746.194 343.786 748.679 349.769C751.692 357.077 750.717 363.274 747.772 370.265C767.799 386.573 762.756 409.626 741.594 422.287C737.565 424.697 733.874 425.934 729.49 427.519C719.286 457.374 712.765 473.593 691.803 498.687C671.691 522.676 647.168 542.59 619.561 557.349C611.525 561.744 598.437 566.597 591.735 571.353C569.223 587.328 546.856 602.662 523.224 617.003C414.258 683.129 304.09 737.621 175.322 749.086C120.823 750.545 94.5148 690.505 100.659 643.297C104.348 614.954 117.079 582.946 143.428 568.541C149.902 565.015 156.901 562.555 164.158 561.255C172.472 559.804 184.606 561.134 193.994 560.367C219.624 558.274 241.666 554.505 266.65 548.905C300.362 541.397 333.63 532.022 366.301 520.821C412.092 504.639 457.987 482.743 501.128 460.553C534.759 443.254 564.192 423.276 599.606 408.991C619.629 400.915 644.741 381.366 661.987 367.495C662.185 346.735 668.563 326.591 692.345 324.101Z"/></g></g><g class="body"><path fill="#676777" d="M199.463 432.855C210.248 423.831 210.438 419.628 217.951 408.136C222.518 401.262 227.494 394.67 232.852 388.394C250.787 367.59 273.761 351.237 299.663 341.6C379.529 311.886 481.65 326.111 538.029 394.151C550.746 409.498 560.769 427.337 569.227 445.279C596.32 501.628 601.694 556.825 605.994 618.642C609.878 669.842 609.562 721.274 605.048 772.422C600.793 817.111 590.702 870.512 573.327 912.052C600.998 944.567 632.678 972.172 673.6 984.244C688.48 988.633 772.713 1006.71 741.824 1033.39C716.073 1055.63 627.359 1050.78 595.41 1050.66L558.19 1050.57C553.804 1050.55 544.698 1050.77 540.607 1050.38C538.05 1053.23 534.957 1056.1 531.64 1057.94C508.64 1070.7 437.001 1064.64 412.477 1057.62C408.729 1054.08 405.581 1048.22 402.909 1043.72C387.728 1043.25 371.335 1038.44 357.143 1033.29C351.533 1031.25 345.981 1027.89 340.287 1026.17C342.194 1032.02 344.588 1037.79 343.523 1044.04C340.286 1063.03 315.172 1061.97 300.695 1063.09C278.62 1064.8 256.158 1067.44 234.23 1064.19C222.435 1062.44 202.1 1056.19 205.255 1040.79C208.919 1024.85 224.68 1013.88 237.662 1005.53C175.965 946.17 150.68 868.781 143.533 785.186C142.941 778.268 142.68 748.962 140.051 744.98C107.452 724.903 99.2783 666.82 102.408 632.433C108.674 563.605 147.293 478.541 199.463 432.855Z"/><defs><linearGradient id="gradient_0" gradientUnits="userSpaceOnUse" x1="545.69128" y1="1054.425" x2="693.1283" y2="946.32812"><stop offset="0" stop-color="#43434E"/><stop offset="1" stop-color="#5B5C6A"/></linearGradient></defs><path fill="url(#gradient_0)" d="M573.327 912.052C600.998 944.567 632.678 972.172 673.6 984.244C688.48 988.633 772.713 1006.71 741.824 1033.39C716.073 1055.63 627.359 1050.78 595.41 1050.66L558.19 1050.57C553.804 1050.55 544.698 1050.77 540.607 1050.38C543.103 1028.33 527.115 1017.7 511.787 1006.34C529.216 989.789 547.275 961.541 559.127 940.366C563.96 931.731 568.188 921.062 573.327 912.052Z"/><path fill="#484956" d="M322.912 1003.88C324.569 970.324 332.056 937.482 343.673 905.876C351.57 884.389 366.082 854.324 393.419 854.978C400.137 855.139 407.264 858.187 411.779 863.427C431.146 889.322 435.767 937.182 434.549 968.163C434.167 977.859 431.457 991.855 429.713 1000.7C413.902 1012.06 406.678 1019.22 403.318 1039.67C403.097 1041.01 402.96 1042.36 402.909 1043.72C387.728 1043.25 371.335 1038.44 357.143 1033.29C351.533 1031.25 345.981 1027.89 340.287 1026.17C338.226 1018.15 329.151 1009.12 322.912 1003.88Z"/><defs><linearGradient id="gradient_1" gradientUnits="userSpaceOnUse" x1="190.13977" y1="590.18158" x2="106.13823" y2="585.00372"><stop offset="0" stop-color="#4E4E5F"/><stop offset="1" stop-color="#6A6977"/></linearGradient></defs><path fill="url(#gradient_1)" d="M199.463 432.855C200.963 435.741 201.173 436.292 200.127 439.479C197.174 448.483 192.271 456.697 188.416 465.297C166.756 513.609 154.535 567.629 147.518 619.886C144.501 642.381 142.525 665.003 141.597 687.68C141.257 696.549 141.484 740.075 140.051 744.98C107.452 724.903 99.2783 666.82 102.408 632.433C108.674 563.605 147.293 478.541 199.463 432.855Z"/></g><g class="head" transform="translate(396 478) scale(.93) translate(-396 -478)"><defs><linearGradient id="obChinG0" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="0.5" stop-color="#F8F8FD"/><stop offset="1" stop-color="#DFE1F2"/></linearGradient></defs><path fill="url(#obChinG0)" stroke="#E2E4EF" stroke-width="3" d="M172 215 C 158 262, 157 305, 164 343 C 178 433, 276 482, 396 482 C 516 482, 614 433, 628 343 C 635 305, 634 262, 620 215 Q 396 110, 172 215 Z"/><g class="face"><path fill="#686A7C" d="M247.19 102.297C249.28 101.297 250.93 100 252.8 98.6016C261.6 92.1016 270.28 86.2031 280.08 81.2031C337.9 51 405.06 44.2031 467.75 62.1016C488.06 68.1016 505.83 76 523.92 86.8984C530.04 90.6016 540.52 98.8984 545.65 101.602C550.73 93 559.15 84.3984 569.08 81.7969C577.8 79.5 587.04 80.7969 594.82 85.2969C603.79 90.6016 611.49 100.398 613.95 110.5C616.12 119.797 614.53 129.398 609.53 137.5C605.32 144.102 599.72 148.898 592.7 152.297C594.58 157.898 601.73 165.398 604.15 170.703C609.81 183.102 622.71 208.5 623.27 221.703C621.14 224.602 613.63 229.102 610.49 231.102C582.12 248.5 550.82 260.703 518.11 267C519.44 271.102 519.99 273.398 520.82 277.398C521.53 280.797 524.08 292.797 518.57 305.703C516.77 308.297 512.15 315.898 510.49 317.297C504.15 322.703 494.86 327.5 486.72 328.898C471.75 331.297 456.44 327.703 444.12 318.898C439.45 315.5 435.31 311.5 431.83 307C429.56 308.703 426.9 311 424.67 312.898C424.76 322.398 429.83 376.703 411.44 362.5C407.24 359.297 409.25 322.898 409.26 315C401.87 311.297 396.1 306 390.15 300.398C375.81 325.5 350.26 336.602 322.97 324.102C319.69 322.102 316.31 318.602 314.86 316.797C312.03 313.398 311.94 313.398 309.5 307.102C308.87 305 308.01 297.703 307.99 297.703C307.59 286 309.2 278.602 313.11 267.898C269.82 264.398 224.24 257.203 186.01 236.398C181.07 233.703 171.29 229.102 167.47 225.5C167.87 221.797 170.24 215.5 171.49 211.797C178.57 190.602 187.49 171 200.51 152.703C198.02 151.602 196.88 151.203 194.74 149.5C188 145.898 182.36 140.602 178.79 133.797C174.44 125.602 173.59 116 176.45 107.102C186.72 75.2031 230.79 68.8984 247.19 102.297Z"/><path fill="#4A4C5C" d="M194.72 149.602C187.98 146 182.34 140.703 178.77 133.898C174.42 125.703 173.57 116.102 176.43 107.203C186.7 75.2969 230.77 69 247.17 102.398C237.63 109.102 220.92 128.297 212.57 137.102C210.64 139.102 208.92 142 206.93 144.102L200.49 152.797C198 151.703 196.86 151.297 194.72 149.602Z"/><path fill="#4A4C5C" d="M545.63 101.703C550.71 93.1016 559.13 84.5 569.06 81.8984C577.78 79.6016 587.02 80.8984 594.8 85.3984C603.77 90.7031 611.47 100.5 613.93 110.602C616.1 119.898 614.51 129.5 609.51 137.602C605.3 144.203 599.7 149 592.68 152.398C588.63 148 585.1 141.5 581.27 137.203C570.17 124.602 558.14 112.797 545.63 101.703Z"/><path fill="#373741" d="M390.13 300.5C385.19 295.703 379.66 291.602 387.17 285.297C390.32 282.703 394.91 283.398 397.94 285.797C404.08 290.703 409.43 296.898 415.01 302.398C421.11 295.102 431.57 277.5 442.34 285.398C443.35 286.203 443.98 287.398 444.07 288.602C444.63 295.602 435.77 302.203 431.81 307.102C429.54 308.797 426.88 311.102 424.65 313C424.74 322.5 429.81 376.797 411.42 362.602C407.22 359.398 409.23 323 409.24 315.102C401.85 311.398 396.08 306.102 390.13 300.5Z"/><path fill="#373741" d="M334.23 218.203C345.56 216.602 353.25 219.5 362.21 227.797C367.78 230.602 377.71 254.398 364.3 252.297C352.76 250.398 357.32 234.102 339.81 231.602C320.47 233.398 326.83 250.398 315.6 258.898C302.03 255.203 307.55 243 312.68 233.898C317.05 226.102 325.48 220.203 334.23 218.203Z"/><path fill="#373741" d="M488.83 217.203C525.74 216.703 532.77 270.102 509.36 253.297C508.2 244.297 505.75 238.398 498.58 232.797C475.89 224.797 475.5 254.898 463.48 252.297C461.4 250.703 461.17 250.102 459.95 247.797C459.33 242.898 462.12 237.203 464.62 233.102C470.87 223.203 478.07 219.797 488.83 217.203Z"/><path class="wk wL1" fill="#373741" d="M310.81 279.203C314.78 278.602 321.65 278.5 321.58 284C321.18 284.703 320.33 286.297 319.81 286.703C315.95 287.602 312.96 288.297 309.01 288.703L309.2 289C271.92 295 235.15 303.797 199.21 315.398C183.95 320.398 166.83 327.297 152.21 334.102C141.78 339 133.72 335.5 138.88 324.203C140.19 321.297 158.24 314.398 161.74 313.102C197.18 299.203 234.02 289.102 271.63 283.203C282.26 281.398 300.03 279 310.81 279.203Z"/><path class="wk wR1" fill="#373741" d="M515.52 281.398C527.58 280.703 539.53 280.297 551.62 280.5C566.67 280.898 659.1 286.703 664.23 291.5C665.49 292.602 666.11 294.297 666.15 296C666.2 297.797 665.79 299.203 664.46 300.398C660.95 303.602 655.08 303.203 650.71 302.797C641.83 302 620.21 299.703 618.35 299.703Q544.11 290.898 511.5 290.898C508.25 290.102 506.12 289.602 505.06 286.203C506.36 281.5 511.58 281.602 515.52 281.398Z"/><path class="wk wR2" fill="#373741" d="M503.68 302.5C512.5 302.102 542.85 312.602 552.98 315.602C580.28 323.898 607.86 331.297 635.3 339.102C641.93 341 650.92 345.703 642.87 353.102C628.66 355.898 525.45 320.297 506.75 312.602C504.08 311.5 502.51 310.703 501.46 307.898C501.25 305.703 502.45 304.398 503.68 302.5Z"/><path class="wk wL2" fill="#373741" d="M311.47 303.5C315.99 303.5 319.16 299.102 323.87 300.797C329.67 306.297 323.75 309 319.21 311C311.67 315.203 302.18 319 294.26 323.102C281.64 329.602 268.76 336.5 256.6 343.898C247.25 349.5 237.47 356.898 228.37 363C223.07 366.898 218.3 370.602 212.6 373.797C206.22 377.398 200.32 369.5 203.29 364.297C206.82 358.203 215.76 354.203 221.68 350.102C248.74 331.5 280.26 314.203 311.47 303.5Z"/></g></g><g class="cal" transform="rotate(-10 185 720)"><svg x="55" y="605" width="260" height="232" viewBox="574 214 659 590"><defs><linearGradient id="calGrad" gradientUnits="userSpaceOnUse" x1="910.78699" y1="809.6629" x2="897.57861" y2="391.84973"><stop offset="0" stop-color="#E6E8FB"/><stop offset="1" stop-color="white"/></linearGradient></defs><path fill="url(#calGrad)" d="M1077.03 268.015C1076.49 258.688 1076.84 243.115 1076.93 234C1076.94 232.736 1077.04 231.504 1077.12 230.246C1077.74 221.242 1085.61 214.689 1094.5 214.475C1103.72 214.253 1112.36 221.268 1112.39 230.746C1112.44 243.164 1112.19 255.582 1112.37 267.999C1113.5 268.03 1114.62 268.089 1115.75 268.076C1131.83 267.885 1147.92 267.912 1164 268.041C1174.83 268.128 1184.65 271.641 1194.27 276.473C1201.64 280.175 1212.3 289.488 1217.21 296.178C1222.38 303.233 1226.84 310.906 1229.27 319.311C1230.9 324.957 1232.34 333.682 1232.41 339.75C1232.75 370.488 1232.34 401.258 1232.29 432C1232.25 453.916 1232.31 475.834 1232.21 497.75C1232.21 497.754 1232.2 500.746 1232.2 500.75C1232.22 502.938 1232.09 505.123 1231.99 507.309C1232.09 507.866 1232.17 508.427 1232.17 508.993C1232.35 584.979 1232.5 661.309 1232.41 737.254C1232.4 738.254 1230.8 744.936 1230.5 746.497C1229.23 753.268 1224.94 762.894 1221.36 768.194C1219.98 770.244 1218.55 772.259 1217.15 774.302C1210.9 783.459 1199.29 791.847 1189.23 796.4C1183.1 799.172 1173.88 802.867 1167 802.901C1055.26 803.46 943.494 802.953 831.75 803.021C773.833 803.056 715.915 802.957 657.998 803.022C651.492 803.029 644.968 803.251 638.499 802.557C633.533 802.025 623.967 799.302 619.467 797.117C613.379 794.16 608.818 791.093 603.518 786.939C595.94 781 591.473 775.956 586.442 768.497C582.135 762.111 578.596 754.27 576.902 746.753C575.69 741.378 575.293 740.268 575.134 734.5C575.134 734.497 575.097 732.754 575.097 732.75C574.441 691.358 574.772 649.899 574.778 608.5C574.782 575.789 574.705 543.076 574.723 510.367C574.703 509.828 574.685 509.289 574.683 508.75C574.669 503.418 574.709 498.083 574.697 492.75C574.665 478.083 574.684 463.417 574.643 448.75C574.539 411.916 574.496 375.082 574.89 338.25C574.933 334.241 575.322 330.247 575.586 326.247C575.69 324.667 576.193 323.516 576.651 321.999C578.954 314.368 580.679 309.424 585.008 302.748C589.832 295.31 595.345 288.398 602.657 283.194C613.428 275.528 628.447 268.31 642.249 268.079C659.192 267.795 676.138 268.01 693.083 267.959C693.084 267.959 695.079 267.973 695.08 267.973C695.306 267.52 695.421 267.026 695.415 266.52C695.268 254.68 695.213 242.838 695.425 230.999C695.805 209.727 730.398 209.126 730.979 231.499C730.979 231.502 730.998 232.745 730.998 232.749C731.07 244.496 731.111 256.245 730.926 267.991L887.557 268.034C887.313 256.442 887.342 244.844 887.514 233.25C887.636 225.031 888.544 220.467 896.506 216.594C905.499 212.219 916.469 215.496 921.282 224.398C922.88 227.354 922.594 230.74 922.628 234C922.742 244.753 922.547 255.505 922.587 266.259C922.593 267.909 922.411 267.881 924.074 268.111C924.786 268.222 925.498 268.333 926.211 268.444C928.27 268.022 930.397 268.221 932.499 268.226C953.832 268.282 975.167 268.193 996.5 268.177C999.994 268.174 1003.51 268.067 1007 268.156C1009.67 268.225 1012.33 268.138 1015 268.138C1029.5 268.137 1044 268.049 1058.5 268.104C1064.68 268.127 1070.85 268.021 1077.03 268.015Z"/><path fill="#DCDEFA" d="M1077.03 268.015C1076.49 258.688 1076.84 243.115 1076.93 234C1076.94 232.736 1077.04 231.504 1077.12 230.246C1077.74 221.242 1085.61 214.689 1094.5 214.475C1103.72 214.253 1112.36 221.268 1112.39 230.746C1112.44 243.164 1112.19 255.582 1112.37 267.999C1113.5 268.03 1114.62 268.089 1115.75 268.076C1131.83 267.885 1147.92 267.912 1164 268.041C1174.83 268.128 1184.65 271.641 1194.27 276.473C1201.64 280.175 1212.3 289.488 1217.21 296.178C1222.38 303.233 1226.84 310.906 1229.27 319.311C1230.9 324.957 1232.34 333.682 1232.41 339.75C1232.75 370.488 1232.34 401.258 1232.29 432C1232.25 453.916 1232.31 475.834 1232.21 497.75C1232.21 497.754 1232.2 500.746 1232.2 500.75C1232.22 502.938 1232.09 505.123 1231.99 507.309C1231.3 504.811 1231.5 505.008 1231.52 502.503C1231.66 489.173 1231.51 475.83 1231.52 462.5C1231.53 452.915 1231.38 443.336 1231.45 433.75C1231.51 424.502 1231.55 415.248 1231.56 406C1231.56 404.579 1231.53 403.164 1231.48 401.744C1065.99 401.597 900.494 401.709 735 401.595C687.25 401.562 639.5 401.541 591.75 401.734C589.326 401.744 586.923 402.175 584.5 402.233C581.587 402.303 578.673 402.245 575.76 402.245C575.749 403.413 575.747 404.581 575.739 405.75C575.729 407.136 575.511 407.93 575.406 409.25C575.287 410.73 575.303 412.273 575.261 413.763C575.261 413.767 575.245 414.746 575.245 414.75C575.135 426.161 575.244 437.588 575.241 449C575.235 467.25 575.192 485.501 575.24 503.75C575.24 503.754 575.245 506.247 575.245 506.251C575.247 506.461 575.417 509.381 575.014 510.015C575.012 510.018 574.725 510.364 574.723 510.367C574.703 509.828 574.685 509.289 574.683 508.75C574.669 503.418 574.709 498.083 574.697 492.75C574.665 478.083 574.684 463.417 574.643 448.75C574.539 411.916 574.496 375.082 574.89 338.25C574.933 334.241 575.322 330.247 575.586 326.247C575.69 324.667 576.193 323.516 576.651 321.999C578.954 314.368 580.679 309.424 585.008 302.748C589.832 295.31 595.345 288.398 602.657 283.194C613.428 275.528 628.447 268.31 642.249 268.079C659.192 267.795 676.138 268.01 693.083 267.959C693.084 267.959 695.079 267.973 695.08 267.973C695.306 267.52 695.421 267.026 695.415 266.52C695.268 254.68 695.213 242.838 695.425 230.999C695.805 209.727 730.398 209.126 730.979 231.499C730.979 231.502 730.998 232.745 730.998 232.749C731.07 244.496 731.111 256.245 730.926 267.991L887.557 268.034C887.313 256.442 887.342 244.844 887.514 233.25C887.636 225.031 888.544 220.467 896.506 216.594C905.499 212.219 916.469 215.496 921.282 224.398C922.88 227.354 922.594 230.74 922.628 234C922.742 244.753 922.547 255.505 922.587 266.259C922.593 267.909 922.411 267.881 924.074 268.111C924.786 268.222 925.498 268.333 926.211 268.444C928.27 268.022 930.397 268.221 932.499 268.226C953.832 268.282 975.167 268.193 996.5 268.177C999.994 268.174 1003.51 268.067 1007 268.156C1009.67 268.225 1012.33 268.138 1015 268.138C1029.5 268.137 1044 268.049 1058.5 268.104C1064.68 268.127 1070.85 268.021 1077.03 268.015Z"/><path fill="#A9A9A8" d="M887.557 268.034C887.313 256.442 887.342 244.844 887.514 233.25C887.636 225.031 888.544 220.467 896.506 216.594C905.499 212.219 916.469 215.496 921.282 224.398C922.88 227.354 922.594 230.74 922.628 234C922.742 244.753 922.547 255.505 922.587 266.259C922.593 267.909 922.411 267.881 924.074 268.111C922.424 268.426 922.431 268.461 922.452 270.24C922.58 280.999 922.432 291.759 922.523 302.518C922.527 302.989 922.567 303.46 922.644 303.925C922.138 308.007 922.747 312.156 922.342 316.249C919.887 341.048 887.827 336.487 887.499 316.752C887.434 312.839 887.37 308.926 887.41 305.013C887.41 305.012 887.439 303.603 887.439 303.601C887.471 303.152 887.499 302.702 887.506 302.251C887.703 291.007 887.573 279.76 887.559 268.514L730.868 268.462C730.819 279.793 730.954 291.122 730.923 302.452C730.923 302.453 730.899 303.664 730.899 303.665C730.152 312.823 732.783 323.259 723.811 329.638C711.978 338.052 695.785 330.035 695.468 315.5C695.402 312.498 695.43 309.494 695.311 306.493C695.284 305.788 695.089 305.105 694.844 304.443C695.078 304.226 695.256 304.04 695.339 303.72C695.75 302.144 695.498 296.788 695.498 296.75C695.56 287.832 695.628 278.913 695.478 269.996C695.466 269.301 695.368 268.606 695.08 267.973C695.306 267.52 695.421 267.026 695.415 266.52C695.268 254.68 695.213 242.838 695.425 230.999C695.805 209.727 730.398 209.126 730.979 231.499C730.979 231.502 730.998 232.745 730.998 232.749C731.07 244.496 731.111 256.245 730.926 267.991L887.557 268.034Z"/><path fill="#A9A9A8" d="M1077.03 268.015C1076.49 258.688 1076.84 243.115 1076.93 234C1076.94 232.736 1077.04 231.504 1077.12 230.246C1077.74 221.242 1085.61 214.689 1094.5 214.475C1103.72 214.253 1112.36 221.268 1112.39 230.746C1112.44 243.164 1112.19 255.582 1112.37 267.999C1112.36 279.507 1112.29 291.015 1112.43 302.522C1112.43 302.981 1112.5 303.438 1112.65 303.87C1112.09 307.122 1112.36 310.449 1112.3 313.75C1111.82 339.577 1077.43 338.734 1077 315.501C1076.93 312.081 1077.01 308.66 1076.91 305.242C1076.91 305.241 1076.84 303.972 1076.84 303.971C1076.93 303.489 1076.99 303.002 1077 302.511C1077.13 291.174 1077.15 279.836 1077.04 268.499C1074.35 268.427 1071.69 268.584 1069 268.59C1031.5 268.665 994 268.625 956.5 268.645C947.503 268.65 938.495 268.551 929.499 268.646C928.399 268.657 927.3 268.593 926.211 268.444C928.27 268.022 930.397 268.221 932.499 268.226C953.832 268.282 975.167 268.193 996.5 268.177C999.994 268.174 1003.51 268.067 1007 268.156C1009.67 268.225 1012.33 268.138 1015 268.138C1029.5 268.137 1044 268.049 1058.5 268.104C1064.68 268.127 1070.85 268.021 1077.03 268.015Z"/><path fill="#292838" d="M1076.84 303.971C1076.84 303.972 1076.91 305.241 1076.91 305.242C1077.01 308.66 1076.93 312.081 1077 315.501C1077.43 338.734 1111.82 339.577 1112.3 313.75C1112.36 310.449 1112.09 307.122 1112.65 303.87C1120.44 310.228 1124.38 317.752 1122.14 328.007C1115.84 356.885 1072.22 355.596 1066.54 328.254C1064.35 317.731 1068.68 310.165 1076.84 303.971Z"/><path fill="#292838" d="M887.439 303.601C887.439 303.603 887.41 305.012 887.41 305.013C887.37 308.926 887.434 312.839 887.499 316.752C887.827 336.487 919.887 341.048 922.342 316.249C922.747 312.156 922.138 308.007 922.644 303.925C928.752 308.627 932.606 314.052 932.855 321.999C933.41 339.693 916.936 351.299 900.25 349.007C877.28 345.851 866.407 316.65 887.439 303.601Z"/><path fill="#292838" d="M730.899 303.665C742.275 312.345 744.837 324.106 737.251 336.505C726.183 354.595 696.019 353.084 687.223 333.678C682.213 322.623 685.108 311.961 694.616 304.621C694.619 304.619 694.841 304.446 694.844 304.443C695.089 305.105 695.284 305.788 695.311 306.493C695.43 309.494 695.402 312.498 695.468 315.5C695.785 330.035 711.978 338.052 723.811 329.638C732.783 323.259 730.152 312.823 730.899 303.665Z"/><image href="data:image/webp;base64,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" x="640" y="560" width="526" height="85"/></svg></g></svg>
+        </div>
+        <button class="obcta" data-obnext>시작하기</button>
+      </section>
+
+      <!-- 1 닉네임 -->
+      <section class="obs" id="ob1">
+        <div class="obask"><div class="obav"><svg viewBox="120 40 570 475" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><linearGradient id="obChinG1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="0.5" stop-color="#F8F8FD"/><stop offset="1" stop-color="#DFE1F2"/></linearGradient></defs><path fill="url(#obChinG1)" stroke="#E2E4EF" stroke-width="3" d="M172 215 C 158 262, 157 305, 164 343 C 178 433, 276 482, 396 482 C 516 482, 614 433, 628 343 C 635 305, 634 262, 620 215 Q 396 110, 172 215 Z"/><g class="face"><path fill="#686A7C" d="M247.19 102.297C249.28 101.297 250.93 100 252.8 98.6016C261.6 92.1016 270.28 86.2031 280.08 81.2031C337.9 51 405.06 44.2031 467.75 62.1016C488.06 68.1016 505.83 76 523.92 86.8984C530.04 90.6016 540.52 98.8984 545.65 101.602C550.73 93 559.15 84.3984 569.08 81.7969C577.8 79.5 587.04 80.7969 594.82 85.2969C603.79 90.6016 611.49 100.398 613.95 110.5C616.12 119.797 614.53 129.398 609.53 137.5C605.32 144.102 599.72 148.898 592.7 152.297C594.58 157.898 601.73 165.398 604.15 170.703C609.81 183.102 622.71 208.5 623.27 221.703C621.14 224.602 613.63 229.102 610.49 231.102C582.12 248.5 550.82 260.703 518.11 267C519.44 271.102 519.99 273.398 520.82 277.398C521.53 280.797 524.08 292.797 518.57 305.703C516.77 308.297 512.15 315.898 510.49 317.297C504.15 322.703 494.86 327.5 486.72 328.898C471.75 331.297 456.44 327.703 444.12 318.898C439.45 315.5 435.31 311.5 431.83 307C429.56 308.703 426.9 311 424.67 312.898C424.76 322.398 429.83 376.703 411.44 362.5C407.24 359.297 409.25 322.898 409.26 315C401.87 311.297 396.1 306 390.15 300.398C375.81 325.5 350.26 336.602 322.97 324.102C319.69 322.102 316.31 318.602 314.86 316.797C312.03 313.398 311.94 313.398 309.5 307.102C308.87 305 308.01 297.703 307.99 297.703C307.59 286 309.2 278.602 313.11 267.898C269.82 264.398 224.24 257.203 186.01 236.398C181.07 233.703 171.29 229.102 167.47 225.5C167.87 221.797 170.24 215.5 171.49 211.797C178.57 190.602 187.49 171 200.51 152.703C198.02 151.602 196.88 151.203 194.74 149.5C188 145.898 182.36 140.602 178.79 133.797C174.44 125.602 173.59 116 176.45 107.102C186.72 75.2031 230.79 68.8984 247.19 102.297Z"/><path fill="#4A4C5C" d="M194.72 149.602C187.98 146 182.34 140.703 178.77 133.898C174.42 125.703 173.57 116.102 176.43 107.203C186.7 75.2969 230.77 69 247.17 102.398C237.63 109.102 220.92 128.297 212.57 137.102C210.64 139.102 208.92 142 206.93 144.102L200.49 152.797C198 151.703 196.86 151.297 194.72 149.602Z"/><path fill="#4A4C5C" d="M545.63 101.703C550.71 93.1016 559.13 84.5 569.06 81.8984C577.78 79.6016 587.02 80.8984 594.8 85.3984C603.77 90.7031 611.47 100.5 613.93 110.602C616.1 119.898 614.51 129.5 609.51 137.602C605.3 144.203 599.7 149 592.68 152.398C588.63 148 585.1 141.5 581.27 137.203C570.17 124.602 558.14 112.797 545.63 101.703Z"/><path fill="#373741" d="M390.13 300.5C385.19 295.703 379.66 291.602 387.17 285.297C390.32 282.703 394.91 283.398 397.94 285.797C404.08 290.703 409.43 296.898 415.01 302.398C421.11 295.102 431.57 277.5 442.34 285.398C443.35 286.203 443.98 287.398 444.07 288.602C444.63 295.602 435.77 302.203 431.81 307.102C429.54 308.797 426.88 311.102 424.65 313C424.74 322.5 429.81 376.797 411.42 362.602C407.22 359.398 409.23 323 409.24 315.102C401.85 311.398 396.08 306.102 390.13 300.5Z"/><path fill="#373741" d="M334.23 218.203C345.56 216.602 353.25 219.5 362.21 227.797C367.78 230.602 377.71 254.398 364.3 252.297C352.76 250.398 357.32 234.102 339.81 231.602C320.47 233.398 326.83 250.398 315.6 258.898C302.03 255.203 307.55 243 312.68 233.898C317.05 226.102 325.48 220.203 334.23 218.203Z"/><path fill="#373741" d="M488.83 217.203C525.74 216.703 532.77 270.102 509.36 253.297C508.2 244.297 505.75 238.398 498.58 232.797C475.89 224.797 475.5 254.898 463.48 252.297C461.4 250.703 461.17 250.102 459.95 247.797C459.33 242.898 462.12 237.203 464.62 233.102C470.87 223.203 478.07 219.797 488.83 217.203Z"/><path class="wk wL1" fill="#373741" d="M310.81 279.203C314.78 278.602 321.65 278.5 321.58 284C321.18 284.703 320.33 286.297 319.81 286.703C315.95 287.602 312.96 288.297 309.01 288.703L309.2 289C271.92 295 235.15 303.797 199.21 315.398C183.95 320.398 166.83 327.297 152.21 334.102C141.78 339 133.72 335.5 138.88 324.203C140.19 321.297 158.24 314.398 161.74 313.102C197.18 299.203 234.02 289.102 271.63 283.203C282.26 281.398 300.03 279 310.81 279.203Z"/><path class="wk wR1" fill="#373741" d="M515.52 281.398C527.58 280.703 539.53 280.297 551.62 280.5C566.67 280.898 659.1 286.703 664.23 291.5C665.49 292.602 666.11 294.297 666.15 296C666.2 297.797 665.79 299.203 664.46 300.398C660.95 303.602 655.08 303.203 650.71 302.797C641.83 302 620.21 299.703 618.35 299.703Q544.11 290.898 511.5 290.898C508.25 290.102 506.12 289.602 505.06 286.203C506.36 281.5 511.58 281.602 515.52 281.398Z"/><path class="wk wR2" fill="#373741" d="M503.68 302.5C512.5 302.102 542.85 312.602 552.98 315.602C580.28 323.898 607.86 331.297 635.3 339.102C641.93 341 650.92 345.703 642.87 353.102C628.66 355.898 525.45 320.297 506.75 312.602C504.08 311.5 502.51 310.703 501.46 307.898C501.25 305.703 502.45 304.398 503.68 302.5Z"/><path class="wk wL2" fill="#373741" d="M311.47 303.5C315.99 303.5 319.16 299.102 323.87 300.797C329.67 306.297 323.75 309 319.21 311C311.67 315.203 302.18 319 294.26 323.102C281.64 329.602 268.76 336.5 256.6 343.898C247.25 349.5 237.47 356.898 228.37 363C223.07 366.898 218.3 370.602 212.6 373.797C206.22 377.398 200.32 369.5 203.29 364.297C206.82 358.203 215.76 354.203 221.68 350.102C248.74 331.5 280.26 314.203 311.47 303.5Z"/></g></svg></div><div class="obbub" data-type="뭐라고 부를까?"></div></div>
+        <div class="oblab">닉네임</div>
+        <input class="obinp" id="obNick" placeholder="2~12자, 한글·영문·숫자" maxlength="12" autocomplete="nickname">
+        <div class="obsp"></div>
+        <button class="obcta" id="obB1" disabled>계속하기</button>
+      </section>
+
+      <!-- 2 시험 날짜 -->
+      <section class="obs" id="ob2">
+        <div class="obask"><div class="obav"><svg viewBox="120 40 570 475" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><linearGradient id="obChinG2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="0.5" stop-color="#F8F8FD"/><stop offset="1" stop-color="#DFE1F2"/></linearGradient></defs><path fill="url(#obChinG2)" stroke="#E2E4EF" stroke-width="3" d="M172 215 C 158 262, 157 305, 164 343 C 178 433, 276 482, 396 482 C 516 482, 614 433, 628 343 C 635 305, 634 262, 620 215 Q 396 110, 172 215 Z"/><g class="face"><path fill="#686A7C" d="M247.19 102.297C249.28 101.297 250.93 100 252.8 98.6016C261.6 92.1016 270.28 86.2031 280.08 81.2031C337.9 51 405.06 44.2031 467.75 62.1016C488.06 68.1016 505.83 76 523.92 86.8984C530.04 90.6016 540.52 98.8984 545.65 101.602C550.73 93 559.15 84.3984 569.08 81.7969C577.8 79.5 587.04 80.7969 594.82 85.2969C603.79 90.6016 611.49 100.398 613.95 110.5C616.12 119.797 614.53 129.398 609.53 137.5C605.32 144.102 599.72 148.898 592.7 152.297C594.58 157.898 601.73 165.398 604.15 170.703C609.81 183.102 622.71 208.5 623.27 221.703C621.14 224.602 613.63 229.102 610.49 231.102C582.12 248.5 550.82 260.703 518.11 267C519.44 271.102 519.99 273.398 520.82 277.398C521.53 280.797 524.08 292.797 518.57 305.703C516.77 308.297 512.15 315.898 510.49 317.297C504.15 322.703 494.86 327.5 486.72 328.898C471.75 331.297 456.44 327.703 444.12 318.898C439.45 315.5 435.31 311.5 431.83 307C429.56 308.703 426.9 311 424.67 312.898C424.76 322.398 429.83 376.703 411.44 362.5C407.24 359.297 409.25 322.898 409.26 315C401.87 311.297 396.1 306 390.15 300.398C375.81 325.5 350.26 336.602 322.97 324.102C319.69 322.102 316.31 318.602 314.86 316.797C312.03 313.398 311.94 313.398 309.5 307.102C308.87 305 308.01 297.703 307.99 297.703C307.59 286 309.2 278.602 313.11 267.898C269.82 264.398 224.24 257.203 186.01 236.398C181.07 233.703 171.29 229.102 167.47 225.5C167.87 221.797 170.24 215.5 171.49 211.797C178.57 190.602 187.49 171 200.51 152.703C198.02 151.602 196.88 151.203 194.74 149.5C188 145.898 182.36 140.602 178.79 133.797C174.44 125.602 173.59 116 176.45 107.102C186.72 75.2031 230.79 68.8984 247.19 102.297Z"/><path fill="#4A4C5C" d="M194.72 149.602C187.98 146 182.34 140.703 178.77 133.898C174.42 125.703 173.57 116.102 176.43 107.203C186.7 75.2969 230.77 69 247.17 102.398C237.63 109.102 220.92 128.297 212.57 137.102C210.64 139.102 208.92 142 206.93 144.102L200.49 152.797C198 151.703 196.86 151.297 194.72 149.602Z"/><path fill="#4A4C5C" d="M545.63 101.703C550.71 93.1016 559.13 84.5 569.06 81.8984C577.78 79.6016 587.02 80.8984 594.8 85.3984C603.77 90.7031 611.47 100.5 613.93 110.602C616.1 119.898 614.51 129.5 609.51 137.602C605.3 144.203 599.7 149 592.68 152.398C588.63 148 585.1 141.5 581.27 137.203C570.17 124.602 558.14 112.797 545.63 101.703Z"/><path fill="#373741" d="M390.13 300.5C385.19 295.703 379.66 291.602 387.17 285.297C390.32 282.703 394.91 283.398 397.94 285.797C404.08 290.703 409.43 296.898 415.01 302.398C421.11 295.102 431.57 277.5 442.34 285.398C443.35 286.203 443.98 287.398 444.07 288.602C444.63 295.602 435.77 302.203 431.81 307.102C429.54 308.797 426.88 311.102 424.65 313C424.74 322.5 429.81 376.797 411.42 362.602C407.22 359.398 409.23 323 409.24 315.102C401.85 311.398 396.08 306.102 390.13 300.5Z"/><path fill="#373741" d="M334.23 218.203C345.56 216.602 353.25 219.5 362.21 227.797C367.78 230.602 377.71 254.398 364.3 252.297C352.76 250.398 357.32 234.102 339.81 231.602C320.47 233.398 326.83 250.398 315.6 258.898C302.03 255.203 307.55 243 312.68 233.898C317.05 226.102 325.48 220.203 334.23 218.203Z"/><path fill="#373741" d="M488.83 217.203C525.74 216.703 532.77 270.102 509.36 253.297C508.2 244.297 505.75 238.398 498.58 232.797C475.89 224.797 475.5 254.898 463.48 252.297C461.4 250.703 461.17 250.102 459.95 247.797C459.33 242.898 462.12 237.203 464.62 233.102C470.87 223.203 478.07 219.797 488.83 217.203Z"/><path class="wk wL1" fill="#373741" d="M310.81 279.203C314.78 278.602 321.65 278.5 321.58 284C321.18 284.703 320.33 286.297 319.81 286.703C315.95 287.602 312.96 288.297 309.01 288.703L309.2 289C271.92 295 235.15 303.797 199.21 315.398C183.95 320.398 166.83 327.297 152.21 334.102C141.78 339 133.72 335.5 138.88 324.203C140.19 321.297 158.24 314.398 161.74 313.102C197.18 299.203 234.02 289.102 271.63 283.203C282.26 281.398 300.03 279 310.81 279.203Z"/><path class="wk wR1" fill="#373741" d="M515.52 281.398C527.58 280.703 539.53 280.297 551.62 280.5C566.67 280.898 659.1 286.703 664.23 291.5C665.49 292.602 666.11 294.297 666.15 296C666.2 297.797 665.79 299.203 664.46 300.398C660.95 303.602 655.08 303.203 650.71 302.797C641.83 302 620.21 299.703 618.35 299.703Q544.11 290.898 511.5 290.898C508.25 290.102 506.12 289.602 505.06 286.203C506.36 281.5 511.58 281.602 515.52 281.398Z"/><path class="wk wR2" fill="#373741" d="M503.68 302.5C512.5 302.102 542.85 312.602 552.98 315.602C580.28 323.898 607.86 331.297 635.3 339.102C641.93 341 650.92 345.703 642.87 353.102C628.66 355.898 525.45 320.297 506.75 312.602C504.08 311.5 502.51 310.703 501.46 307.898C501.25 305.703 502.45 304.398 503.68 302.5Z"/><path class="wk wL2" fill="#373741" d="M311.47 303.5C315.99 303.5 319.16 299.102 323.87 300.797C329.67 306.297 323.75 309 319.21 311C311.67 315.203 302.18 319 294.26 323.102C281.64 329.602 268.76 336.5 256.6 343.898C247.25 349.5 237.47 356.898 228.37 363C223.07 366.898 218.3 370.602 212.6 373.797C206.22 377.398 200.32 369.5 203.29 364.297C206.82 358.203 215.76 354.203 221.68 350.102C248.74 331.5 280.26 314.203 311.47 303.5Z"/></g></svg></div><div class="obbub" data-type="시험이 언제야? 아직이면 대략이라도"></div></div>
+        <div class="obopts">
+          <button class="obopt" id="obDate">날짜 등록<small>달력에서 목표 날짜를 고르면 D-day가 잡혀</small></button>
+        </div>
+        <div class="obme" id="obDateMe" style="display:none"><div class="obmbub" id="obDateMeT"></div></div>
+        <div class="obsp"></div>
+        <button class="obcta" id="obB2" data-obnext disabled>계속하기</button>
+      </section>
+
+      <!-- 3 하루 공부 시간 -->
+      <section class="obs" id="ob3">
+        <div class="obask"><div class="obav"><svg viewBox="120 40 570 475" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><linearGradient id="obChinG3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="0.5" stop-color="#F8F8FD"/><stop offset="1" stop-color="#DFE1F2"/></linearGradient></defs><path fill="url(#obChinG3)" stroke="#E2E4EF" stroke-width="3" d="M172 215 C 158 262, 157 305, 164 343 C 178 433, 276 482, 396 482 C 516 482, 614 433, 628 343 C 635 305, 634 262, 620 215 Q 396 110, 172 215 Z"/><g class="face"><path fill="#686A7C" d="M247.19 102.297C249.28 101.297 250.93 100 252.8 98.6016C261.6 92.1016 270.28 86.2031 280.08 81.2031C337.9 51 405.06 44.2031 467.75 62.1016C488.06 68.1016 505.83 76 523.92 86.8984C530.04 90.6016 540.52 98.8984 545.65 101.602C550.73 93 559.15 84.3984 569.08 81.7969C577.8 79.5 587.04 80.7969 594.82 85.2969C603.79 90.6016 611.49 100.398 613.95 110.5C616.12 119.797 614.53 129.398 609.53 137.5C605.32 144.102 599.72 148.898 592.7 152.297C594.58 157.898 601.73 165.398 604.15 170.703C609.81 183.102 622.71 208.5 623.27 221.703C621.14 224.602 613.63 229.102 610.49 231.102C582.12 248.5 550.82 260.703 518.11 267C519.44 271.102 519.99 273.398 520.82 277.398C521.53 280.797 524.08 292.797 518.57 305.703C516.77 308.297 512.15 315.898 510.49 317.297C504.15 322.703 494.86 327.5 486.72 328.898C471.75 331.297 456.44 327.703 444.12 318.898C439.45 315.5 435.31 311.5 431.83 307C429.56 308.703 426.9 311 424.67 312.898C424.76 322.398 429.83 376.703 411.44 362.5C407.24 359.297 409.25 322.898 409.26 315C401.87 311.297 396.1 306 390.15 300.398C375.81 325.5 350.26 336.602 322.97 324.102C319.69 322.102 316.31 318.602 314.86 316.797C312.03 313.398 311.94 313.398 309.5 307.102C308.87 305 308.01 297.703 307.99 297.703C307.59 286 309.2 278.602 313.11 267.898C269.82 264.398 224.24 257.203 186.01 236.398C181.07 233.703 171.29 229.102 167.47 225.5C167.87 221.797 170.24 215.5 171.49 211.797C178.57 190.602 187.49 171 200.51 152.703C198.02 151.602 196.88 151.203 194.74 149.5C188 145.898 182.36 140.602 178.79 133.797C174.44 125.602 173.59 116 176.45 107.102C186.72 75.2031 230.79 68.8984 247.19 102.297Z"/><path fill="#4A4C5C" d="M194.72 149.602C187.98 146 182.34 140.703 178.77 133.898C174.42 125.703 173.57 116.102 176.43 107.203C186.7 75.2969 230.77 69 247.17 102.398C237.63 109.102 220.92 128.297 212.57 137.102C210.64 139.102 208.92 142 206.93 144.102L200.49 152.797C198 151.703 196.86 151.297 194.72 149.602Z"/><path fill="#4A4C5C" d="M545.63 101.703C550.71 93.1016 559.13 84.5 569.06 81.8984C577.78 79.6016 587.02 80.8984 594.8 85.3984C603.77 90.7031 611.47 100.5 613.93 110.602C616.1 119.898 614.51 129.5 609.51 137.602C605.3 144.203 599.7 149 592.68 152.398C588.63 148 585.1 141.5 581.27 137.203C570.17 124.602 558.14 112.797 545.63 101.703Z"/><path fill="#373741" d="M390.13 300.5C385.19 295.703 379.66 291.602 387.17 285.297C390.32 282.703 394.91 283.398 397.94 285.797C404.08 290.703 409.43 296.898 415.01 302.398C421.11 295.102 431.57 277.5 442.34 285.398C443.35 286.203 443.98 287.398 444.07 288.602C444.63 295.602 435.77 302.203 431.81 307.102C429.54 308.797 426.88 311.102 424.65 313C424.74 322.5 429.81 376.797 411.42 362.602C407.22 359.398 409.23 323 409.24 315.102C401.85 311.398 396.08 306.102 390.13 300.5Z"/><path fill="#373741" d="M334.23 218.203C345.56 216.602 353.25 219.5 362.21 227.797C367.78 230.602 377.71 254.398 364.3 252.297C352.76 250.398 357.32 234.102 339.81 231.602C320.47 233.398 326.83 250.398 315.6 258.898C302.03 255.203 307.55 243 312.68 233.898C317.05 226.102 325.48 220.203 334.23 218.203Z"/><path fill="#373741" d="M488.83 217.203C525.74 216.703 532.77 270.102 509.36 253.297C508.2 244.297 505.75 238.398 498.58 232.797C475.89 224.797 475.5 254.898 463.48 252.297C461.4 250.703 461.17 250.102 459.95 247.797C459.33 242.898 462.12 237.203 464.62 233.102C470.87 223.203 478.07 219.797 488.83 217.203Z"/><path class="wk wL1" fill="#373741" d="M310.81 279.203C314.78 278.602 321.65 278.5 321.58 284C321.18 284.703 320.33 286.297 319.81 286.703C315.95 287.602 312.96 288.297 309.01 288.703L309.2 289C271.92 295 235.15 303.797 199.21 315.398C183.95 320.398 166.83 327.297 152.21 334.102C141.78 339 133.72 335.5 138.88 324.203C140.19 321.297 158.24 314.398 161.74 313.102C197.18 299.203 234.02 289.102 271.63 283.203C282.26 281.398 300.03 279 310.81 279.203Z"/><path class="wk wR1" fill="#373741" d="M515.52 281.398C527.58 280.703 539.53 280.297 551.62 280.5C566.67 280.898 659.1 286.703 664.23 291.5C665.49 292.602 666.11 294.297 666.15 296C666.2 297.797 665.79 299.203 664.46 300.398C660.95 303.602 655.08 303.203 650.71 302.797C641.83 302 620.21 299.703 618.35 299.703Q544.11 290.898 511.5 290.898C508.25 290.102 506.12 289.602 505.06 286.203C506.36 281.5 511.58 281.602 515.52 281.398Z"/><path class="wk wR2" fill="#373741" d="M503.68 302.5C512.5 302.102 542.85 312.602 552.98 315.602C580.28 323.898 607.86 331.297 635.3 339.102C641.93 341 650.92 345.703 642.87 353.102C628.66 355.898 525.45 320.297 506.75 312.602C504.08 311.5 502.51 310.703 501.46 307.898C501.25 305.703 502.45 304.398 503.68 302.5Z"/><path class="wk wL2" fill="#373741" d="M311.47 303.5C315.99 303.5 319.16 299.102 323.87 300.797C329.67 306.297 323.75 309 319.21 311C311.67 315.203 302.18 319 294.26 323.102C281.64 329.602 268.76 336.5 256.6 343.898C247.25 349.5 237.47 356.898 228.37 363C223.07 366.898 218.3 370.602 212.6 373.797C206.22 377.398 200.32 369.5 203.29 364.297C206.82 358.203 215.76 354.203 221.68 350.102C248.74 331.5 280.26 314.203 311.47 303.5Z"/></g></svg></div><div class="obbub" data-type="하루에 얼마나 할 수 있어?"></div></div>
+        <div class="obask cont" id="obAsk3b" style="visibility:hidden"><div class="obbub" data-type="잠시만 아까 그 창 다시 가져올게! 아랫쪽에 자습목표가 있거든 거기에서 드래그해주면 돼." data-delay="1000"></div></div>
+        <div class="obopts" id="obOpts3" style="visibility:hidden">
+          <button class="obopt" id="obHour">시간 등록<small>아래 «하루 자습 목표» 슬라이더를 드래그</small></button>
+        </div>
+        <div class="obme" id="obHourMe" style="display:none"><div class="obmbub" id="obHourMeT"></div></div>
+        <div class="obsp"></div>
+        <button class="obcta" id="obB3" data-obnext disabled>계속하기</button>
+      </section>
+
+      <!-- 4 마무리 → 기존 온보딩으로 -->
+      <section class="obs" id="ob4">
+        <div class="obask"><div class="obav"><svg viewBox="120 40 570 475" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><linearGradient id="obChinG4" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="0.5" stop-color="#F8F8FD"/><stop offset="1" stop-color="#DFE1F2"/></linearGradient></defs><path fill="url(#obChinG4)" stroke="#E2E4EF" stroke-width="3" d="M172 215 C 158 262, 157 305, 164 343 C 178 433, 276 482, 396 482 C 516 482, 614 433, 628 343 C 635 305, 634 262, 620 215 Q 396 110, 172 215 Z"/><g class="face"><path fill="#686A7C" d="M247.19 102.297C249.28 101.297 250.93 100 252.8 98.6016C261.6 92.1016 270.28 86.2031 280.08 81.2031C337.9 51 405.06 44.2031 467.75 62.1016C488.06 68.1016 505.83 76 523.92 86.8984C530.04 90.6016 540.52 98.8984 545.65 101.602C550.73 93 559.15 84.3984 569.08 81.7969C577.8 79.5 587.04 80.7969 594.82 85.2969C603.79 90.6016 611.49 100.398 613.95 110.5C616.12 119.797 614.53 129.398 609.53 137.5C605.32 144.102 599.72 148.898 592.7 152.297C594.58 157.898 601.73 165.398 604.15 170.703C609.81 183.102 622.71 208.5 623.27 221.703C621.14 224.602 613.63 229.102 610.49 231.102C582.12 248.5 550.82 260.703 518.11 267C519.44 271.102 519.99 273.398 520.82 277.398C521.53 280.797 524.08 292.797 518.57 305.703C516.77 308.297 512.15 315.898 510.49 317.297C504.15 322.703 494.86 327.5 486.72 328.898C471.75 331.297 456.44 327.703 444.12 318.898C439.45 315.5 435.31 311.5 431.83 307C429.56 308.703 426.9 311 424.67 312.898C424.76 322.398 429.83 376.703 411.44 362.5C407.24 359.297 409.25 322.898 409.26 315C401.87 311.297 396.1 306 390.15 300.398C375.81 325.5 350.26 336.602 322.97 324.102C319.69 322.102 316.31 318.602 314.86 316.797C312.03 313.398 311.94 313.398 309.5 307.102C308.87 305 308.01 297.703 307.99 297.703C307.59 286 309.2 278.602 313.11 267.898C269.82 264.398 224.24 257.203 186.01 236.398C181.07 233.703 171.29 229.102 167.47 225.5C167.87 221.797 170.24 215.5 171.49 211.797C178.57 190.602 187.49 171 200.51 152.703C198.02 151.602 196.88 151.203 194.74 149.5C188 145.898 182.36 140.602 178.79 133.797C174.44 125.602 173.59 116 176.45 107.102C186.72 75.2031 230.79 68.8984 247.19 102.297Z"/><path fill="#4A4C5C" d="M194.72 149.602C187.98 146 182.34 140.703 178.77 133.898C174.42 125.703 173.57 116.102 176.43 107.203C186.7 75.2969 230.77 69 247.17 102.398C237.63 109.102 220.92 128.297 212.57 137.102C210.64 139.102 208.92 142 206.93 144.102L200.49 152.797C198 151.703 196.86 151.297 194.72 149.602Z"/><path fill="#4A4C5C" d="M545.63 101.703C550.71 93.1016 559.13 84.5 569.06 81.8984C577.78 79.6016 587.02 80.8984 594.8 85.3984C603.77 90.7031 611.47 100.5 613.93 110.602C616.1 119.898 614.51 129.5 609.51 137.602C605.3 144.203 599.7 149 592.68 152.398C588.63 148 585.1 141.5 581.27 137.203C570.17 124.602 558.14 112.797 545.63 101.703Z"/><path fill="#373741" d="M390.13 300.5C385.19 295.703 379.66 291.602 387.17 285.297C390.32 282.703 394.91 283.398 397.94 285.797C404.08 290.703 409.43 296.898 415.01 302.398C421.11 295.102 431.57 277.5 442.34 285.398C443.35 286.203 443.98 287.398 444.07 288.602C444.63 295.602 435.77 302.203 431.81 307.102C429.54 308.797 426.88 311.102 424.65 313C424.74 322.5 429.81 376.797 411.42 362.602C407.22 359.398 409.23 323 409.24 315.102C401.85 311.398 396.08 306.102 390.13 300.5Z"/><path fill="#373741" d="M334.23 218.203C345.56 216.602 353.25 219.5 362.21 227.797C367.78 230.602 377.71 254.398 364.3 252.297C352.76 250.398 357.32 234.102 339.81 231.602C320.47 233.398 326.83 250.398 315.6 258.898C302.03 255.203 307.55 243 312.68 233.898C317.05 226.102 325.48 220.203 334.23 218.203Z"/><path fill="#373741" d="M488.83 217.203C525.74 216.703 532.77 270.102 509.36 253.297C508.2 244.297 505.75 238.398 498.58 232.797C475.89 224.797 475.5 254.898 463.48 252.297C461.4 250.703 461.17 250.102 459.95 247.797C459.33 242.898 462.12 237.203 464.62 233.102C470.87 223.203 478.07 219.797 488.83 217.203Z"/><path class="wk wL1" fill="#373741" d="M310.81 279.203C314.78 278.602 321.65 278.5 321.58 284C321.18 284.703 320.33 286.297 319.81 286.703C315.95 287.602 312.96 288.297 309.01 288.703L309.2 289C271.92 295 235.15 303.797 199.21 315.398C183.95 320.398 166.83 327.297 152.21 334.102C141.78 339 133.72 335.5 138.88 324.203C140.19 321.297 158.24 314.398 161.74 313.102C197.18 299.203 234.02 289.102 271.63 283.203C282.26 281.398 300.03 279 310.81 279.203Z"/><path class="wk wR1" fill="#373741" d="M515.52 281.398C527.58 280.703 539.53 280.297 551.62 280.5C566.67 280.898 659.1 286.703 664.23 291.5C665.49 292.602 666.11 294.297 666.15 296C666.2 297.797 665.79 299.203 664.46 300.398C660.95 303.602 655.08 303.203 650.71 302.797C641.83 302 620.21 299.703 618.35 299.703Q544.11 290.898 511.5 290.898C508.25 290.102 506.12 289.602 505.06 286.203C506.36 281.5 511.58 281.602 515.52 281.398Z"/><path class="wk wR2" fill="#373741" d="M503.68 302.5C512.5 302.102 542.85 312.602 552.98 315.602C580.28 323.898 607.86 331.297 635.3 339.102C641.93 341 650.92 345.703 642.87 353.102C628.66 355.898 525.45 320.297 506.75 312.602C504.08 311.5 502.51 310.703 501.46 307.898C501.25 305.703 502.45 304.398 503.68 302.5Z"/><path class="wk wL2" fill="#373741" d="M311.47 303.5C315.99 303.5 319.16 299.102 323.87 300.797C329.67 306.297 323.75 309 319.21 311C311.67 315.203 302.18 319 294.26 323.102C281.64 329.602 268.76 336.5 256.6 343.898C247.25 349.5 237.47 356.898 228.37 363C223.07 366.898 218.3 370.602 212.6 373.797C206.22 377.398 200.32 369.5 203.29 364.297C206.82 358.203 215.76 354.203 221.68 350.102C248.74 331.5 280.26 314.203 311.47 303.5Z"/></g></svg></div><div class="obbub" data-type="좋아, 이 정도면 공부 계획 짤 준비 끝! 이제 오캔스픽이 어떻게 생겼는지 한 바퀴 돌면서 하나씩 써보자."></div></div>
+        <div class="obme" id="obYes" style="visibility:hidden"><button class="obmbub yes" id="obB4"><span class="t"></span><small id="obB4s" style="visibility:hidden">(오캔스픽 둘러보기)</small></button></div>
+        <div class="obsp"></div>
+      </section>
+    </div>
+  </section>
+  <!-- 웃는 오달이(팝업용 템플릿): 73_quest 온보딩 완료 팝업 -->
+  <template id="odSmileTpl"><div class="obav odsmile"><svg viewBox="120 40 570 475" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><linearGradient id="obChinG5" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="0.5" stop-color="#F8F8FD"/><stop offset="1" stop-color="#DFE1F2"/></linearGradient></defs><path fill="url(#obChinG5)" stroke="#E2E4EF" stroke-width="3" d="M172 215 C 158 262, 157 305, 164 343 C 178 433, 276 482, 396 482 C 516 482, 614 433, 628 343 C 635 305, 634 262, 620 215 Q 396 110, 172 215 Z"/><g class="face"><path fill="#686A7C" d="M247.19 102.297C249.28 101.297 250.93 100 252.8 98.6016C261.6 92.1016 270.28 86.2031 280.08 81.2031C337.9 51 405.06 44.2031 467.75 62.1016C488.06 68.1016 505.83 76 523.92 86.8984C530.04 90.6016 540.52 98.8984 545.65 101.602C550.73 93 559.15 84.3984 569.08 81.7969C577.8 79.5 587.04 80.7969 594.82 85.2969C603.79 90.6016 611.49 100.398 613.95 110.5C616.12 119.797 614.53 129.398 609.53 137.5C605.32 144.102 599.72 148.898 592.7 152.297C594.58 157.898 601.73 165.398 604.15 170.703C609.81 183.102 622.71 208.5 623.27 221.703C621.14 224.602 613.63 229.102 610.49 231.102C582.12 248.5 550.82 260.703 518.11 267C519.44 271.102 519.99 273.398 520.82 277.398C521.53 280.797 524.08 292.797 518.57 305.703C516.77 308.297 512.15 315.898 510.49 317.297C504.15 322.703 494.86 327.5 486.72 328.898C471.75 331.297 456.44 327.703 444.12 318.898C439.45 315.5 435.31 311.5 431.83 307C429.56 308.703 426.9 311 424.67 312.898C424.76 322.398 429.83 376.703 411.44 362.5C407.24 359.297 409.25 322.898 409.26 315C401.87 311.297 396.1 306 390.15 300.398C375.81 325.5 350.26 336.602 322.97 324.102C319.69 322.102 316.31 318.602 314.86 316.797C312.03 313.398 311.94 313.398 309.5 307.102C308.87 305 308.01 297.703 307.99 297.703C307.59 286 309.2 278.602 313.11 267.898C269.82 264.398 224.24 257.203 186.01 236.398C181.07 233.703 171.29 229.102 167.47 225.5C167.87 221.797 170.24 215.5 171.49 211.797C178.57 190.602 187.49 171 200.51 152.703C198.02 151.602 196.88 151.203 194.74 149.5C188 145.898 182.36 140.602 178.79 133.797C174.44 125.602 173.59 116 176.45 107.102C186.72 75.2031 230.79 68.8984 247.19 102.297Z"/><path fill="#4A4C5C" d="M194.72 149.602C187.98 146 182.34 140.703 178.77 133.898C174.42 125.703 173.57 116.102 176.43 107.203C186.7 75.2969 230.77 69 247.17 102.398C237.63 109.102 220.92 128.297 212.57 137.102C210.64 139.102 208.92 142 206.93 144.102L200.49 152.797C198 151.703 196.86 151.297 194.72 149.602Z"/><path fill="#4A4C5C" d="M545.63 101.703C550.71 93.1016 559.13 84.5 569.06 81.8984C577.78 79.6016 587.02 80.8984 594.8 85.3984C603.77 90.7031 611.47 100.5 613.93 110.602C616.1 119.898 614.51 129.5 609.51 137.602C605.3 144.203 599.7 149 592.68 152.398C588.63 148 585.1 141.5 581.27 137.203C570.17 124.602 558.14 112.797 545.63 101.703Z"/><path fill="#373741" d="M390.13 300.5C385.19 295.703 379.66 291.602 387.17 285.297C390.32 282.703 394.91 283.398 397.94 285.797C404.08 290.703 409.43 296.898 415.01 302.398C421.11 295.102 431.57 277.5 442.34 285.398C443.35 286.203 443.98 287.398 444.07 288.602C444.63 295.602 435.77 302.203 431.81 307.102C429.54 308.797 426.88 311.102 424.65 313C424.74 322.5 429.81 376.797 411.42 362.602C407.22 359.398 409.23 323 409.24 315.102C401.85 311.398 396.08 306.102 390.13 300.5Z"/><path fill="#373741" d="M334.23 218.203C345.56 216.602 353.25 219.5 362.21 227.797C367.78 230.602 377.71 254.398 364.3 252.297C352.76 250.398 357.32 234.102 339.81 231.602C320.47 233.398 326.83 250.398 315.6 258.898C302.03 255.203 307.55 243 312.68 233.898C317.05 226.102 325.48 220.203 334.23 218.203Z"/><path fill="#373741" d="M488.83 217.203C525.74 216.703 532.77 270.102 509.36 253.297C508.2 244.297 505.75 238.398 498.58 232.797C475.89 224.797 475.5 254.898 463.48 252.297C461.4 250.703 461.17 250.102 459.95 247.797C459.33 242.898 462.12 237.203 464.62 233.102C470.87 223.203 478.07 219.797 488.83 217.203Z"/><path class="wk wL1" fill="#373741" d="M310.81 279.203C314.78 278.602 321.65 278.5 321.58 284C321.18 284.703 320.33 286.297 319.81 286.703C315.95 287.602 312.96 288.297 309.01 288.703L309.2 289C271.92 295 235.15 303.797 199.21 315.398C183.95 320.398 166.83 327.297 152.21 334.102C141.78 339 133.72 335.5 138.88 324.203C140.19 321.297 158.24 314.398 161.74 313.102C197.18 299.203 234.02 289.102 271.63 283.203C282.26 281.398 300.03 279 310.81 279.203Z"/><path class="wk wR1" fill="#373741" d="M515.52 281.398C527.58 280.703 539.53 280.297 551.62 280.5C566.67 280.898 659.1 286.703 664.23 291.5C665.49 292.602 666.11 294.297 666.15 296C666.2 297.797 665.79 299.203 664.46 300.398C660.95 303.602 655.08 303.203 650.71 302.797C641.83 302 620.21 299.703 618.35 299.703Q544.11 290.898 511.5 290.898C508.25 290.102 506.12 289.602 505.06 286.203C506.36 281.5 511.58 281.602 515.52 281.398Z"/><path class="wk wR2" fill="#373741" d="M503.68 302.5C512.5 302.102 542.85 312.602 552.98 315.602C580.28 323.898 607.86 331.297 635.3 339.102C641.93 341 650.92 345.703 642.87 353.102C628.66 355.898 525.45 320.297 506.75 312.602C504.08 311.5 502.51 310.703 501.46 307.898C501.25 305.703 502.45 304.398 503.68 302.5Z"/><path class="wk wL2" fill="#373741" d="M311.47 303.5C315.99 303.5 319.16 299.102 323.87 300.797C329.67 306.297 323.75 309 319.21 311C311.67 315.203 302.18 319 294.26 323.102C281.64 329.602 268.76 336.5 256.6 343.898C247.25 349.5 237.47 356.898 228.37 363C223.07 366.898 218.3 370.602 212.6 373.797C206.22 377.398 200.32 369.5 203.29 364.297C206.82 358.203 215.76 354.203 221.68 350.102C248.74 331.5 280.26 314.203 311.47 303.5Z"/></g></svg></div></template>
+  <!-- ===== /상담실 온보딩 ===== -->
 
   <section id="sc-title" class="screen on">
     <button class="setgear" id="btn-settings" title="설정" aria-label="설정"><svg class="gearic" viewBox="107.6 116.4 1040 1040" aria-hidden="true"><path fill="#8A80CF" d="M571.656 136.775C574.057 136.473 580.13 136.436 582.715 136.422L641.258 136.583C675.824 136.673 706.395 132.393 733.641 159.733C756.353 182.523 756.182 206.591 756.166 235.93L756.183 274.983C770.095 280.236 790.841 290.119 803.889 297.376C814.994 286.597 826 275.717 836.907 264.738C857.297 244.555 874.51 234.269 904.139 234.529C943.624 234.875 959.961 255.28 985.292 280.501C998.101 293.161 1010.82 305.909 1023.46 318.744C1045.51 341.389 1053.99 368.977 1046.8 400.163C1041.45 423.398 1027.45 437.06 1011.17 453.23C1001.7 462.661 992.124 471.989 982.449 481.213C987.568 491.066 992.959 504.587 996.717 514.932L1038.77 515.06C1068.08 515.168 1093.01 515.437 1115.44 538.391C1141.9 565.46 1139.54 590.671 1139.48 624.499L1139.51 676.377C1139.43 710.288 1127.6 736.755 1097.49 754.315C1077.97 765.697 1059.33 764.609 1037.72 764.557L996.662 764.431C992.655 775.345 987.772 787.531 982.572 797.889C1010.62 829.641 1049.85 850.393 1049.18 898.862C1048.69 934.59 1035.15 948.889 1011.77 972.823C1001.23 983.578 990.6 994.251 979.891 1004.84C956.053 1028.41 938.91 1045.31 902.426 1045.1C868.611 1044.91 851.931 1030.23 830.02 1007.79L803.093 980.253C787.847 988.312 772.124 995.435 756.011 1001.58C755.95 1014.33 755.968 1027.08 756.064 1039.83C756.178 1065.84 756.617 1085 740.08 1107.27C726.253 1125.89 706.655 1135.51 684.095 1138.69L683.347 1138.73C667.891 1139.58 643.472 1139.05 627.723 1139.04C610.425 1139.03 575.06 1140.37 559.833 1136.9C546.734 1133.84 534.609 1127.56 524.564 1118.61C510.164 1105.79 500.999 1088.11 498.826 1068.96C497.984 1061.18 498.393 1052.64 498.357 1044.77C498.293 1030.71 498.735 1016.39 498.001 1002.36C481.923 994.219 468.064 989.936 450.668 980.107C420.115 1009.88 396.807 1046.06 349.288 1045.12C312.122 1044.38 296.938 1027.73 272.549 1003.47L240.347 971.545C218.509 949.646 204.465 931.699 204.885 898.593C205.322 864.233 220.506 848.411 242.766 826.375L271.523 797.881C267.582 790.929 259.809 771.947 257.255 764.38L215.185 764.443C184.731 764.472 162.499 764.65 138.694 740.99C113.256 715.707 114.659 688.179 114.73 655.699L114.679 609.093C114.67 601.023 114.592 593.049 115.65 585.211C119.944 553.397 142.073 527.008 173.164 518.332C187.794 514.25 201.753 514.964 216.688 515.007L257.309 515.003C262.012 503.022 266.018 493.191 271.468 481.482C262.764 473.471 253.755 463.627 245.335 456.107C216.255 430.137 197.702 400.606 207.237 360.206C213.151 335.147 227.088 322.868 244.318 305.228C255.065 294.251 265.899 283.36 276.818 272.555C299.751 249.768 315.65 234.496 351.108 234.56C384.834 234.621 400.642 248.271 422.787 270.36L450.257 297.845C465.839 289.233 481.936 281.586 498.456 274.949L498.439 234.456C498.429 207.806 497.721 189.051 515.614 166.482C529.425 149.061 549.821 139.228 571.656 136.775ZM677.339 1084.97C701.11 1079.75 701.607 1062.44 701.47 1042.8L701.174 1005.36C701.121 997.145 700.519 983.804 702.448 976.314C703.754 971.06 706.577 966.305 710.564 962.643C717.133 956.632 726.288 954.863 734.269 951.502C747.921 945.755 765.886 938.752 778.232 931.032C812.793 909.42 819.253 917.983 844.357 943.669L871.303 970.959C876.634 976.359 883.186 983.622 889.783 987.16C895.167 990.059 901.373 991.054 907.394 989.982C911.949 989.172 916.254 987.315 919.97 984.558C924.352 981.367 929.221 976.114 933.112 972.19C945.422 959.779 957.95 947.585 970.19 935.111C976.398 928.785 984.552 922.369 989.436 914.96C993.524 908.87 995.002 901.395 993.538 894.208C991.079 882.392 979.103 872.624 970.683 864.421L944.258 838.811C938.082 832.919 929.909 825.673 925.78 818.237C922.957 813.136 921.719 807.309 922.224 801.501C923.276 788.945 940.793 761.417 944.553 746.704C953.874 710.228 966.117 710.686 998.542 710.828L1039.72 711.039C1047.35 711.079 1055.54 711.732 1062.96 709.636C1069.74 707.719 1075.47 703.706 1079.38 697.806C1081.67 694.341 1083.36 690.285 1084 686.171C1085.29 677.857 1085.18 597.223 1083.57 590.415C1081.79 582.907 1077.14 576.714 1070.54 572.746C1066.97 570.605 1063.02 569.343 1058.92 568.731C1050.98 567.545 1042.4 568.169 1034.38 568.2L991.633 568.389C984.722 568.412 977.115 569.053 970.376 567.388C964.966 566.051 959.693 562.819 956.019 558.635C949.856 551.616 943.277 527.945 939.092 517.925C934.309 506.473 926.694 495.017 923.396 483.162C921.218 475.331 922.221 467.98 926.266 460.913C929.998 454.394 935.984 449.277 941.294 444.055C952.184 433.344 986.116 402.754 991.41 391.338C994.317 385.068 994.709 378.251 993.014 371.587C991.97 367.484 990.173 364.232 987.558 360.929C978.551 349.549 966.525 339.224 956.214 328.942C947.463 320.215 926.803 297.585 917.891 292.219C911.272 288.163 903.278 287.001 895.779 289.005C880.85 293.033 854.137 327.454 840.726 338.32C834.47 343.389 828.877 352.287 820.432 355.432C812.928 358.873 801.46 358.736 794.525 354.054C778.681 343.354 761.997 335.674 744.463 327.989C727.832 320.7 705.648 319.091 702.177 297.13C700.927 280.292 701.329 260.573 701.634 243.819C702.145 215.661 704.642 187.669 666.184 189.593C638.057 191 604.59 187.396 576.754 190.006C568.402 191.921 561.611 195.443 556.971 203.065C555.061 206.256 553.808 209.797 553.285 213.48C552.38 219.456 552.769 231.14 552.804 237.567L553.056 278.011C553.099 284.363 553.533 293.036 552.069 299.002C550.699 304.616 547.664 309.685 543.363 313.545C537.012 319.201 525.184 322.152 516.881 325.495C510.657 328.049 504.505 330.777 498.433 333.675C491.639 336.834 484.946 340.205 478.363 343.782C471.485 347.582 463.138 353.243 456.036 356.072C435.802 364.134 422.226 347.012 409.312 334.22L381.447 306.694C376.265 301.58 369.767 294.636 363.398 291.274C357.639 288.227 350.982 287.33 344.622 288.744C340.793 289.598 335.736 291.983 332.893 294.575C320.088 306.252 306.734 320.135 294.627 332.518C287.73 339.572 268.742 357.346 264.448 364.282C260.278 371.059 258.976 379.218 260.831 386.956C263.489 397.912 274.351 406.795 282.197 414.498C291.388 423.564 300.64 432.569 309.95 441.513C315.832 447.125 323.714 453.883 327.746 460.782C330.683 465.777 332.048 471.541 331.664 477.323C330.96 488.012 319.18 508.691 314.791 518.889C300.042 553.167 306.977 569.452 262.555 568.488C249.32 568.201 198.821 566.777 189.015 570.108C182.707 572.258 177.344 576.535 173.843 582.205C172.122 584.953 169.877 589.864 169.715 593.156C168.456 618.83 169.574 644.733 169.33 670.458C169.275 676.256 169.173 682.664 170.393 688.318C177.16 713.85 199.272 711.072 219.245 710.986L261.477 710.806C273.886 710.763 286.346 709.42 296.193 718.596C299.035 721.271 301.33 724.473 302.949 728.024C304.207 730.806 305.885 736.64 306.966 739.814C309.094 746.075 311.437 752.26 313.989 758.36C318.714 769.71 326.989 783.841 330.299 794.956C332.734 803.136 331.893 811.485 327.583 818.913C323.865 825.318 317.95 830.318 312.713 835.448C301.926 846.016 267.637 876.896 262.514 887.515C259.695 893.36 259.215 899.998 260.676 906.286C261.554 910.062 262.779 912.841 265.154 915.88C274.125 927.359 286.198 937.597 296.521 947.902C305.263 956.631 328.203 981.707 337.589 987.08C343.886 990.685 351.064 991.35 358.003 989.324C361.498 988.304 364.704 986.631 367.631 984.476C374.137 979.684 379.809 973.307 385.518 967.605C394.951 958.232 404.306 948.781 413.582 939.253C419.805 932.864 427.466 923.762 435.766 920.603C450.66 914.936 462.218 923.76 474.335 930.841C483.59 936.25 494.041 940.56 503.661 945.284C512.715 949.71 532.936 955.188 540.187 959.991C545.628 963.661 549.607 969.126 551.428 975.432C557.839 997.293 547.998 1043.32 554.558 1066.32C562.859 1095.43 610.894 1082.17 632.997 1085.24C644.269 1086.38 666.302 1085.62 677.339 1084.97Z"/><path fill="#8A80CF" d="M611.378 423.932C729.467 415.418 832.082 504.285 840.526 622.379C848.969 740.473 760.04 843.034 641.941 851.407C523.943 859.772 421.487 770.935 413.051 652.942C404.615 534.948 493.39 432.44 611.378 423.932ZM635.826 793.381C722.615 788.428 788.972 714.083 784.071 627.292C779.171 540.5 704.867 474.098 618.072 478.946C531.203 483.798 464.732 558.18 469.637 645.046C474.542 731.912 548.963 798.338 635.826 793.381Z"/></svg><span>설정</span></button>
@@ -2146,13 +2285,10 @@ html:not([data-theme="light"]) .mynote .a4{background:#ECEEF2;border-color:#3a44
       </div>
       <div id="ckWarn"></div>
       <div class="row" style="margin-top:22px">
-        <button class="btn ghost sm" id="ckBack">이전</button>
+        <button class="btn ghost" id="ckBack">이전</button>
         <span class="right"></span>
         <button class="btn" id="ckNext">시험 시작</button>
       </div>
-    </div>
-    <div class="card">
-      <div class="note">실제 시험 규칙: 문제는 자동으로 재생되고, 재생이 끝나면 곧바로 녹음이 시작됩니다. 답변을 마치면 <b>다음</b>을 누르세요. 문제는 문항당 <b>한 번만</b> 다시 들을 수 있습니다.</div>
     </div>
   </section>
 
@@ -2608,6 +2744,7 @@ html:not([data-theme="light"]) .mynote .a4{background:#ECEEF2;border-color:#3a44
 <!-- ===== 시험 날짜 달력 ===== -->
 <div class="mask" id="ddMask">
   <div class="modal" style="max-width:440px">
+    <button class="mx" id="ddX" aria-label="닫기" style="display:none"></button>
     <div class="step">EXAM DATE</div>
     <div class="hd"><h2 id="ddTitle" style="font-size:19px">목표 날짜 정하기</h2></div>
     <p class="sub" style="margin-top:-12px">당장 시험을 치르지 않더라도 목표하는 D-DAY를 정해주세요. 마음이 명확해야 몸이 따라옵니다.</p>
@@ -2668,6 +2805,7 @@ html:not([data-theme="light"]) .mynote .a4{background:#ECEEF2;border-color:#3a44
       <div class="set">
         <label>온보딩</label>
         <div class="admlist">
+          <button class="btn ghost sm" id="admObConsult">▶ 상담실 온보딩 보기 <span class="sub">: 첫 로그인 직후의 오달이 상담 5화면 (끝나면 타이틀로)</span></button>
           <button class="btn ghost sm" id="admOb">▶ 온보딩 시작하기 <span class="sub">: 이 기기에서 첫날 온보딩을 처음부터 다시 봅니다</span></button>
           <button class="btn ghost sm" id="admDay2">▶ Day 2 온보딩 미리 보기</button>
           <button class="btn ghost sm" id="admDay3">▶ Day 3 안내 미리 보기</button>
@@ -2777,6 +2915,7 @@ html:not([data-theme="light"]) .mynote .a4{background:#ECEEF2;border-color:#3a44
     <!-- 계정 -->
     <div class="setpane" data-pane="acct" style="display:none">
       <div class="lic" id="setLicRow"><span class="sub" id="setLicInfo" style="margin:0"></span><button class="btn sm" id="setBuy">이용권 구매</button><button class="btn ghost sm" id="setLicRefresh">상태 새로고침</button></div>
+      <p class="sub" id="setLicPolicy" style="margin:-4px 0 12px;font-size:12.5px;line-height:1.7"></p>
       <div class="kv">
         <span>이름</span><b><span id="setNameVal"></span> <button class="btn ghost sm" id="setRename" style="padding:2px 9px;font-size:12px;margin-left:6px">바꾸기</button></b>
         <span>로그인 계정</span><b id="setAccInfo"></b>
@@ -3078,6 +3217,7 @@ window.CLOUD = {
   naver: false,       // 네이버 로그인 (출시 후 추가 예정: true 로 바꾸면 버튼이 살아난다)
   ttsBase: '',        // 고품질 음성 팩 위치 (비우면 <url>/storage/v1/object/public/tts/v1/)
   apple: true,        // Apple 로그인 (2026-10-15 Supabase Apple 공급자 설정 완료)
+  kakao: true,        // 카카오 로그인: Supabase Auth › Providers › Kakao 설정(REST API 키·Client Secret) 뒤 true
   maxDevices: 2,
   reviewEmails: ['happycat@vibivi.co.kr'],   // 앱 심사용 계정: 이 주소만 이메일 코드 대신 비밀번호로 로그인 (Supabase 에서 비밀번호 사용자로 직접 생성)
   playSku: 'plus_3m',              // 앱 안 기본 상품 = 오캔플러스 (Play Console 에 같은 ID · 160,000원). dyn_3m(233,700) · up_dyn(30,000) 은 AL·영숙어 페이지가 생기면 앱 안에서 노출
@@ -3492,7 +3632,7 @@ window.MWE=[{"p":"i'd like to","ko":"~하고 싶다 (정중)"},{"p":"would like 
     pop.addEventListener('mouseleave', function () { if (!pinned) hoverT = setTimeout(hide, 200); });
   }
 
-  var NO_DICT = '#sc-login, #sc-title, #sc-exam, #sc-name';
+  var NO_DICT = '#sc-login, #sc-title, #sc-exam, #sc-name, #sc-ob';
   function onMove(e) {
     if (pinned) return;
     clearTimeout(hoverT);
@@ -3512,7 +3652,7 @@ window.MWE=[{"p":"i'd like to","ko":"~하고 싶다 (정중)"},{"p":"would like 
     if (!info) { hide(); return; }
     /* 버튼·링크 클릭은 방해하지 않는다: 텍스트 위에서만 고정 */
     if (e.target.closest && e.target.closest('button, a, .lcard, .tile2, .expc, .lsopt, .todor, .lv, .seg, .chip')) return;
-    if (e.target.closest && e.target.closest('#sc-login, #sc-title, #sc-exam, #sc-name')) return;   // 로그인·타이틀·실전 모의고사에서는 단어 뜻 창을 띄우지 않는다
+    if (e.target.closest && e.target.closest('#sc-login, #sc-title, #sc-exam, #sc-name, #sc-ob')) return;   // 로그인·타이틀·실전 모의고사에서는 단어 뜻 창을 띄우지 않는다
     pinned = true; lastKey = info.sentence + '#' + info.idx; render(info);
   }
   function onTouch(e) {
@@ -3520,7 +3660,7 @@ window.MWE=[{"p":"i'd like to","ko":"~하고 싶다 (정중)"},{"p":"would like 
     var info = lookupAt(t.clientX, t.clientY);
     if (!info) { hide(); return; }
     if (e.target.closest && e.target.closest('button, a, .lcard, .tile2, .expc, .lsopt, .todor, .lv, .seg, .chip')) return;
-    if (e.target.closest && e.target.closest('#sc-login, #sc-title, #sc-exam, #sc-name')) return;   // 로그인·타이틀·실전 모의고사에서는 단어 뜻 창을 띄우지 않는다
+    if (e.target.closest && e.target.closest('#sc-login, #sc-title, #sc-exam, #sc-name, #sc-ob')) return;   // 로그인·타이틀·실전 모의고사에서는 단어 뜻 창을 띄우지 않는다
     pinned = true; render(info);
   }
 
@@ -8762,15 +8902,18 @@ window.koOf = function (en) {
   D.openPicker = function (opts) {
     opts = opts || {};
     var cur = parse(D.get()) || today0();
-    P = { y: cur.getFullYear(), m: cur.getMonth(), sel: D.get() ? ymd(cur) : null, onDone: opts.onDone, first: !!opts.first };
+    P = { y: cur.getFullYear(), m: cur.getMonth(), sel: D.get() ? ymd(cur) : null, onDone: opts.onDone, first: !!opts.first, ob: opts.ob || '' };
     var m = $('ddMask');
     m.classList.add('on');
-    $('ddSkip').style.display = P.first ? '' : 'none';
-    $('ddCancel').style.display = P.first ? 'none' : '';
-    $('ddClear').style.display = D.get() && !P.first ? '' : 'none';
+    /* 상담실 온보딩(ob)에서 열 때: 취소·나중에·지우기 없이 우상단 X 만 */
+    $('ddSkip').style.display = P.first && !P.ob ? '' : 'none';
+    $('ddCancel').style.display = P.first || P.ob ? 'none' : '';
+    $('ddClear').style.display = D.get() && !P.first && !P.ob ? '' : 'none';
+    var x = $('ddX'); if (x) x.style.display = P.ob ? '' : 'none';
     $('ddTitle').textContent = '목표 날짜 정하기';
     var g = $('ddGoal'); if (g) { var cur = +S.s().goalH; g.value = cur >= 5 && cur <= 13 ? cur : 5; paintGoal(); g.oninput = paintGoal; }
     drawCal();
+    if (P.ob === 'hour' && g) setTimeout(function () { g.scrollIntoView({ block: 'center', behavior: 'smooth' }); g.focus(); }, 60);
   };
   function paintGoal() {
     var g = $('ddGoal'), v = $('ddGoalV'); if (!g || !v) return;
@@ -8819,6 +8962,7 @@ window.koOf = function (en) {
     $('ddOk').onclick = function () { if (!P.sel) return; D.set(P.sel); var g = $('ddGoal'); if (g) { S.s().goalH = +g.value; S.save(); } closePicker(true); };
     $('ddSkip').onclick = function () { D.skipped = true; closePicker(false); };
     $('ddCancel').onclick = function () { closePicker(false); };
+    var dx = $('ddX'); if (dx) dx.onclick = function () { closePicker(false); };
     $('ddClear').onclick = function () { D.clear(); closePicker(false); };
     $('ddMask').addEventListener('click', function (e) { if (e.target === $('ddMask') && !(P && P.first)) closePicker(false); });
     var sb = $('setDday'); if (sb) sb.onclick = function () { $('mask').classList.remove('on'); D.openPicker({ onDone: function () { if (window.openSettings) window.openSettings('exam'); } }); };
@@ -8992,7 +9136,7 @@ window.koOf = function (en) {
   var S = window.store;
 
   function nav(id) {
-    ['sc-login', 'sc-name', 'sc-title', 'sc-survey', 'sc-level', 'sc-check', 'sc-exam', 'sc-result', 'sc-history', 'sc-guide', 'sc-learn', 'sc-consult', 'sc-trainset', 'sc-drill', 'sc-quiz', 'sc-exp', 'sc-explist', 'sc-custom', 'sc-listen', 'sc-wrong', 'sc-speed']
+    ['sc-login', 'sc-name', 'sc-ob', 'sc-title', 'sc-survey', 'sc-level', 'sc-check', 'sc-exam', 'sc-result', 'sc-history', 'sc-guide', 'sc-learn', 'sc-consult', 'sc-trainset', 'sc-drill', 'sc-quiz', 'sc-exp', 'sc-explist', 'sc-custom', 'sc-listen', 'sc-wrong', 'sc-speed']
       .forEach(function (x) { var el = $(x); if (el) el.classList.toggle('on', x === id); });
     window.scrollTo(0, 0);
     try { document.dispatchEvent(new CustomEvent('opic:nav', { detail: { id: id } })); } catch (e) {}
@@ -9277,6 +9421,7 @@ window.koOf = function (en) {
   document.addEventListener('opic:nav', function (e) {
     var id = e.detail && e.detail.id; if (!id) return;
     if (id === 'sc-survey') setTimeout(function () { window.tell('여기서 고른 항목에서 시험 문제가 나옵니다\n실제 오픽과 마찬가지로, 여기서 선택한 항목에서 시험 문제가 출제됩니다. 말할 거리가 많은 주제를 고르는 것도 전략입니다.'); }, 250);
+    if (id === 'sc-check') setTimeout(function () { window.tell('실제 시험 규칙\n문제는 자동으로 재생되고, 재생이 끝나면 곧바로 녹음이 시작됩니다. 답변을 마치면 다음을 누르세요. 문제는 문항당 한 번만 다시 들을 수 있습니다.', '닫기'); }, 250);
     if (id === 'sc-level') setTimeout(function () { window.tell('난이도는 4와 5만 선택할 수 있습니다\n목표 등급이 IH이므로 난이도 4와 5만 선택할 수 있습니다. 나머지 단계는 실제 시험 화면 재현을 위해 표시만 됩니다.'); }, 250);
   });
 
@@ -9597,7 +9742,7 @@ window.koOf = function (en) {
       + (sess.adjusted ? ' · 중간 조정 ' + sess.adjusted : '')
       + (sess.early ? ' · 중단됨' : '') + '</div>'
       + '<div class="bigscore" style="margin-top:10px">' + s.overall + '<span style="font-size:20px;color:var(--mut)">/100</span></div>'
-      + '<div class="lvpill ' + (s.level.l === 'IH' || s.level.l === 'AL' ? 'ih' : '') + '">추정 등급 ' + s.level.l + '</div>'
+      + '<div class="lvpill ' + (s.level.l === 'IH' || s.level.l === 'AL' ? 'ih' : '') + '">추정 등급 <span class="mono">' + s.level.l + '</span></div>'
       + '<div class="sub" style="margin-top:8px">' + s.level.ko + ' · 목표 IH까지 '
       + (s.overall >= 76 ? '<b style="color:var(--ac2)">도달</b>' : ('<b style="color:var(--warn)">' + (76 - s.overall) + '점</b>')) + '</div>'
       + '<div class="stats strip">'
@@ -9610,16 +9755,27 @@ window.koOf = function (en) {
 
     var bars = '<div class="card"><div class="hd"><h2>영역별 점수 <span class="qpop"><button class="qmark" type="button" id="resNoteBtn" aria-label="점수 안내">?</button><span class="qpop-box" id="resNoteBox">이 점수는 브라우저에서 측정한 발화 속도 · 쉼 · 어휘 · 과제 수행 지표를 오픽 채점 기준(유창성 우선, 암기 감점)에 맞춰 환산한 <b>추정치</b>입니다. 실제 ACTFL 등급과는 차이가 있을 수 있습니다.</span></span></h2><span class="sub">괄호는 종합 점수 반영 비중</span></div><div class="bars">';
     Object.keys(SUBLABEL).forEach(function (k) {
-      bars += '<div class="bar"><span class="t">' + SUBLABEL[k] + ' <span style="color:var(--dim);font-size:11px">' + SUBWEIGHT[k] + '%</span></span>'
-        + '<span class="g"><i style="width:' + s.sub[k] + '%;background:' + barColor(s.sub[k]) + '"></i></span>'
-        + '<span class="v">' + s.sub[k] + '</span></div>';
+      bars += '<div class="bar"><span class="t">' + SUBLABEL[k] + ' <span class="w">' + SUBWEIGHT[k] + '%</span></span>'
+        + '<span class="g"><i data-w="' + s.sub[k] + '" style="width:0;background:' + barColor(s.sub[k]) + '"></i></span>'
+        + '<span class="v">0</span></div>';
     });
     bars += '</div>';
-    bars += '<div class="note blue" style="margin-top:16px"><b>강점</b> ' + s.strongest.map(function (k) { return SUBLABEL[k]; }).join(' · ')
-      + ' &nbsp;|&nbsp; <b>우선 보완</b> ' + s.weakest.map(function (k) { return SUBLABEL[k]; }).join(' · ') + '</div>';
+    /* 아무 말도 안 해서 전부 0이면 강점·보완 문구는 비운다 */
+    bars += '<div class="note blue" style="margin-top:16px">' + (s.totalWords ? '<b>강점</b> ' + s.strongest.map(function (k) { return SUBLABEL[k]; }).join(' · ')
+      + ' &nbsp;|&nbsp; <b>우선 보완</b> ' + s.weakest.map(function (k) { return SUBLABEL[k]; }).join(' · ') : '&nbsp;') + '</div>';
     bars += '</div>';
 
     $('resTop').innerHTML = head + bars + (window.aiGradeCard ? window.aiGradeCard(sess) : '');
+    (function () {   /* 영역별 점수: 게이지가 차오르고 숫자가 올라간다 */
+      var rows = [].slice.call($('resTop').querySelectorAll('.bar'));
+      requestAnimationFrame(function () {
+        rows.forEach(function (r) {
+          var i = r.querySelector('.g i'), v = r.querySelector('.v'), to = +i.dataset.w || 0; i.style.width = to + '%';
+          var t0 = performance.now();
+          (function f(now) { var k = Math.min(1, (now - t0) / 700); v.textContent = Math.round(to * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(f); })(t0);
+        });
+      });
+    })();
     (function () {   /* 영역별 점수 ?: 작은 설명 상자. 바깥 아무 곳이나 누르면 닫힘 */
       var b = $('resNoteBtn'), box = $('resNoteBox'); if (!b || !box) return;
       var close = function () { box.classList.remove('on'); document.removeEventListener('pointerdown', onDoc, true); };
@@ -10637,7 +10793,7 @@ window.koOf = function (en) {
     { id: 'lib', t: '주제별 답안' },
     { id: 'myans', t: '나만의 답안' },
     { id: 'note', t: '내 노트' },
-    { id: 'plan', t: '4주 커리큘럼', admin: true }   // 설정 › 관리자에서만 연다
+    { id: 'plan', t: '나의 커리큘럼', admin: true }   // 설정 › 관리자에서만 연다 (14일 지도가 들어오면 공개)
   ];
   function tabsVisible() { return CTABS.filter(function (t) { return !t.hidden && (!t.admin || (window.isAdmin && window.isAdmin())); }); }
   function tabAllowed(id) { return CTABS.some(function (t) { return t.id === id && (!t.admin || (window.isAdmin && window.isAdmin())); }); }
@@ -10680,6 +10836,14 @@ window.koOf = function (en) {
     return diagTail(C, card('현재 위치', h, '<button class="btn ghost sm" data-go="rx">원인 · 처방 →</button>'));
   };
 
+  /* 상담 기록: 상담실 온보딩에서 받은 값(닉네임 · 시험 날짜 · 하루 자습 목표) */
+  function consultCard() {
+    var s = window.store.s(), D = window.dday, n = D && D.get() ? D.days() : null, g = +s.goalH; if (!(g >= 5 && g <= 13)) g = 5;
+    var dd = n == null ? '미설정' : esc(D.label()) + ' · ' + (n === 0 ? 'D-DAY' : n > 0 ? 'D-' + n : 'D+' + (-n));
+    return card('상담 기록', '<div class="kvs"><div><span>닉네임</span><b>' + esc(s.userName || '미설정') + '</b></div>'
+      + '<div><span>시험 날짜</span><b>' + dd + '</b></div>'
+      + '<div><span>하루 자습 목표</span><b>' + g + '시간</b></div></div>');
+  }
   function diagTail(C, posCard) {
     var t = C.train;
     var tot = t.touched || 1;
@@ -10807,6 +10971,7 @@ window.koOf = function (en) {
       + '<div><small>오늘 공부</small><strong>' + big + '</strong></div></div></header>';
     C.__questCard = '<div class="card gsec dq">' + dqHead + th + '</div>';
     return stH
+      + consultCard()
       + posCard
       + card('훈련 진도', sh)
       + card('배경 설문 진단', svh);
@@ -10966,26 +11131,10 @@ window.koOf = function (en) {
   CR.myans = function (C) { return window.myAnsTabHTML ? window.myAnsTabHTML(C) : ''; };
   CR.note = function () { return window.myNoteHTML ? window.myNoteHTML() : ''; };
 
-  CR.plan = function (C) {
-    var h = '<div class="wk">' + C.plan.map(function (p) {
-      return '<div class="wkr"><span class="w">' + p.w + '</span><span>'
-        + '<b>' + esc(p.t) + '</b><div class="goal">목표: ' + esc(p.goal) + '</div>'
-        + '<ul>' + p.daily.map(function (d) { return '<li>' + esc(d) + '</li>'; }).join('') + '</ul>'
-        + '<div class="done">✓ 다음 주로 넘어가는 기준: ' + esc(p.done) + '</div></span></div>';
-    }).join('') + '</div>';
-    var r = '<div class="steps" style="margin-top:4px">' + (window.G_ROUTINE || []).map(function (x, i) {
-      return '<div class="stepi"><span class="k">' + (i + 1) + '</span><span style="flex:1"><b>' + esc(x.t)
-        + '</b><p>' + esc(x.d) + '</p></span><span class="s">' + x.sec + '</span></div>';
-    }).join('') + '</div>';
-    return card('4주 커리큘럼', h, 'IM1에서 IH까지의 최단 경로')
-      + card('단계별 원리', r)
-      + card('왜 이 순서인가', '<ul class="tipl">'
-        + '<li>소재가 없으면 골격을 배워도 채울 게 없습니다. 그래서 1주차가 소재입니다.</li>'
-        + '<li>골격을 모르면 소재가 있어도 30초에서 끊깁니다. 그래서 2주차가 골격입니다.</li>'
-        + '<li>골격이 있어도 느리면 시간 안에 못 끝냅니다. 그래서 3주차가 속도입니다.</li>'
-        + '<li>속도가 나와도 15문항을 이어서 못 하면 실전에서 무너집니다. 그래서 4주차가 조립입니다.</li>'
-        + '<li>순서를 바꾸면 각 단계가 서로를 방해합니다. 특히 소재 없이 속도부터 하면 외운 문장만 빨라집니다.</li>'
-        + '</ul>');
+  /* 나의 커리큘럼: 4주 커리큘럼 내용은 지웠고, 상담(시험 날짜·하루 자습 목표)과 진단을 바탕으로 한 14일 지도가 들어올 자리 */
+  CR.plan = function () {
+    setTimeout(function () { window.tell('나의 커리큘럼\n상담에서 정한 시험 날짜와 하루 자습 목표, 첫 진단 결과를 바탕으로 14일 커리큘럼이 여기에 표시됩니다.', '닫기'); }, 0);
+    return card('나의 커리큘럼', '');
   };
 
   var WDK = ['일', '월', '화', '수', '목', '금', '토'];
@@ -13035,7 +13184,7 @@ window.koOf = function (en) {
 
   /* ================= 미끼 퀘스트 (온보딩) ================= */
   var BAIT = [
-    { id: 'dday', t: '학습 디데이 설정하기', p: '1년 동안 천천히 꾸준히? 우리는 그런 거 없습니다. 2주, 병행한다면 한 달이면 스피킹 다 끝낼 수 있습니다.' },
+    { id: 'note', t: '내 노트에 한 줄 적어 보기', p: '앱 안에 내 메모장이 있습니다. 오늘 목표든 외울 표현이든 한 줄만. 자동으로 저장되고 다른 기기에서도 이어집니다.' },
     { id: 'guide', t: '오캔스픽 IM3-IH 학습교재 정독하기', p: '5분. 이 앱이 왜 이 순서로 시키는지 알면 헤매지 않습니다.' },
     { id: 'exp3', t: '필수표현 3개 말해 보기', p: '맞아도 틀려도 됩니다. 말하기 → 채점 → 다음, 세 번이면 끝. 기능을 손에 익히는 게 목적입니다.' },
     { id: 'pre', t: '내 사전 질문 미리 작성하기', p: '실제 오픽 시험 첫 화면에서 고르는 배경 설문. 여기서 고른 항목이 내 문제 은행이 됩니다.' },
@@ -13046,10 +13195,11 @@ window.koOf = function (en) {
   function nextBait() { var d = load(); for (var i = 0; i < BAIT.length; i++) if (!d.done[BAIT[i].id]) return BAIT[i].id; return null; }
   function markDone(id) { var d = load(); if (d.done[id]) return; d.done[id] = Date.now(); save(d); }
 
+  function noteHas() { try { var n = JSON.parse(localStorage.getItem('opic_mynote_v1') || 'null'); return !!(n && (n.pages || []).some(function (t) { return String(t || '').trim(); })); } catch (e) { return false; } }
   /* 진행 중 외부 상태로 완료되는 것들을 확인 */
   function syncBait() {
     var d = load(), ch = false;
-    if (!d.done.dday && window.dday && window.dday.get()) { d.done.dday = Date.now(); ch = true; }
+    if (!d.done.note && noteHas()) { d.done.note = Date.now(); ch = true; }
     if (!d.done.exp3 && d.base.exp3 && (d.base.exp3.n || 0) >= 3) { d.done.exp3 = Date.now(); ch = true; }
     if (!d.done.exam7 && typeof d.base.sess === 'number') {
       if ((window.store.get().sessions || []).length > d.base.sess) { d.done.exam7 = Date.now(); ch = true; }
@@ -13260,7 +13410,7 @@ window.koOf = function (en) {
       var nx = nextBait();
       if (BAIT.some(function (b) { return b.id === g; }) && !d.done[g] && g !== nx) { toast('지금은 강조된 퀘스트부터: 위에서부터 순서대로 갑니다.'); return; }
     }
-    if (g === 'dday') { window.dday.openPicker({ onDone: function (ok) { if (ok) { markDone('dday'); } rerender(); } }); return; }
+    if (g === 'note') { window.renderConsult('note'); return; }
     if (g === 'guide') { markDone('guide'); window.renderGuide(); nav('sc-guide'); return; }
     if (g === 'exp3') {
       d.base.exp3 = { date: today(), n: 0 }; save(d); window.__quizExitOnNext = false;
@@ -13296,9 +13446,9 @@ window.koOf = function (en) {
 
   /* 7문항 전 설득 */
   function gateModal(go) {
-    modal('<h3 style="margin:0 0 8px">시작하기 전에, 한 가지만</h3>'
-      + '<p style="font-size:14.5px;line-height:1.7;margin:0 0 10px">갑작스런 시험에 부담된다면, 지금은 <b>정답을 맞추려고 하지 마세요.</b><br>무슨 문제가 나오는지, 어떻게 전개되는지를 실제 시험처럼 <b>체험</b>하는 게 목적입니다.</p>'
-      + '<p class="sub" style="line-height:1.7;margin:0">말을 하시면 정확한 진단을 드릴 수 있습니다. 하지만 이번 회차의 취지는 문제풀이가 아니라 <b>끝까지 한 바퀴 돌아보기</b>입니다. 막히면 «잘 모르겠어요»라고만 하고 넘어가도 됩니다. 7문항, 10분.</p>'
+    modal('<h3 style="margin:0 0 8px">7문항 축약 테스트를 시작합니다.</h3>'
+      + '<p style="font-size:14.5px;line-height:1.7;margin:0 0 10px">갑작스러운 시험이 부담되겠지만 끝까지 문제라도 들어본다는 생각으로 끝까지 임해주시길 바랍니다. 진심으로 해주셔야 오달이가 제대로 케어해드릴 수 있어요!</p>'
+      + '<p class="sub" style="line-height:1.7;margin:0">해당 모의고사는 메인 화면에서 다시 응시할 수 있습니다. (오달이는 마지막 점수를 전달받습니다)</p>'
       + '<div class="dctl" style="margin-top:18px"><button class="btn" id="qsGo">체험 시작, 끝까지 가 볼게요</button></div>');
     $('qsGo').onclick = function () { closeModal(); go(); };
   }
@@ -13416,7 +13566,8 @@ window.koOf = function (en) {
     try { document.dispatchEvent(new CustomEvent('opic:obdone')); } catch (e) {}
     confetti();
     var lvl = (function () { var ss = window.store.get().sessions || []; var s = ss[ss.length - 1]; return s && s.summary && s.summary.overall != null ? window.toLevel(s.summary.overall).l : null; })();
-    modal('<div style="text-align:center;padding:6px 0"><div style="font-size:42px">🏁</div><h3 style="font-size:22px;margin:6px 0">위대한 첫 걸음</h3>'
+    var face = $('odSmileTpl') ? $('odSmileTpl').innerHTML : '';
+    modal('<div style="text-align:center;padding:6px 0">' + face + '<h3 style="font-size:22px;margin:6px 0">위대한 첫 걸음</h3>'
       + '<p style="color:var(--mut);margin:0;line-height:1.7">문제가 어려웠다고요? 무조건 할 수 있습니다 걱정하지 마세요.<br>그럴 줄 알고 오캔스픽이 다 준비했습니다.</p>'
       + (lvl ? '<p style="margin:12px 0 0">첫 진단: <b style="color:var(--warn)">' + esc(lvl) + ' 추정</b></p>' : '')
       + '<p style="margin:12px 0 0;color:var(--tx)">이제부터가 진짜입니다. <b>' + (window.dday.days() != null ? 'D-' + window.dday.days() : 'D-14') + '</b> 기준 Day 1 퀘스트를 드립니다.</p></div>'
@@ -13466,20 +13617,23 @@ window.koOf = function (en) {
     var any = Object.keys(d.done).length > 0;
     if (sc === 'sc-title') return { target: '#btn-learn', pos: 'above', k: k,
       body: any ? '<p>이어서 갑니다. <b>학습 모드 → 전략 개인 맞춤 컨설팅</b>에 다음 퀘스트가 기다리고 있습니다.</p>'
-        : '<p>' + esc(nmC()) + '오캔스픽에 과몰입할 준비가 되셨나요?</p><p>먼저 <b>전략 개인 맞춤 컨설팅</b>에서 오늘 할 일을 받습니다. 매일 여기서 시작하게 될 겁니다.</p>', hint: '학습 모드를 누르세요' };
+        : '<p>' + esc(nmC()) + '여기가 홈 화면입니다. 앞으로 매일 여기서 시작하게 됩니다.</p><p>먼저 <b>전략 개인 맞춤 컨설팅</b>에서 오늘 할 일을 받습니다.</p>', hint: '학습 모드를 누르세요' };
     if (sc === 'sc-learn') return { target: '#lc-consult', pos: 'above', k: k,
-      body: any ? '<p>컨설팅으로 돌아가면 다음 퀘스트가 열립니다.</p>' : '<p>여기가 사령부입니다. 진단 → 오늘의 퀘스트 → 로드맵이 전부 이 안에 있습니다.</p>', hint: '01 전략 개인 맞춤 컨설팅을 누르세요' };
+      body: any ? '<p>컨설팅으로 돌아가면 다음 퀘스트가 열립니다.</p>' : '<p>여기서 내 전체 커리큘럼이랑 오늘 공부 얼만큼 했는지, 내 실력이 어떤지 알 수 있어.</p>', hint: '01 전략 개인 맞춤 컨설팅을 누르세요' };
     if (sc === 'sc-consult') {
       if (!nx) return null;
       var COPY = {
-        dday: { body: '<p><b>첫 번째 퀘스트.</b> 1년 동안 천천히 꾸준히? 우리는 그런 거 없습니다.</p><p>' + esc(nmP()) + '단 <b>2주</b>, 일과 병행한다면 <b>한 달</b>이면 스피킹 다 끝낼 수 있습니다. 시험일부터 정합니다.</p>', hint: '바로 가기를 누르세요' },
-        guide: { body: '<p>디데이가 잡혔습니다. 이제 앱 전체가 그 날짜에 맞춰 퀘스트를 자릅니다.</p><p><b>두 번째.</b> 5분만 읽고 오세요. 왜 이 순서인지 알면 안 헤맵니다.</p>', hint: '바로 가기를 누르세요' },
+        note: { body: '<p><b>첫 번째 퀘스트.</b> 가볍게 시작합니다. 앱 안에 ' + (userName() ? esc(userName()) + '님 ' : '내 ') + '전용 메모장이 있습니다.</p><p>오늘 목표든 외울 표현이든 <b>한 줄</b>만 적어 보세요.</p>', hint: '바로 가기를 누르세요' },
+        guide: { body: '<p>첫 줄 적었습니다. 노트는 앞으로도 이렇게 자유롭게 씁니다.</p><p><b>두 번째.</b> 5분만 읽고 오세요. 왜 이 순서인지 알면 안 헤맵니다.</p>', hint: '바로 가기를 누르세요' },
         exp3: { body: '<p>오캔스픽은 뇌과학 및 학습을 주제로 한 여러 논문을 기반으로 설계되어 있습니다.</p><p>뭘 해야 할지 헤매지 마시고 <b>오늘의 퀘스트를 쭉 수행</b>하시면 결국 됩니다. 이제 기능을 하나씩 써 봅니다.</p>', hint: '필수표현 3개 말해 보기: 바로 가기' },
         pre: { body: '<p>채점이 어떻게 되는지 보셨죠. 이번엔 실제 시험 첫 화면과 같은 <b>배경 설문</b>입니다. 일단, 실제 시험보듯이 고르세요.</p>', hint: '사전 질문: 바로 가기' },
         intro: { body: '<p>15문항 중 1번은 언제나 자기소개입니다. 내 이야기를 한국어로 적으면 <b>프롬프트</b>를 만들어 드립니다. 쓰시는 AI에 붙여 넣고, 결과를 가져와 저장하면 한 문제는 확정입니다.</p>', hint: '자기소개 정답 만들기: 바로 가기' },
-        exam7: { body: '<p>마지막 온보딩 퀘스트입니다. 이걸 눌러야 진단이 «추측»에서 «측정»이 됩니다.</p><p>7문항, 10분. 지금 바로 눌러 주세요.</p>', hint: '7문항 축약 모의고사: 바로 가기' }
+        exam7: { body: '<p>마지막 퀘스트입니다. 이걸 눌러야 오달이가 여러분에게 맞춰 케어할 수 있습니다.</p><p>7문항, 10분. 지금 바로 눌러 주세요.</p>', hint: '7문항 축약 모의고사: 바로 가기' }
       };
       var cp = COPY[nx];
+      /* 1/6 내 노트 탭 안: 적기 전엔 종이, 적은 뒤엔 «오늘의 퀘스트» 탭으로 */
+      if (nx === 'note' && $('nText')) return { target: '.mynote .a4', pos: 'below', k: k, body: '<p>여기가 내 노트입니다. 종이를 누르고 <b>한 줄</b>만 적으세요.</p>', hint: '적으면 자동 저장' };
+      if (nx === 'guide' && $('nText') && d.done.note) return { target: '#cTabs button[data-t="quest"]', pos: 'below', k: k, body: '<p>첫 줄 적었습니다. 이제 <b>오늘의 퀘스트</b> 탭으로 돌아갑니다.</p>', hint: '오늘의 퀘스트를 누르세요' };
       /* 4/6 사전 질문을 마친 직후, 5/6 로 넘어가기 전 한 번 더 */
       if (nx === 'intro' && !d.preNote) {
         var k4 = 'ONBOARDING 4 / ' + BAIT.length;
@@ -13628,6 +13782,119 @@ window.koOf = function (en) {
   refreshSoon();
 })();
 
+/* ===== 73b_obconsult.js ===== */
+/* ===== 상담실 온보딩: 첫 로그인 직후, 이름 화면(sc-name) 대신 =====
+   인사(손흔들오달) → 닉네임 → 시험 날짜(목표 날짜 창) → 하루 자습 목표(같은 창) → «그래 그러자!» → 타이틀(기존 첫날 온보딩).
+   마크업은 80_body.html #sc-ob, 모양은 00_head.html 끝. 저장은 전부 기존 자리: 이름 auth.setName · 날짜 dday · 시간 store goalH */
+(function () {
+  'use strict';
+  var $ = function (id) { return document.getElementById(id); };
+  var S = window.store;
+  var N = 4, step = 0, typeT = [], naming = false;
+  var WDF = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
+
+  function screens() { return [].slice.call(document.querySelectorAll('#sc-ob .obs')); }
+  /* 타이핑: 전체 문장을 투명하게 먼저 깔아 말풍선 크기를 고정하고, 그 위에 한 글자씩 */
+  function typeInto(el, text, done) {
+    el.innerHTML = '<span class="ghost"></span><span class="typed"></span>'; el.firstChild.textContent = text;
+    var t = el.lastChild, k = 0;
+    (function tick() { if (k <= text.length) { t.textContent = text.slice(0, k); k++; typeT.push(setTimeout(tick, 18)); } else if (done) done(); })();
+  }
+  /* 화면의 오달이 말풍선을 위에서부터 차례로, 끝나면 (뒤로 왔다가 다시 온 경우) 내 말풍선 */
+  function typeScreen(sec) {
+    typeT.forEach(clearTimeout); typeT = [];
+    var bs = [].slice.call(sec.querySelectorAll('[data-type]'));
+    bs.forEach(function (b) { b.innerHTML = '<span class="ghost">' + b.dataset.type + '</span>'; });
+    var me = sec.querySelector('.obme[data-text]'); if (me) me.style.display = 'none';
+    (function next(n) {
+      var b = bs[n];
+      if (!b) { if (sec.id === 'ob3') $('obOpts3').style.visibility = ''; if (me) { me.style.display = ''; typeInto(me.firstElementChild, me.dataset.text); } return; }
+      var go = function () { if (b.parentNode.id === 'obAsk3b') b.parentNode.style.visibility = ''; typeInto(b, b.dataset.type, function () { next(n + 1); }); };
+      var d = +b.dataset.delay || 0; if (d) typeT.push(setTimeout(go, d)); else go();
+    })(0);
+  }
+  function show(i) {
+    step = i;
+    screens().forEach(function (s, k) { s.classList.toggle('on', k === i); });
+    if (i === 3) { $('obAsk3b').style.visibility = 'hidden'; $('obOpts3').style.visibility = 'hidden'; }
+    typeScreen(screens()[i]);
+    $('obTop').style.visibility = i === 0 ? 'hidden' : 'visible';
+    $('obBar').style.clipPath = 'inset(0 ' + (i === 0 ? 100 : 100 - i / N * 100) + '% 0 0 round 999px)';
+    if (i === 1) setTimeout(function () { $('obNick').focus(); }, 50);
+    if (i === 4) {
+      var b = $('obB4'); b.classList.remove('wob'); $('obB4s').style.visibility = 'hidden'; $('obYes').style.visibility = 'hidden';
+      typeT.push(setTimeout(function () { $('obYes').style.visibility = ''; typeInto(b.querySelector('.t'), '그래 그러자!', function () { $('obB4s').style.visibility = ''; void b.offsetWidth; b.classList.add('wob'); }); }, 1900));
+    }
+    window.scrollTo(0, 0);
+  }
+
+  /* 1 닉네임: 이름 화면과 같은 검사·확인창·저장 (74_auth commitName) */
+  function nickGo() {
+    var A = window.auth, v = $('obNick').value.trim();
+    if (!A || !A.nameOk(v) || naming) return;
+    var b = $('obB1');
+    A.commitName(v, function (on) { naming = on; b.disabled = on; b.textContent = on ? '확인 중…' : '계속하기'; }).then(function (ok) {
+      if (!ok) { $('obNick').focus(); return; }
+      show(2);
+    });
+  }
+  /* 2·3 목표 날짜 창 → 내 말풍선 */
+  function dateText() {
+    var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(window.dday.get() || ''); if (!m) return '';
+    var d = new Date(+m[1], +m[2] - 1, +m[3]), n = window.dday.days();
+    return m[1] + '년 ' + (+m[2]) + '월 ' + (+m[3]) + '일 ' + WDF[d.getDay()] + '이 내 시험 날짜야! ' + (n === 0 ? '바로 오늘이야.' : '지금 ' + n + '일 남았어.');
+  }
+  function sayMe(btn, wrap, txt, text, next) {
+    btn.classList.add('on'); wrap.style.display = ''; wrap.dataset.text = text;
+    typeInto(txt, text, function () { next.disabled = false; });
+  }
+  function openDate() {
+    window.dday.openPicker({ ob: 'date', onDone: function (done) { if (!done) return; sayMe($('obDate'), $('obDateMe'), $('obDateMeT'), dateText(), $('obB2')); } });
+  }
+  function openHour() {
+    window.dday.openPicker({ ob: 'hour', onDone: function (done) { if (!done) return; var h = +S.s().goalH || 5; sayMe($('obHour'), $('obHourMe'), $('obHourMeT'), '하루에 ' + h + '시간은 할 수 있어!', $('obB3')); } });
+  }
+  /* 4 → 타이틀: 여기서부터 기존 첫날 온보딩(타이틀 스포트라이트)이 이어받는다 */
+  function finish() {
+    document.documentElement.classList.remove('ob-on');
+    window.refreshTitleBar && window.refreshTitleBar();
+    window.navScreen('sc-title');
+  }
+
+  function start() {
+    document.documentElement.classList.add('ob-on');
+    var A = window.auth, nm = A ? A.name() : '';
+    $('obNick').value = nm; $('obB1').disabled = !(A && A.nameOk(nm));
+    ['obDate', 'obHour'].forEach(function (id) { $(id).classList.remove('on'); });
+    ['obDateMe', 'obHourMe'].forEach(function (id) { var w = $(id); w.style.display = 'none'; delete w.dataset.text; });
+    $('obB2').disabled = true; $('obB3').disabled = true;
+    show(0);
+    var o = document.querySelector('#sc-ob .obodal'); if (o) requestAnimationFrame(function () { o.classList.add('wave'); });
+  }
+
+  function wire() {
+    if (!$('sc-ob') || $('sc-ob').__w) return; $('sc-ob').__w = 1;
+    document.querySelectorAll('#sc-ob [data-obnext]').forEach(function (b) { b.onclick = function () { show(Math.min(N, step + 1)); }; });
+    $('obX').onclick = function () { if (step > 0) show(step - 1); };
+    $('obNick').oninput = function () { $('obB1').disabled = !(window.auth && window.auth.nameOk(this.value)); };
+    $('obNick').onkeydown = function (e) { if (e.key === 'Enter') nickGo(); };
+    $('obB1').onclick = nickGo;
+    $('obDate').onclick = openDate;
+    $('obHour').onclick = openHour;
+    $('obB4').onclick = finish;
+  }
+  document.addEventListener('DOMContentLoaded', wire);
+  if (document.readyState !== 'loading') wire();
+  document.addEventListener('opic:nav', function (e) {
+    var id = e.detail && e.detail.id; if (!id) return;
+    if (id === 'sc-ob') { wire(); start(); }
+    else { document.documentElement.classList.remove('ob-on'); typeT.forEach(clearTimeout); typeT = []; }
+  });
+
+  /* 기기 뒤로 가기(79d_back): 한 화면 뒤로 갔으면 true, 첫 화면이면 false */
+  window.obConsult = { back: function () { if (step > 0) { show(step - 1); return true; } return false; }, step: function () { return step; } };
+})();
+
 /* ===== 74_auth.js ===== */
 /* ===== 계정 · 이름 · 인사 =====
    지금은 로컬 계정(이메일 + 이름)만 실제로 동작한다. 네이버·구글·애플은 서버(백엔드)가 붙으면
@@ -13656,7 +13923,7 @@ window.koOf = function (en) {
     if (!u) { box.style.display = 'none'; return; }
     box.style.display = '';
     box.innerHTML = '<span>이전에 <b>' + esc(u.email || u.name || '이 계정') + '</b>으로 로그인했습니다.</span><button class="btn sm" id="lgResumeGo">이어서 시작 →</button>';
-    $('lgResumeGo').onclick = function () { setAutoLogin(autoBox()); box.style.display = 'none'; if (A.needsName()) nav('sc-name'); else { window.refreshTitleBar && window.refreshTitleBar(); nav('sc-title'); } };
+    $('lgResumeGo').onclick = function () { setAutoLogin(autoBox()); box.style.display = 'none'; if (A.needsName()) nav('sc-ob'); else { window.refreshTitleBar && window.refreshTitleBar(); nav('sc-title'); } };
   }
   A.paintResume = paintResume;
   A.name = function () { var s = S.s(); return (s && s.userName) || ''; };
@@ -13672,7 +13939,7 @@ window.koOf = function (en) {
     /* 자동 로그인을 끈 상태에서 세션만 복원된 경우: 로그인 화면에 머물고 «이어서 시작»만 보여 준다 */
     if (silent && !autoLogin() && $('sc-login').classList.contains('on')) { paintResume(u); return; }
     if (!silent) setAutoLogin(autoBox());
-    if (A.needsName()) { if (onLogin || !silent) { nav('sc-name'); setTimeout(function () { var i = $('nmInput'); if (i) i.focus(); }, 50); } }
+    if (A.needsName()) { if (onLogin || !silent) nav('sc-ob'); }
     else if (onLogin || !had) { window.refreshTitleBar && window.refreshTitleBar(); nav('sc-title'); }
   };
   A.cloudSignedOut = function () { if (load()) { save(null); } if (!$('sc-login').classList.contains('on')) nav('sc-login'); };
@@ -13685,7 +13952,7 @@ window.koOf = function (en) {
     save({ id: u.id, provider: u.provider, email: u.email || '', at: Date.now() });
     setAutoLogin(autoBox());
     if (u.name && !A.name()) A.setName(u.name);
-    if (A.needsName()) { nav('sc-name'); setTimeout(function () { var i = $('nmInput'); if (i) i.focus(); }, 50); }
+    if (A.needsName()) nav('sc-ob');
     else { window.refreshTitleBar && window.refreshTitleBar(); nav('sc-title'); }
   }
 
@@ -13696,7 +13963,7 @@ window.koOf = function (en) {
       if (p === 'email') { showEmailUi(); return; }
       var fn = window.AUTH_PROVIDERS[p];
       if (!fn) {
-        var nm = { naver: '네이버', google: 'Google', apple: 'Apple' }[p];
+        var nm = { naver: '네이버', google: 'Google', apple: 'Apple', kakao: '카카오' }[p];
         if (window.cloud && window.cloud.enabled) { window.toast ? window.toast(nm + ' 로그인은 곧 준비될 예정입니다. 지금은 Google 또는 이메일로 시작하세요.') : window.tell(nm + ' 로그인은 곧 준비될 예정입니다.'); return; }
         window.tell(nm + ' 로그인은 정식 출시와 함께 열립니다.\n지금은 «이메일로 가입 또는 로그인»으로 시작하세요: 진도는 이 PC에 저장되고, 나중에 계정에 그대로 이어집니다.');
         return;
@@ -13784,21 +14051,30 @@ window.koOf = function (en) {
     if (window.toast) window.toast(first ? v + '님, 반갑습니다. 오늘의 퀘스트부터 시작해 볼까요?' : '이름을 바꿨습니다.');
   }
   var naming = false;
+  /* 이름 확정 (이름 화면 · 상담실 온보딩 공용): 검사 → 확인창 → 저장. busy(true/false) 로 버튼 상태를 알려 주고, 결과는 true/false */
+  A.nameOk = nameOk;
+  A.commitName = function (v, busy) {
+    var G = window.goalsNick;
+    if (!G) { A.setName(v); return Promise.resolve(true); }
+    var err = G.check(v); if (err) { window.tell('이 이름은 쓸 수 없어요\n' + err); return Promise.resolve(false); }
+    if (G.current() && G.current().toLowerCase() === v.toLowerCase()) { A.setName(v); return Promise.resolve(true); }
+    var lk = G.lockUntil(); if (lk) { window.tell('이름은 ' + G.fmtD(lk) + '부터 바꿀 수 있어요\n다른 사람에게 보이는 이름이라 한 번 정하면 2주 동안 바꿀 수 없어요.'); return Promise.resolve(false); }
+    return window.ask(G.ask, '이 이름으로 할게요', '다시 고를게요').then(function (ok) {
+      if (!ok) return false;
+      if (busy) busy(true);
+      return G.save(v).then(function (r) {
+        if (busy) busy(false);
+        if (!r.ok) { window.tell('이 이름은 쓸 수 없어요\n' + r.msg); return false; }
+        A.setName(v); return true;
+      });
+    });
+  };
   function nameGo() {
     var v = $('nmInput').value.trim(); if (!nameOk(v) || naming) return;
-    var G = window.goalsNick, first = !A.name();
-    if (!G) { nameDone(v, first); return; }
-    var err = G.check(v); if (err) { window.tell('이 이름은 쓸 수 없어요\n' + err); return; }
-    if (G.current() && G.current().toLowerCase() === v.toLowerCase()) { nameDone(v, first); return; }
-    var lk = G.lockUntil(); if (lk) { window.tell('이름은 ' + G.fmtD(lk) + '부터 바꿀 수 있어요\n다른 사람에게 보이는 이름이라 한 번 정하면 2주 동안 바꿀 수 없어요.'); return; }
-    window.ask(G.ask, '이 이름으로 할게요', '다시 고를게요').then(function (ok) {
+    var first = !A.name();
+    A.commitName(v, function (b) { naming = b; $('nmGo').disabled = b; $('nmGo').textContent = b ? '확인 중…' : '시작하기'; }).then(function (ok) {
       if (!ok) { $('nmInput').focus(); return; }
-      naming = true; $('nmGo').disabled = true; $('nmGo').textContent = '확인 중…';
-      G.save(v).then(function (r) {
-        naming = false; $('nmGo').disabled = false; $('nmGo').textContent = '시작하기';
-        if (!r.ok) { window.tell('이 이름은 쓸 수 없어요\n' + r.msg); return; }
-        nameDone(v, first);
-      });
+      nameDone(v, first);
     });
   }
   $('nmGo').onclick = nameGo;
@@ -13874,7 +14150,7 @@ window.koOf = function (en) {
   if (!auto) {
     if (A.needsLogin()) nav('sc-login');
     else if (!autoLogin()) { nav('sc-login'); if (!(window.CLOUD && window.CLOUD.url)) paintResume(load()); }   // 자동 로그인 꺼짐 → 항상 로그인 화면부터
-    else if (A.needsName()) nav('sc-name');
+    else if (A.needsName()) nav('sc-ob');
   }
 })();
 
@@ -14172,6 +14448,7 @@ window.koOf = function (en) {
     });
   }
   P.google = function () { return oauth('google'); };
+  if (C.kakao) { P.kakao = function () { return oauth('kakao'); }; var kb = document.querySelector('#sc-login .lgb.kakao'); if (kb) kb.style.display = ''; }
   if (C.apple || (window.nativeAuth && window.nativeAuth.apple)) P.apple = function () { return oauth('apple'); };
   if (C.naver) P.naver = function () {
     var u = C.url + '/functions/v1/naver-auth?redirect=' + encodeURIComponent(redirectTo);
@@ -14294,6 +14571,9 @@ window.koOf = function (en) {
       : st.s === 'expired' ? '<b style="color:var(--dan)">이용권 만료</b> · ' + esc(fmtDate(st.ends)) + ' 종료'
       : st.s === 'paused' ? '<b style="color:var(--warn)">이용권 쉬는 중</b> · 남은 ' + st.days + '일 보관 <button class="btn sm" id="setResume" style="margin-left:8px">이어서 시작하기</button>'
       : '<b style="color:var(--warn)">체험 중</b> · 이용권 없음';
+    /* 환불 기준(결제 전 동의 기준) 안내. 스토어 결제는 스토어 정책 */
+    var pol = $('setLicPolicy'); if (pol) pol.textContent = window.IS_IOS_APP ? '앱 안 결제의 환불은 App Store 정책을 따릅니다.'
+      : '환불: 홈페이지 결제는 결제일부터 7일 이내이고, 모의고사 2회 미만, 오달이와 대화한 날이 하루뿐일 때만 전액 환불됩니다 (결제 전 동의 기준). 앱 안 결제는 각 스토어 정책을 따릅니다. 신청은 설정 › 문의.';
     var rs = $('setResume'); if (rs) rs.onclick = function () { rs.disabled = true; rs.textContent = '처리 중…'; window.licenseResume().then(function () { paintLicense(); }); };
     var b = $('setBuy'); if (b) { b.style.display = ((window.IS_STORE_APP && !playOK()) || (st.s === 'active' && st.days > 7)) ? 'none' : ''; b.textContent = st.s === 'none' ? '이용권 구매' : '연장하기'; }
   }
@@ -14580,7 +14860,7 @@ window.koOf = function (en) {
   push.offer = function () {
     if (!push.supported() || Notification.permission !== 'default') return Promise.resolve(false);
     try { if (localStorage.getItem('opic_push_asked') === '1') return Promise.resolve(false); localStorage.setItem('opic_push_asked', '1'); } catch (e) {}
-    return window.ask('진짜 공부 제대로 해보겠다면 앱의 알림을 켜두십시오.\n공부 습관을 유지하도록 독려해드립니다.', '알림 켜기', '나중에').then(function (ok) {
+    return window.ask('공부할 때 맞춰서 알려드릴까요?\n알림을 켜두시면 오달이가 공부하라고 보챕니다.', '알림 켜기', '나중에').then(function (ok) {
       if (!ok) return false;
       return push.enable().then(function (on) { window.toast && window.toast(on ? '알림을 켰습니다. 매일 저녁 ' + (C.pushHour || 20) + '시에 봅니다.' : '알림을 켜지 못했습니다. 설정에서 다시 켤 수 있습니다.'); return on; });
     });
@@ -14607,7 +14887,7 @@ window.koOf = function (en) {
   'use strict';
   var $ = function (id) { return document.getElementById(id); };
   /* FAB 를 숨길 화면 */
-  var HIDE = ['sc-login', 'sc-name', 'sc-consult', 'sc-exam', 'sc-check', 'sc-survey'];
+  var HIDE = ['sc-login', 'sc-name', 'sc-ob', 'sc-consult', 'sc-exam', 'sc-check', 'sc-survey'];
   var lastLeft = null;
 
   function counts() {
@@ -14774,6 +15054,7 @@ window.koOf = function (en) {
       nav('sc-title'); if (window.quest.refresh) window.quest.refresh();
     });
   };
+  if ((b = $('admObConsult'))) b.onclick = function () { closeSettings(); nav('sc-ob'); };
   if ((b = $('admDay2'))) b.onclick = function () { closeSettings(); startDay2(true); };
   if ((b = $('admDay3'))) b.onclick = function () { closeSettings(); startDay3(true); };
   if ((b = $('admTrainOb'))) b.onclick = function () { closeSettings(); try { localStorage.setItem('opic_train_ob_v1', '0'); } catch (e) {} window.toast && window.toast('다음 무한 트레이닝 시작 때 첫 안내가 다시 나옵니다.'); };
@@ -14960,7 +15241,7 @@ window.koOf = function (en) {
         + '<div class="row" style="margin-top:12px"><button class="btn" data-go="survey">설문 작성하러 가기 →</button></div>';
       return card('나만의 답안', h);
     }
-    h = recycleHTML();
+    h = '<p class="mysv">내 서베이 : ' + esc(surveyKo()) + '</p>' + recycleHTML();
     /* 비어 있는 답안이 있는 주제를 맨 위로 (그 안의 순서는 그대로) */
     var hasEmpty = {}; T.rows.forEach(function (r) { if (r.st === 'empty') hasEmpty[r.topic] = 1; });
     var order = T.topics.filter(function (t) { return hasEmpty[t]; }).concat(T.topics.filter(function (t) { return !hasEmpty[t]; }));
@@ -14977,12 +15258,14 @@ window.koOf = function (en) {
       var last = T.rows[T.rows.indexOf(r) + 1];
       if (!last || last.topic !== r.topic) h += '</div>';
     });
-    return card('나만의 답안', h, '<button class="btn ghost sm pill" data-go="survey">서베이 다시 선택</button>');
+    return card('나만의 답안', h, '<button class="btn ghost sm pill" data-resurvey="1">서베이 다시 선택</button>');
   };
   function card(title, inner, sub) { return '<div class="card gsec"><div class="hd"><h3>' + title + '</h3>' + (sub ? '<span class="sub" style="margin:0">' + sub + '</span>' : '') + '</div>' + inner + '</div>'; }
   window.myAnsWire = function (tab) {
     var body = $('cBody'); if (!body) return;
     body.querySelectorAll('[data-go="myans"]').forEach(function (x) { x.onclick = function (e) { e.stopPropagation(); goMyAns(); }; });
+    /* 서베이 다시 선택: 설문만 다시 고르고 저장한 뒤 이 탭으로 돌아온다 (난이도·시험으로 넘어가지 않음) */
+    body.querySelectorAll('[data-resurvey]').forEach(function (x) { x.onclick = function () { window.startSurveyThen(function () { window.renderConsult('myans'); window.navScreen('sc-consult'); }); }; });
     var rt = $('recyTgl'); if (rt) rt.onclick = function () { var l = $('recyList'), open = l.style.display === 'none'; l.style.display = open ? '' : 'none'; rt.classList.toggle('on', open); rt.setAttribute('aria-label', open ? '접기' : '펼치기'); try { localStorage.setItem(RK, open ? '1' : '0'); } catch (e) {} };
     if (tab === 'myans' && $('recyBox')) recycleIntro();
     body.querySelectorAll('[data-mk]').forEach(function (x) {
@@ -15977,10 +16260,10 @@ window.koOf = function (en) {
   function openRateSheet(p, after) {
     var cur = p.self_rating == null ? 0 : p.self_rating;
     sheet('<div class="gsh"><i></i></div><div class="obk">' + esc(fmtYmd(p.ymd)) + ' · 다짐 점검</div><h3 style="margin:6px 0 4px;font-size:18px">이 다짐, 얼마나 이뤘나요?</h3><p class="sub" style="margin:0 0 10px">나만 보는 별점입니다. 다른 학습자에게는 보이지 않아요.</p>'
-      + '<div class="gbody" style="background:var(--panel2);border-radius:12px;padding:12px 14px;margin:0 0 14px">' + esc(p.body) + '</div>'
+      + '<div class="gbody" style="background:var(--panel2);border-radius:0;padding:12px 14px;margin:0 0 14px">' + esc(p.body) + '</div>'
       + '<div class="gbig" id="gRate">' + [1, 2, 3, 4, 5].map(function (i) { return '<button data-n="' + i + '"' + (i <= cur ? ' class="on"' : '') + '>★</button>'; }).join('') + '</div>'
       + '<div class="sub" id="gRateTxt" style="text-align:center;margin:6px 0 14px">' + (cur ? cur + '점' : '별을 눌러 주세요 · 0개도 괜찮습니다') + '</div>'
-      + '<div class="dctl" style="justify-content:center"><button class="btn" id="gRateOk">저장</button><button class="btn ghost sm" id="gRateZero">하나도 못 했어요 (0)</button></div>');
+      + '<div class="dctl" style="justify-content:center"><button class="btn" id="gRateOk">저장</button></div>');
     var sel = cur, W = ['', '조금은 했어요', '절반쯤', '꽤 했어요', '거의 다', '완벽하게 해냈어요!'];
     var paint = function () { $('gRate').querySelectorAll('button').forEach(function (b) { b.classList.toggle('on', +b.dataset.n <= sel); }); $('gRateTxt').textContent = sel ? sel + '점 · ' + W[sel] : '별을 눌러 주세요 · 0개도 괜찮습니다'; };
     $('gRate').querySelectorAll('button').forEach(function (b) { b.onclick = function () { sel = +b.dataset.n; paint(); }; });
@@ -15992,7 +16275,6 @@ window.koOf = function (en) {
       }).catch(function (e) { window.tell('저장에 실패했습니다. ' + (e && e.message || e)); });
     };
     $('gRateOk').onclick = function () { done(sel); };
-    $('gRateZero').onclick = function () { done(0); };
     var m = $('gSheetMask'); if (m && after) m.__after = after;
   }
   /* ----- 스토어 리뷰 요청: 별점 4개 이상 · 스스로 평가 3회째부터 · 미루면 30일 뒤 · 한 번 응하면 다시 안 묻는다 ----- */
@@ -16565,17 +16847,24 @@ window.koOf = function (en) {
   function hangGo(to, ms, cb) { if (hangAnim) cancelAnimationFrame(hangAnim); var from = hangCur, t0 = performance.now(); (function f(now) { var k = Math.min(1, (now - t0) / ms); hangCur = from + (to - from) * ease(k); hangDraw(hangCur); if (k < 1) hangAnim = requestAnimationFrame(f); else { hangAnim = null; cb && cb(); } })(t0); }
   var HSEQ = [[1, 500, 3500], [0, 500, 2750]];
   function hangLoop(i) { if (!hangOn) return; var s = HSEQ[i % 2]; hangGo(s[0], s[1], function () { setTimeout(function () { hangLoop(i + 1); }, s[2]); }); }
-  var flying = false;
+  var flying = false, hangFollow = null;
+  function hangPlace(coach) {
+    var r = coach.getBoundingClientRect(), x = r.left + HANG.dx, y = r.top + HANG.dy;
+    hb.style.left = hf.style.left = x + 'px'; hb.style.top = hf.style.top = y + 'px';
+    halo.style.left = (x - 85) + 'px'; halo.style.top = (y - 75) + 'px';
+  }
   function hangSync() {
     if (flying) return;
     var coach = $('qsCoach'); if (!coach) return;
     var on = coach.classList.contains('on') && coach.offsetWidth > 0;
     if (!on) { if (hb) { hb.classList.remove('on'); hf.classList.remove('on'); halo.classList.remove('on'); } if (hangOn) { hangOn = false; if (hangAnim) { cancelAnimationFrame(hangAnim); hangAnim = null; } } return; }
     hangMake();
-    var r = coach.getBoundingClientRect(), x = r.left + HANG.dx, y = r.top + HANG.dy;
-    hb.style.left = hf.style.left = x + 'px'; hb.style.top = hf.style.top = y + 'px';
-    halo.style.left = (x - 85) + 'px'; halo.style.top = (y - 75) + 'px';
+    hangPlace(coach);
     hb.classList.add('on'); hf.classList.add('on'); halo.classList.add('on');
+    /* 말풍선은 left/top 에 .45s 트랜지션이 걸려 있어 한 번 읽은 자리는 바로 옛 자리가 된다 → 움직이는 동안 매 프레임 말풍선 자리에 다시 붙인다 */
+    if (hangFollow) cancelAnimationFrame(hangFollow);
+    var t0 = performance.now();
+    (function f() { hangPlace(coach); hangFollow = (performance.now() - t0 < 700) ? requestAnimationFrame(f) : null; })();
     if (!hangOn) { hangOn = true; if (hangEyeInit()) { hangDraw(0); setTimeout(function () { hangLoop(0); }, 1000); } }
   }
   function hangWatch() {
@@ -16766,7 +17055,7 @@ window.koOf = function (en) {
     return { text: text.replace(/\n{3,}/g, '\n\n').trim(), m: m };
   }
   function renderActs(m) {
-    if (m.btn.length && D.refund.seen && paidDays() <= 7 && (D.refund.turn || 0) < 2) m.btn = [];   /* 환불 1·2단계에선 조치 버튼을 아직 내지 않는다 */
+    if (m.btn.length && D.refund.seen && (D.refund.turn || 0) < ((D.refund.exceeded || paidDays() > 7) ? 3 : 2)) m.btn = [];   /* 환불 조치 단계 전엔 버튼을 내지 않는다: 기준 초과·7일 경과는 4단계, 아니면 3단계 */
     if (!m.go.length && !m.choice.length && !m.btn.length) return;
     var row = document.createElement('div'); row.className = 'odacts';
     m.go.slice(0, 1).forEach(function (v) { var b = document.createElement('button'); b.type = 'button'; b.className = 'odpill odgo'; b.textContent = v; b.onclick = function () { goTo(v); }; row.appendChild(b); });
@@ -16872,6 +17161,7 @@ window.koOf = function (en) {
     }).then(function (r) {
       th.remove();
       if (r.first_done) D.firstDone = true;
+      if (r.over != null) D.refund.exceeded = !!r.over;   /* 환불 기준 초과 사용(서버 판정): 조치 버튼을 내는 단계가 달라진다 */
       if (r.busy) { D.over = true; save(); return botSay(BUSY[(r.n || 0) % 2], { noHist: true }); }
       if (r.error) {
         var msg = r.error === 'offline' ? '서버에 연결돼 있지 않아요 (로그인 상태에서만 대화할 수 있어요)' : r.error === 'license' ? '이용권이 있어야 오달이 과외를 받을 수 있어요' : r.error === 'login' ? '다시 로그인해 주세요' : '오달이가 잠깐 자리를 비웠어요: ' + r.error;
@@ -17226,9 +17516,9 @@ window.koOf = function (en) {
 
   window.myNoteHTML = function () {
     var d = load(); if (cur >= d.pages.length) cur = d.pages.length - 1;
-    return '<div class="card gsec mynote"><div class="hd"><h3>내 노트</h3>'
-      + '<span class="row nctl"><button class="btn ghost sm pill" id="nFsDn" title="글씨 작게">가−</button><span class="nfs" id="nFs">' + d.fs + '</span><button class="btn ghost sm pill" id="nFsUp" title="글씨 크게">가＋</button>'
-      + '<button class="btn ghost sm pill" id="nAdd">＋ 페이지</button></span></div>'
+    return '<div class="card gsec mynote"><div class="hd"><input class="ntitle" id="nTitle" placeholder="Title..." maxlength="40" spellcheck="false" value="' + esc((d.titles || [])[cur] || '') + '">'
+      + '<span class="row nctl"><button class="nico" id="nFsDn" title="글씨 작게">▼</button><span class="nfs" id="nFs">' + d.fs + '</span><button class="nico" id="nFsUp" title="글씨 크게">▲</button>'
+      + '<button class="btn ghost sm pill" id="nAdd" title="페이지 추가">＋</button><button class="btn ghost sm pill" id="nDel">페이지 삭제</button></span></div>'
       + '<div class="a4wrap"><div class="a4"><textarea id="nText" class="ntext" style="font-size:' + d.fs + 'px" spellcheck="false" placeholder="자유롭게 적으세요.">' + esc(d.pages[cur]) + '</textarea></div></div>'
       + '<div class="npager"><button class="btn ghost sm pill" id="nPrev"' + (cur === 0 ? ' disabled' : '') + '>‹ 이전</button><span class="npg" id="nPg">' + (cur + 1) + ' / ' + d.pages.length + '</span><button class="btn ghost sm pill" id="nNext">다음 ›</button></div>'
       + '</div>';
@@ -17245,11 +17535,21 @@ window.koOf = function (en) {
     if (tab !== 'note') return;
     var d = load(), t = $('nText'); if (!t) return;
     t.oninput = function () { d.pages[cur] = t.value; clearTimeout(saveT); saveT = setTimeout(save, 400); };
+    var ti = $('nTitle'); if (ti) { ti.oninput = function () { d.titles = d.titles || []; d.titles[cur] = ti.value; clearTimeout(saveT); saveT = setTimeout(save, 400); }; ti.onblur = function () { clearTimeout(saveT); save(); }; }
     t.onblur = function () { clearTimeout(saveT); save(); };
     var setFs = function (v) { d.fs = Math.min(FS_MAX, Math.max(FS_MIN, v)); t.style.fontSize = d.fs + 'px'; $('nFs').textContent = d.fs; save(); };
     $('nFsDn').onclick = function () { setFs(d.fs - FS_STEP); };
     $('nFsUp').onclick = function () { setFs(d.fs + FS_STEP); };
     $('nAdd').onclick = function () { if (addPage()) go(d.pages.length - 1); };
+    $('nDel').onclick = function () {
+      window.ask('이 페이지를 정말 삭제하시겠습니까?\n적은 내용은 되돌릴 수 없습니다.', '삭제', '취소').then(function (yes) {
+        if (!yes) return;
+        d.titles = d.titles || [];
+        if (d.pages.length === 1) { d.pages[0] = ''; d.titles[0] = ''; }   /* 마지막 한 장은 비우기만(최소 1장 유지) */
+        else { d.pages.splice(cur, 1); d.titles.splice(cur, 1); if (cur > d.pages.length - 1) cur = d.pages.length - 1; }
+        save(); go(cur);
+      });
+    };
     $('nPrev').onclick = function () { if (cur > 0) go(cur - 1); };
     $('nNext').onclick = function () {
       if (cur < d.pages.length - 1) { go(cur + 1); return; }
@@ -17297,6 +17597,8 @@ window.koOf = function (en) {
     var cur = document.querySelector('section.screen.on'); var id = cur && cur.id;
     /* 2) 타이틀에서는 앱을 나간다 (한 번 더 뒤로) */
     if (id === 'sc-title' || id === 'sc-login') { try { history.back(); } catch (e) {} return; }
+    /* 상담실 온보딩: 한 화면 뒤로, 첫 화면이면 앱을 나간다 */
+    if (id === 'sc-ob') { if (window.obConsult && window.obConsult.back()) return; try { history.back(); } catch (e) {} return; }
     /* 3) 시험 중에는 뒤로 가기를 막는다 */
     if (id === 'sc-exam' || id === 'sc-check') { return; }
     var b = BACK[id] && $(BACK[id]);
