@@ -2040,7 +2040,7 @@ html:not([data-theme="light"]) .mysv{color:var(--tx)}
 #cBody .kvs>div:last-child{border-bottom:0}
 #cBody .kvs span{color:var(--mut)}#cBody .kvs b{font-weight:600;text-align:right}
 /* ===== 상담실 온보딩 (sc-ob): 테마와 무관하게 밝은 화면. 목업 onboard-consult-mock.html 과 같은 수치 ===== */
-html.ob-on body{background:#f6f7fb}
+html.ob-on body{background:#fff;background-image:radial-gradient(55% 45% at 0% 0%,rgba(143,130,202,.16),rgba(143,130,202,.05) 55%,transparent 80%),radial-gradient(55% 45% at 100% 100%,rgba(217,237,182,.55),rgba(217,237,182,.18) 55%,transparent 80%);background-attachment:fixed;background-repeat:no-repeat}   /* 앱 학습교재 배경과 같게 */
 #sc-ob{color:#1E2033;word-break:keep-all;user-select:none}
 #sc-ob.on{display:block;animation:none}
 #sc-ob .obph{max-width:430px;min-height:calc(100dvh - 108px);margin:0 auto;display:flex;flex-direction:column;padding:16px 22px 22px}
@@ -13833,7 +13833,7 @@ window.koOf = function (en) {
     var A = window.auth, v = $('obNick').value.trim();
     if (!A || !A.nameOk(v) || naming) return;
     var b = $('obB1');
-    A.commitName(v, function (on) { naming = on; b.disabled = on; b.textContent = on ? '확인 중…' : '계속하기'; }).then(function (ok) {
+    A.commitName(v, function (on) { naming = on; b.disabled = on; b.textContent = on ? '확인 중…' : '계속하기'; }, { onboarding: true }).then(function (ok) {
       if (!ok) { $('obNick').focus(); return; }
       show(2);
     });
@@ -13863,7 +13863,7 @@ window.koOf = function (en) {
 
   function start() {
     document.documentElement.classList.add('ob-on');
-    var A = window.auth, nm = A ? (A.name() || (A.nameOk(String(A.suggestName || '')) ? String(A.suggestName).trim() : '')) : '';
+    var A = window.auth, nm = A && A.nameOk(String(A.suggestName || '')) ? String(A.suggestName).trim() : '';   /* 상담실에선 닉네임이 아직 없다고 보고 새로 정한다 */
     $('obNick').value = nm; $('obB1').disabled = !(A && A.nameOk(nm));
     ['obDate', 'obHour'].forEach(function (id) { $(id).classList.remove('on'); });
     ['obDateMe', 'obHourMe'].forEach(function (id) { var w = $(id); w.style.display = 'none'; delete w.dataset.text; });
@@ -14051,18 +14051,20 @@ window.koOf = function (en) {
     if (window.toast) window.toast(first ? v + '님, 반갑습니다. 오늘의 퀘스트부터 시작해 볼까요?' : '이름을 바꿨습니다.');
   }
   var naming = false;
-  /* 이름 확정 (이름 화면 · 상담실 온보딩 공용): 검사 → 확인창 → 저장. busy(true/false) 로 버튼 상태를 알려 주고, 결과는 true/false */
+  /* 이름 확정 (이름 화면 · 상담실 온보딩 공용): 검사 → 확인창 → 저장. busy(true/false) 로 버튼 상태를 알려 주고, 결과는 true/false
+     opts.onboarding: 상담실 온보딩(첫 가입) → 2주 잠금 없이 몇 번이든 새 이름으로 저장 (다른 화면은 잠금 그대로) */
   A.nameOk = nameOk;
-  A.commitName = function (v, busy) {
+  A.commitName = function (v, busy, opts) {
+    var ob = !!(opts && opts.onboarding);
     var G = window.goalsNick;
     if (!G) { A.setName(v); return Promise.resolve(true); }
     var err = G.check(v); if (err) { window.tell('이 이름은 쓸 수 없어요\n' + err); return Promise.resolve(false); }
     if (G.current() && G.current().toLowerCase() === v.toLowerCase()) { A.setName(v); return Promise.resolve(true); }
-    var lk = G.lockUntil(); if (lk) { window.tell('이름은 ' + G.fmtD(lk) + '부터 바꿀 수 있어요\n다른 사람에게 보이는 이름이라 한 번 정하면 2주 동안 바꿀 수 없어요.'); return Promise.resolve(false); }
+    var lk = ob ? null : G.lockUntil(); if (lk) { window.tell('이름은 ' + G.fmtD(lk) + '부터 바꿀 수 있어요\n다른 사람에게 보이는 이름이라 한 번 정하면 2주 동안 바꿀 수 없어요.'); return Promise.resolve(false); }
     return window.ask(G.ask, '이 이름으로 할게요', '다시 고를게요').then(function (ok) {
       if (!ok) return false;
       if (busy) busy(true);
-      return G.save(v).then(function (r) {
+      return G.save(v, ob).then(function (r) {
         if (busy) busy(false);
         if (!r.ok) { window.tell('이 이름은 쓸 수 없어요\n' + r.msg); return false; }
         A.setName(v); return true;
@@ -16035,13 +16037,13 @@ window.koOf = function (en) {
   function lockUntil() { if (!me.changed_at) return null; var d = new Date(me.changed_at); d.setDate(d.getDate() + 14); return d > new Date() ? d : null; }
   function fmtD(d) { return (d.getMonth() + 1) + '월 ' + d.getDate() + '일'; }
   /* 이름 = 다짐 닉네임 (2026-10): 확인창 없이 저장만 하는 핵심 함수. 확인창은 이름 화면(74_auth)에서 */
-  function saveCore(n) {
+  function saveCore(n, onboarding) {   /* onboarding: 상담실 온보딩 → 2주 잠금 건너뜀(서버 set_nickname p_onboarding) */
     var err = nickCheck(n); if (err) return Promise.resolve({ ok: false, msg: err });
     if (me.nickname && me.nickname.toLowerCase() === n.toLowerCase()) return Promise.resolve({ ok: true });
-    var lk0 = lockUntil(); if (lk0) return Promise.resolve({ ok: false, msg: fmtD(lk0) + '부터 바꿀 수 있어요' });
+    var lk0 = onboarding ? null : lockUntil(); if (lk0) return Promise.resolve({ ok: false, msg: fmtD(lk0) + '부터 바꿀 수 있어요' });
     var s = sb();
     if (!s) { me.nickname = n; me.changed_at = new Date().toISOString(); cacheNick(); return Promise.resolve({ ok: true }); }
-    return s.rpc('set_nickname', { p_nick: n }).then(function (r) {
+    return s.rpc('set_nickname', onboarding ? { p_nick: n, p_onboarding: true } : { p_nick: n }).then(function (r) {
       var x = r.data || {};
       if (r.error || !x.ok) {
         var code = x.code || 'error';
