@@ -7933,6 +7933,8 @@ window.surpriseTopics = function () {
     var pool = window.surveyTopics(survey);
     var r = rankSurvey(pool);
     var ordered = r.high.concat(r.low);
+    /* 2026-11-16 '운동을 전혀 하지 않음'은 다른 운동 항목을 같이 골랐으면 맨 뒤로 (걷기 · 조깅을 골라 놓고 "운동 안 한다면서요?" 콤보가 나오지 않게) */
+    if (ordered.indexOf('sport_none') >= 0 && ordered.some(function (t) { return /^sport_/.test(t) && t !== 'sport_none'; })) ordered = ordered.filter(function (t) { return t !== 'sport_none'; }).concat(['sport_none']);
     var recentT = topicHist();
     var spAll = shuffle(window.surpriseTopics());
     var sp = spAll.filter(function (t) { return recentT.indexOf(t) < 0; }).concat(spAll.filter(function (t) { return recentT.indexOf(t) >= 0; }));
@@ -8009,8 +8011,10 @@ window.surpriseTopics = function () {
       var rp2 = pickRoleplay(pool, taken);
       add(rpItem(rp2, 'q11', 'rp_ask'), '롤플레이 · ' + rp2.ko, 60);
       add(rpItem(rp2, 'q12', 'rp_solve'), '롤플레이 · ' + rp2.ko, 75);
-      var h2 = sp[0];
-      add(draw(h2, 'issue', taken, 5), '고난도 · ' + window.TOPICS[h2].ko, 90);
+      /* 2026-11-16 7번 = 15문항의 14 · 15 자리 축약: 난이도 5 는 돌발 이슈, 난이도 4 는 돌발 일반 문제(묘사) (15문항 규칙과 동일) */
+      var h2 = sp[0], adv2 = difficulty !== 4;
+      add(draw(h2, adv2 ? 'issue' : 'describe', taken, adv2 ? 5 : 4), (adv2 ? '고난도 · ' : '일반 · ') + window.TOPICS[h2].ko, 90);
+      items[items.length - 1].tail = 1;
     }
 
     window.__examTaken = taken;
@@ -9344,7 +9348,7 @@ window.SPK_ICON = '<svg class="spkic" viewBox="0 0 1024 1024" aria-hidden="true"
   };
   /* core 다음: 교재 팩 + 설문 주제의 질문 팩(모의고사·듣기)도 미리, 조용히 */
   function pkFollow() {
-    try { var sv = window.store && window.store.get().survey; var tps = sv && window.surveyTopics ? window.surveyTopics(sv) : []; window.ttsPack.ensure(['q/_intro', 'guide', 'core', 'coach'].concat(tps.map(function (t) { return 'q/' + t; })).concat(['q/_roleplay']).concat(window.MODE_KEYS && window.MODE_KEYS.isToss() ? ['toss'] : []), { toast: false }); } catch (e) {}
+    try { var sv = window.store && window.store.get().survey; var tps = sv && window.surveyTopics ? window.surveyTopics(sv) : []; window.ttsPack.ensure(['sound', 'q/_intro', 'guide', 'core', 'coach'].concat(tps.map(function (t) { return 'q/' + t; })).concat(['q/_roleplay']).concat(window.MODE_KEYS && window.MODE_KEYS.isToss() ? ['toss'] : []), { toast: false }); } catch (e) {}
   }
   /* 이미 core 가 있는 기기만 부팅 때 나머지를 조용히 받는다. 처음 받는 core 는 79_upgrade “영어 음성” 팝업의 확인으로 */
   pkLoadStored().then(function () {
@@ -15304,7 +15308,10 @@ window.koOf = function (en) {
   function play() {
     if (playing) return; playing = true; $('sndIc').classList.add('play');
     var done = function () { playing = false; var ic = $('sndIc'); if (ic) ic.classList.remove('play'); };
-    try { window.ttsSpeak(LINE, { lang: 'en-US' }).then(done, done); } catch (e) { done(); }
+    /* 2026-11-16 이 문장은 고급 음성팩 sound.pack(17KB)에 있다: 없으면 먼저 받고(최대 4초) 들려준다 */
+    var ready = Promise.resolve();
+    try { var P = window.ttsPack; if (P && P.wanted() && !P.has('sound')) ready = Promise.race([P.ensure(['sound'], { toast: false }), new Promise(function (r) { setTimeout(r, 4000); })]); } catch (e) {}
+    ready.then(function () { try { window.ttsSpeak(LINE, { lang: 'en-US' }).then(done, done); } catch (e) { done(); } }, function () { try { window.ttsSpeak(LINE, { lang: 'en-US' }).then(done, done); } catch (e) { done(); } });
   }
   function stop() { try { if (window.speechSynthesis) speechSynthesis.cancel(); } catch (e) {} try { window.ttsStop && window.ttsStop(); } catch (e) {} playing = false; }
   /* 시험 시작 직전에 부른다: soundTest(function () { 실제 시작 }) */
@@ -24148,7 +24155,7 @@ window.OCTC_ODAL_IMG = 'data:image/webp;base64,UklGRm57AABXRUJQVlA4WAoAAAAQAAAAL
   function voicePackPopup(tries) {
     var P = window.ttsPack; tries = tries || 0;
     var tossM = !!(window.MODE_KEYS && window.MODE_KEYS.isToss()), need = tossM ? 'toss' : 'core';   /* 오캔토스 탭이면 토스 음성(toss.pack) */
-    if (vpAsked || vpBusy || !P || !P.wanted() || P.has(need)) return;
+    if (vpAsked || vpBusy || window.__vpAuto || !P || !P.wanted() || P.has(need)) return;   /* 2026-11-16 동의 관문이 자동으로 받는 중이면 묻지 않는다 (79k_consent) */
     var title = $('sc-title'); if (!title || !title.classList.contains('on')) return;
     if (!P.ready() || window.cloudBooting || document.querySelector('.mask.on, #qsSpot.on')) {   /* 첫날 안내(스포트라이트) 중에는 기다린다 */ if (tries < 20) setTimeout(function () { voicePackPopup(tries + 1); }, 3000); return; }
     vpAsked = true;
@@ -26742,7 +26749,7 @@ window.DEFAV = [
 
 /* ===== 79j_masterbook.js ===== */
 /* ===== 『대기업·외국계 영어면접 변환 마스터북』 인앱 리더 (2026-11-15) =====
-   - 오캔플러스 · 오캔 다이나믹 플러스 공통 부록. 설정 › 이용권의 «영어면접 변환 마스터북 열람 · 저장» 버튼 → 유료 이용권 보유자만.
+   - 오캔플러스 · 오캔 다이나믹 플러스 공통 부록. 설정 › 이용권의 「영어면접 변환 마스터북 열람 · 저장」 버튼 → 유료 이용권 보유자만.
    - 첫 열람 때 동의 창: 핵심 디지털 부록 제공 개시 → 전액 환불 기준 제외. 동의하면 opic_masterbook_v1 = {openedAt} 저장(PROGRESS_KEYS 로 계정 동기화),
      오달이 서버(odal-chat)에는 userState.mbOpen 으로 전달해 환불 기준 판정에 쓴다.
    - 리더: 전체 화면 시트. 인쇄 · PDF 저장은 브라우저 인쇄(window.print). 아이폰 앱(WKWebView)은 인쇄가 없어 안내만. */
@@ -26761,7 +26768,7 @@ window.DEFAV = [
   /* 블록: h(소제목) · p(문단) · tbl(표: [머리행, ...행]) · ex(영문 예시: [영문, 한글, 라벨]) · ul(목록) · tip(한 줄 팁) */
   var BOOK = [
     { no: '00', title: '이 책을 쓰는 법', lead: '새로 외우지 마세요. 2주 동안 입에 붙인 오픽 문단이 그대로 면접 답변의 뼈대입니다.', blocks: [
-      ['p', '오픽에서 IH·AL 을 받은 사람은 이미 «시작 · 전개 · 반전 · 마무리» 네 단으로 1분 30초를 말하는 근육이 있습니다. 대기업 · 외국계 영어면접이 묻는 것도 결국 같은 네 단입니다. 다른 점은 딱 세 가지: 말투(구어체에서 비즈니스 격식으로), 소재(일상에서 직무로), 결론(느낌에서 기여로).'],
+      ['p', '오픽에서 IH·AL 을 받은 사람은 이미 「시작 · 전개 · 반전 · 마무리」 네 단으로 1분 30초를 말하는 근육이 있습니다. 대기업 · 외국계 영어면접이 묻는 것도 결국 같은 네 단입니다. 다른 점은 딱 세 가지: 말투(구어체에서 비즈니스 격식으로), 소재(일상에서 직무로), 결론(느낌에서 기여로).'],
       ['tbl', [['오픽 문항', '면접에서 같은 구조로 묻는 질문', '이 책의 장'], ['Q1 자기소개', 'Tell me about yourself. (1분 자기소개)', '02'], ['Q4 과거 돌발 에피소드', 'Tell me about a time you faced an unexpected problem.', '03-1'], ['Q12 대안 제시 롤플레이', 'How do you handle conflict with a coworker?', '03-2'], ['Q14 과거 vs 지금 비교', 'How has this industry changed over the last few years?', '03-3'], ['Q15 사회 이슈 의견', 'What do you think about the recent issue of ~?', '03-4']]],
       ['p', '순서는 이렇게 쓰세요. 1장에서 단어 스위치 5개를 익히고, 2장에서 내 직무의 1분 자기소개 한 편을 완성하고, 3장에서 꼬리질문 4개를 STAR 로 묶어 둡니다. 4장은 시험장 당일용 쿠션어입니다. 전부 합쳐 외울 분량은 영어 문장 20개 안쪽입니다.'],
       ['tip', '오픽 만능 템플릿(내 만능 템플릿 마스터북)에 저장해 둔 문장을 옆에 열어 놓고 단어만 바꿔 보세요. 이 책의 모든 예문은 오캔스픽 템플릿 문장에서 출발합니다.']
@@ -26773,7 +26780,7 @@ window.DEFAV = [
         ['3 연결 추임새', 'you know / I mean / like / kind of', 'specifically / in other words / for example / to some extent'],
         ['4 감정 동사', 'I panicked / I freaked out / my mind went blank', 'I faced an unexpected challenge / I had to think on my feet / I prioritized'],
         ['5 마무리', "So yeah, that's pretty much it! / I was super relieved.", "That experience taught me ~ / That's why I believe I can contribute to ~"]]],
-      ['p', '규칙은 하나입니다. «느낌으로 끝나는 문장»을 «배운 것 · 결과 · 기여»로 끝내세요. 오픽은 I felt super relieved 로 끝나도 등급이 나오지만, 면접은 그 다음 한 문장(As a result, ~ / Since then, I always ~)이 당락을 가릅니다.'],
+      ['p', '규칙은 하나입니다. 「느낌으로 끝나는 문장」을 「배운 것 · 결과 · 기여」로 끝내세요. 오픽은 I felt super relieved 로 끝나도 등급이 나오지만, 면접은 그 다음 한 문장(As a result, ~ / Since then, I always ~)이 당락을 가릅니다.'],
       ['ex', ["Everything was going great until suddenly, my phone battery completely died! I panicked at first, but thankfully a nice staff member helped me out, so I felt super relieved.", '오픽 Q4 만능 트러블 (원문)', '변환 전']],
       ['ex', ["Everything was on track until, right before the client meeting, the shared presentation file was corrupted. Instead of panicking, I immediately pulled the backup from our team drive and rebuilt the key slides in twenty minutes. As a result, the meeting started on time, and since then I always keep a second copy ready.", '같은 네 단: 순조 · 사고 · 대처 · 결과. 바뀐 건 소재(배터리에서 발표 파일로)와 마지막 한 문장뿐.', '변환 후']],
       ['tip', '발음이 불안한 고급 단어는 쓰지 마세요. consistently · prioritized · as a result 세 개만 입에 붙여도 격식은 충분합니다.']
@@ -26781,25 +26788,25 @@ window.DEFAV = [
     { no: '02', title: '1분 자기소개 완전체: 기획 · 개발 · 경영지원 · 신입', lead: '오픽 Q1 의 네 칸(인사 · 신분 · 하는 일 · 마무리)을 면접의 네 칸(인사 · 핵심 강점 · 근거 경험 · 지원 동기)으로 옮깁니다.', blocks: [
       ['tbl', [['칸', '오픽 Q1', '면접 1분 자기소개', '시간'], ['1', "Hi Eva! Let me tell you about myself.", "Thank you for having me. Let me briefly introduce myself.", '5초'], ['2', "I'm an office worker, and I live in an apartment with my family.", "I'm a [직무] with [N] years of experience in [분야], and my strength is [강점 한 단어].", '15초'], ['3', "In my free time, I usually watch movies, because it really helps me unwind.", "For example, at my last company I [한 일], which resulted in [숫자 결과].", '25초'], ['4', "So yeah, that's pretty much me!", "That's why I believe I can contribute to [회사·팀의 목표]. I'm excited to be here.", '10초']]],
       ['h', '기획 · 마케팅'],
-      ['ex', ["Thank you for having me. Let me briefly introduce myself. I'm a marketing planner with three years of experience in online campaigns, and my strength is turning data into clear decisions. For example, at my last company I redesigned our monthly promotion based on customer feedback, which increased repeat purchases by 18 percent in one quarter. That's why I believe I can contribute to your team's growth goals. I'm excited to be here.", '숫자(18 percent) 하나만 바꿔 넣으면 됩니다. 숫자가 없으면 «기간»(in three months)으로 대신하세요.', '기획 · 마케팅']],
+      ['ex', ["Thank you for having me. Let me briefly introduce myself. I'm a marketing planner with three years of experience in online campaigns, and my strength is turning data into clear decisions. For example, at my last company I redesigned our monthly promotion based on customer feedback, which increased repeat purchases by 18 percent in one quarter. That's why I believe I can contribute to your team's growth goals. I'm excited to be here.", '숫자(18 percent) 하나만 바꿔 넣으면 됩니다. 숫자가 없으면 「기간」(in three months)으로 대신하세요.', '기획 · 마케팅']],
       ['h', '개발 · IT'],
-      ['ex', ["Thank you for the opportunity. I'm a backend developer with two years of experience building web services, and my strength is writing code that other people can maintain. For example, I refactored our order system so that deployment time dropped from two hours to twenty minutes, and the team has had far fewer late-night fixes since then. I'm particularly interested in this position because your product handles real users at scale, and that's exactly where I want to grow.", '«유지보수 가능한 코드» 같은 추상 강점은 바로 뒤에 숫자(two hours 에서 twenty minutes 로)로 증명하세요.', '개발 · IT']],
+      ['ex', ["Thank you for the opportunity. I'm a backend developer with two years of experience building web services, and my strength is writing code that other people can maintain. For example, I refactored our order system so that deployment time dropped from two hours to twenty minutes, and the team has had far fewer late-night fixes since then. I'm particularly interested in this position because your product handles real users at scale, and that's exactly where I want to grow.", '「유지보수 가능한 코드」 같은 추상 강점은 바로 뒤에 숫자(two hours 에서 twenty minutes 로)로 증명하세요.', '개발 · IT']],
       ['h', '경영지원 · 인사 · 재무'],
-      ['ex', ["Thank you for having me. I've worked in HR and general affairs for four years, and my strength is making complicated processes simple for everyone. For example, I rebuilt our onboarding checklist so new employees could finish their first-week setup in one day instead of three, and managers told me it saved them hours every month. I believe that kind of support work is what keeps a global team running smoothly, and I'd love to bring it here.", '경영지원은 «남의 시간을 아껴 준 경험»이 가장 강한 근거입니다.', '경영지원']],
+      ['ex', ["Thank you for having me. I've worked in HR and general affairs for four years, and my strength is making complicated processes simple for everyone. For example, I rebuilt our onboarding checklist so new employees could finish their first-week setup in one day instead of three, and managers told me it saved them hours every month. I believe that kind of support work is what keeps a global team running smoothly, and I'd love to bring it here.", '경영지원은 「남의 시간을 아껴 준 경험」이 가장 강한 근거입니다.', '경영지원']],
       ['h', '신입 · 경력 없음'],
-      ['ex', ["Thank you for having me. I recently graduated with a degree in business administration, and my strength is learning fast and following through. For example, during a six-month team project I was in charge of customer interviews, and I talked to over forty people and organized their feedback into three product ideas our team actually presented. I don't have full-time experience yet, but I know how to take ownership of a task and finish it. That's what I'd like to show you here.", '경력이 없으면 «숫자가 있는 프로젝트» 한 개로 충분합니다. 없는 경력을 꾸미지 말고 I don\'t have ~ yet, but ~ 로 정직하게 넘기는 문장이 오히려 점수를 받습니다.', '신입']],
+      ['ex', ["Thank you for having me. I recently graduated with a degree in business administration, and my strength is learning fast and following through. For example, during a six-month team project I was in charge of customer interviews, and I talked to over forty people and organized their feedback into three product ideas our team actually presented. I don't have full-time experience yet, but I know how to take ownership of a task and finish it. That's what I'd like to show you here.", '경력이 없으면 「숫자가 있는 프로젝트」 한 개로 충분합니다. 없는 경력을 꾸미지 말고 I don\'t have ~ yet, but ~ 로 정직하게 넘기는 문장이 오히려 점수를 받습니다.', '신입']],
       ['tip', '네 편 중 내 직무 하나만 골라 10번 소리 내어 읽으세요. 오픽 자기소개처럼 55초 안에 끝나면 완성입니다.']
     ] },
     { no: '03', title: 'STAR 꼬리질문 4선: 위기 대처 · 갈등 조율 · 산업 변화 · 이슈 의견', lead: '오픽 4단(시작 · 전개 · 반전 · 마무리) = STAR(Situation · Task · Action · Result). 이름만 다릅니다.', blocks: [
       ['tbl', [['STAR', '오픽 4단', '면접에서 쓰는 한 문장 신호'], ['S 상황', '1단 시작(언제 · 어디서 · 누구와)', 'At my previous company, we were ~'], ['T 과제', '2단 전개(무엇을 하려 했나)', 'My role was to ~ / The challenge was ~'], ['A 행동', '3단 반전(사고와 대처)', 'So I decided to ~ / First, ~ Then, ~'], ['R 결과', '4단 마무리(결과 · 배운 것)', 'As a result, ~ / Since then, I always ~']]],
       ['h', '03-1 위기 대처 (오픽 Q4 과거 돌발 에피소드 = Tell me about a time you faced an unexpected problem.)'],
-      ['ex', ["At my previous company, we were preparing a product demo for a key client. The night before, the main server went down and the demo environment stopped working. My role was to make sure the demo happened on time, so I decided to set up a smaller version on my laptop with sample data and rehearsed it twice with the sales team. As a result, the client saw the core features without any delay, and since then our team always keeps an offline backup for every demo.", '오픽 «배터리 방전 트러블»과 똑같은 순서입니다. 순조 · 사고 · 내가 한 일 두 가지 · 결과 · 그 뒤 습관.', 'STAR 완성본']],
+      ['ex', ["At my previous company, we were preparing a product demo for a key client. The night before, the main server went down and the demo environment stopped working. My role was to make sure the demo happened on time, so I decided to set up a smaller version on my laptop with sample data and rehearsed it twice with the sales team. As a result, the client saw the core features without any delay, and since then our team always keeps an offline backup for every demo.", '오픽 「배터리 방전 트러블」과 똑같은 순서입니다. 순조 · 사고 · 내가 한 일 두 가지 · 결과 · 그 뒤 습관.', 'STAR 완성본']],
       ['h', '03-2 갈등 조율 (오픽 Q12 대안 제시 롤플레이 = How do you handle disagreement with a coworker?)'],
       ['ex', ["Could we reschedule for next week, or could I get a refund instead? It's totally up to you!", '오픽 Q12 양자택일 대안 (원문)', '변환 전']],
-      ['ex', ["When a coworker and I disagreed about the launch schedule, I first asked what his main concern was, and it turned out he was worried about testing time. So I suggested two options: we could launch one week later with full testing, or launch on time with a smaller feature set. We agreed on the second option, and the launch went smoothly. I think listening first and then offering a choice is the fastest way to resolve most conflicts.", '오픽의 «대안 두 개 + 상대에게 선택권»이 그대로 면접의 갈등 조율 답변이 됩니다.', '변환 후']],
+      ['ex', ["When a coworker and I disagreed about the launch schedule, I first asked what his main concern was, and it turned out he was worried about testing time. So I suggested two options: we could launch one week later with full testing, or launch on time with a smaller feature set. We agreed on the second option, and the launch went smoothly. I think listening first and then offering a choice is the fastest way to resolve most conflicts.", '오픽의 「대안 두 개 + 상대에게 선택권」이 그대로 면접의 갈등 조율 답변이 됩니다.', '변환 후']],
       ['h', '03-3 산업 변화 (오픽 Q14 과거 vs 지금 비교 = How has this industry changed recently?)'],
       ['ex', ["Back then, people used to do everything in person, but these days, thanks to smartphones, we can handle it with just a few taps. I'm not an expert, but I think it's super convenient.", '오픽 Q14 만능 비교틀 (원문)', '변환 전']],
-      ['ex', ["A few years ago, most of the work in this field was done manually and took days to finish. These days, with automation and AI tools, the same work takes hours, so the real difference is no longer who works harder but who can decide faster using the data. I'm not claiming to be an expert in every tool, but I've been actively using them in my own projects, and I'd like to keep doing that here.", '«예전 · 요즘 · 진짜 차이 · 나는 어떻게 하고 있나». 모르는 분야도 이 틀이면 1분이 채워집니다.', '변환 후']],
+      ['ex', ["A few years ago, most of the work in this field was done manually and took days to finish. These days, with automation and AI tools, the same work takes hours, so the real difference is no longer who works harder but who can decide faster using the data. I'm not claiming to be an expert in every tool, but I've been actively using them in my own projects, and I'd like to keep doing that here.", '「예전 · 요즘 · 진짜 차이 · 나는 어떻게 하고 있나」. 모르는 분야도 이 틀이면 1분이 채워집니다.', '변환 후']],
       ['h', '03-4 이슈 의견 (오픽 Q15 사회 이슈 = What do you think about ~?)'],
       ['ex', ["I recently read that many companies in this industry are moving to a hybrid work model. The reason it's a big topic is that it changes how teams communicate. Some people worry about slower decisions, while others say it actually improves focus. Personally, I've worked both ways, and what mattered most was having clear written updates every day. So I think the model matters less than the communication habits behind it.", '오픽 Q15 와 같은 순서: 뉴스 한 줄 · 왜 화제인가 · 양쪽 반응 · 내 경험 · 내 의견 한 문장.', 'STAR 변형']],
       ['tip', '네 답변 모두 1분 안에 끝내세요. 오픽과 달리 면접관은 꼬리질문을 더 던집니다. 짧게 끝내고 다음 질문을 받는 쪽이 유리합니다.']
@@ -26807,10 +26814,10 @@ window.DEFAV = [
     { no: '04', title: '면접장 뇌정지 방어 쿠션어 & 125 WPM 보이스', lead: '3초 침묵은 오픽에서도 면접에서도 똑같이 감점입니다. 침묵 대신 쿠션어를 넣고, 속도는 1분에 125단어로 고정하세요.', blocks: [
       ['tbl', [['상황', '쿠션어 (2~3초 벌기)', '그 다음 할 말'], ['질문을 못 알아들었을 때', "Sorry, could you say that again? / If I understand correctly, you're asking about ~", '내가 이해한 질문을 한 문장으로 되묻고 바로 답'], ['생각할 시간이 필요할 때', "That's a great question. Let me think about that for a second.", '2초 안에 STAR 의 S 부터'], ['답이 없을 때', "I haven't had that exact situation, but something similar happened when ~", '가장 가까운 오픽 에피소드로 연결'], ['말이 막혔을 때', "In other words, ~ / What I mean is ~", '방금 한 문장을 쉬운 말로 다시 말하며 이어가기'], ['모르는 것을 물을 때', "I'm not fully sure about that, but my understanding is ~", '아는 범위만 말하고 배우겠다는 한 문장']]],
       ['h', '125 WPM 보이스 만들기'],
-      ['ul', ['오픽 IH 발화 속도(분당 120~130단어)를 그대로 유지하세요. 더 빨리 말하려 하면 문장 끝이 뭉개집니다.', '문장 사이는 0.5초, 단락 사이는 1초. 오캔스픽 모의고사의 «쉼 비율» 지표가 20% 안쪽이면 그 속도입니다.', '첫 문장은 반드시 외운 문장으로: Thank you for having me. 이 한 문장이 목소리를 잡아 줍니다.', '숫자는 천천히: eighteen percent, twenty minutes. 숫자가 근거이므로 또렷하게.', '마지막 문장은 1초 내려서 끝내기. 올라가는 억양으로 끝나면 자신 없게 들립니다.']],
+      ['ul', ['오픽 IH 발화 속도(분당 120~130단어)를 그대로 유지하세요. 더 빨리 말하려 하면 문장 끝이 뭉개집니다.', '문장 사이는 0.5초, 단락 사이는 1초. 오캔스픽 모의고사의 「쉼 비율」 지표가 20% 안쪽이면 그 속도입니다.', '첫 문장은 반드시 외운 문장으로: Thank you for having me. 이 한 문장이 목소리를 잡아 줍니다.', '숫자는 천천히: eighteen percent, twenty minutes. 숫자가 근거이므로 또렷하게.', '마지막 문장은 1초 내려서 끝내기. 올라가는 억양으로 끝나면 자신 없게 들립니다.']],
       ['h', '리허설 체크리스트'],
-      ['ul', ['D-3: 내 직무 자기소개 1편 + STAR 4편을 오캔스픽 «내 대본 말하기»에 붙여 넣고 녹음 10회', 'D-1: 쿠션어 5개를 소리 내어 3회씩. 자기소개를 55초 안에 끝내는지 시간 재기', '당일: 대기실에서 자기소개 한 번만 속으로. 새 문장은 절대 추가하지 않기']],
-      ['tip', '이 책의 영문 예시는 전부 내 상황에 맞게 단어를 바꿔야 완성됩니다. 바꾼 문장은 오캔스픽 «내 대본 말하기»에 저장하고 오달이에게 발음 점검을 받으세요.']
+      ['ul', ['D-3: 내 직무 자기소개 1편 + STAR 4편을 오캔스픽 「내 대본 말하기」에 붙여 넣고 녹음 10회', 'D-1: 쿠션어 5개를 소리 내어 3회씩. 자기소개를 55초 안에 끝내는지 시간 재기', '당일: 대기실에서 자기소개 한 번만 속으로. 새 문장은 절대 추가하지 않기']],
+      ['tip', '이 책의 영문 예시는 전부 내 상황에 맞게 단어를 바꿔야 완성됩니다. 바꾼 문장은 오캔스픽 「내 대본 말하기」에 저장하고 오달이에게 발음 점검을 받으세요.']
     ] }
   ];
 
@@ -26885,6 +26892,194 @@ window.DEFAV = [
     + ".mbtip{margin:4px 0 8px;padding:10px 12px;border-radius:6px;background:var(--panel2,#F2F1FA);font-size:13px}.mbfoot{margin:28px 0 0;font-size:11.5px;color:var(--mut,#5B5E80)}"
     + "html.mb-open body{overflow:hidden}"
     + "@media print{html.mb-open body>*:not(#mbSheet){display:none!important}html.mb-open #mbSheet{position:static;display:block;background:#fff;color:#000}html.mb-open .mbbar{display:none}html.mb-open .mbpage{overflow:visible;max-width:none;padding:0;font-size:12.5px}html.mb-open .mbcover{-webkit-print-color-adjust:exact;print-color-adjust:exact}html.mb-open .mbch{break-inside:auto}html.mb-open .mbex,html.mb-open table{break-inside:avoid}@page{margin:16mm}}";
+  (document.head || document.documentElement).appendChild(css);
+})();
+
+/* ===== 79k_consent.js ===== */
+/* ===== 첫 로그인 동의 · 마이크 권한 관문 (2026-11-16) =====
+   로그인 뒤 메인 화면 전에 전체 화면으로 한 번: 약관 · 개인정보 · 마이크/음성 인식 · 음성 엔진 내려받기 · AI 채점 전부 「필수」.
+   필수를 다 체크해야 「다음으로」, 다음 화면에서 기기 마이크 권한(그리고 iOS 는 음성 인식 권한)을 바로 요청하고
+   짧은 인식 테스트를 돌린다. 마이크 권한을 허용하지 않으면 앱을 시작할 수 없다.
+   기록은 기기에만(opic_consent_v1): 기기마다 권한을 받아야 하므로 계정 동기화 대상이 아니다. */
+(function () {
+  'use strict';
+  var $ = function (id) { return document.getElementById(id); };
+  var KEY = 'opic_consent_v1';
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function done() { try { return !!localStorage.getItem(KEY); } catch (e) { return false; } }
+  function signedIn() { var c = window.cloud; if (!c || !c.enabled) return true; return !!(c.user && c.user()); }
+  function ext(u) { if (window.ocan && window.ocan.openExternal) window.ocan.openExternal(u); else window.open(u, '_blank', 'noopener'); }
+  var SITE = (window.CLOUD && window.CLOUD.site) || 'https://www.ocanspic.com';
+  var desk = !!window.IS_DESKTOP, ios = !!window.IS_IOS_APP;
+
+  var ROWS = [
+    { id: 'terms', req: true, t: '오캔스픽 회원 이용약관 동의', link: SITE + '/terms' },
+    { id: 'priv', req: true, t: '개인정보 수집 및 이용 동의', link: SITE + '/privacy' },
+    { id: 'mic', req: true, t: '마이크 · 음성 인식 권한 동의', info: '오캔스픽은 말하기 연습 앱입니다. 녹음 · 발음 채점 · 모의고사에 기기의 마이크와 음성 인식(받아쓰기)을 씁니다. 다음 화면에서 기기 권한 창이 뜨면 「허용」을 눌러야 시작할 수 있습니다.' },
+    { id: 'voice', req: true, t: '음성 엔진 내려받기 동의', info: desk ? '질문을 읽어 주는 고품질 영어 음성(약 20MB)과 기기 안에서 돌아가는 음성 인식 엔진을 처음 한 번 내려받습니다.' : '질문 · 모범답안 · 예문을 읽어 주는 고품질 영어 음성(약 20MB)을 처음 한 번 내려받습니다. 와이파이에서 받는 것을 권합니다.' },
+    { id: 'ai', req: true, t: 'AI 채점 이용 동의', info: '모의고사 · 즉석 평가의 채점을 위해 답변의 받아쓰기 글, 문항, 점수 지표만 AI 채점 서버로 보냅니다. 음성 파일 · 이메일 · 이름은 보내지 않습니다.' },
+    { id: 'push', req: false, t: '특전혜택 · 공부알리미 동의', sub: '특전을 받으려면 혜택 · 알림 동의가 필요합니다!' }
+  ];
+  var chk = {}, step = 1, el = null;
+
+  /* ---------- 1단계: 약관 ---------- */
+  function rowHTML(r) {
+    return '<div class="cg-row' + (chk[r.id] ? ' on' : '') + '" data-row="' + r.id + '"><span class="cg-ck" aria-hidden="true">' + CK + '</span><b class="cg-req">' + (r.req ? '필수' : '선택') + '</b><span class="cg-t">' + esc(r.t) + (r.sub ? '<small>' + esc(r.sub) + '</small>' : '') + '</span>'
+      + '<button type="button" class="cg-more" data-more="' + r.id + '" aria-label="자세히">' + CHEV + '</button></div>';
+  }
+  function allReq() { return ROWS.every(function (r) { return !r.req || chk[r.id]; }); }
+  function allAny() { return ROWS.every(function (r) { return chk[r.id]; }); }
+  function paint1() {
+    ROWS.forEach(function (r) { var d = el.querySelector('[data-row="' + r.id + '"]'); if (d) d.classList.toggle('on', !!chk[r.id]); });
+    var a = $('cgAll'); if (a) a.classList.toggle('on', allAny());
+    var n = $('cgNext'); if (n) n.disabled = !allReq();
+  }
+  function page1() {
+    var nm = (window.auth && window.auth.name && window.auth.name()) || '';
+    el.innerHTML = '<div class="cg-in"><div class="cg-top"></div>'
+      + '<h1>안녕하세요, ' + esc(nm || '학습자') + '님!</h1>'
+      + '<p class="cg-lead">먼저, 오캔스픽 이용을 위한<br>약관동의가 필요합니다.</p>'
+      + '<button type="button" class="cg-all" id="cgAll"><span class="cg-ck" aria-hidden="true">' + CK + '</span>모든 약관에 동의</button>'
+      + '<div class="cg-rows">' + ROWS.map(rowHTML).join('') + '</div>'
+      + '<div class="cg-foot"><button type="button" class="cg-btn" id="cgNext" disabled>다음으로</button></div></div>';
+    $('cgAll').onclick = function () { var on = !allAny(); ROWS.forEach(function (r) { chk[r.id] = on; }); paint1(); };
+    el.querySelectorAll('.cg-row').forEach(function (d) { d.onclick = function (e) { if (e.target.closest('.cg-more')) return; var id = d.dataset.row; chk[id] = !chk[id]; paint1(); }; });
+    el.querySelectorAll('.cg-more').forEach(function (b) {
+      b.onclick = function (e) {
+        e.stopPropagation(); var r = ROWS.filter(function (x) { return x.id === b.dataset.more; })[0]; if (!r) return;
+        if (r.link) { ext(r.link); return; }
+        window.tell((r.t + '\n' + (r.info || r.sub || '')), '확인');
+      };
+    });
+    $('cgNext').onclick = function () { if (!allReq()) return; step = 2; page2(); };
+    paint1();
+  }
+
+  /* ---------- 2단계: 마이크 · 음성 인식 켜기 ---------- */
+  var rec = null, timer = null, granted = false, okText = '', testing = false, lastCode = '';
+  function page2() {
+    el.innerHTML = '<div class="cg-in"><div class="cg-top"><button type="button" class="cg-back" id="cgBack" aria-label="이전">' + BACK + '</button></div>'
+      + '<h1>마이크를 켜 주세요</h1>'
+      + '<p class="cg-lead">권한 창이 뜨면 「허용」을 누르고,<br>아래 문장을 소리 내어 읽어 주세요.</p>'
+      + '<div class="cg-sent">Hi, my name is <b>' + esc((window.auth && window.auth.name && window.auth.name()) || '___') + '</b>. I\'m getting ready for the OPIc test, and I\'d like to check my microphone.</div>'
+      + '<div class="cg-meter"><i id="cgMeter"></i></div>'
+      + '<div class="cg-live" id="cgLive">여기에 인식된 문장이 표시됩니다.</div>'
+      + '<p class="cg-st" id="cgSt"></p><p class="cg-dl" id="cgDl"></p>'
+      + '<div class="cg-foot"><button type="button" class="cg-btn" id="cgGo">마이크 켜기</button></div></div>';
+    $('cgBack').onclick = function () { stopTest(); step = 1; page1(); };
+    $('cgGo').onclick = function () { if ($('cgGo').textContent === '시작하기') finish(); else runTest(); };
+    setTimeout(runTest, 300);   /* 화면에 들어오면 바로 권한 창 */
+    startDownload();            /* 동시에 영어 음성팩 내려받기 (팝업 없이) */
+  }
+  function st(msg, bad) { var s = $('cgSt'); if (s) { s.textContent = msg; s.classList.toggle('bad', !!bad); } }
+  function stopTest() { if (timer) { clearTimeout(timer); timer = null; } testing = false; if (rec) { try { rec.release(); } catch (e) {} rec = null; } }
+  function runTest() {
+    stopTest();
+    okText = '';
+    var go = $('cgGo'); if (go) { go.textContent = '요청 중…'; go.disabled = true; }
+    st('마이크 권한을 요청하고 있습니다…');
+    if (!window.Recorder) { st('이 기기에서는 마이크를 쓸 수 없습니다.', true); return; }
+    rec = new window.Recorder();
+    rec.init().then(function () {
+      granted = true; testing = true;
+      st('말해 보세요… (8초)');
+      if (go) { go.textContent = '다시 시도'; go.disabled = false; }
+      rec.onLevel = function (v) { var m = $('cgMeter'); if (m) m.style.width = Math.min(100, v * 110) + '%'; };
+      rec.onText = function (t, i) { var l = $('cgLive'); if (l) l.innerHTML = '<b>' + esc(t) + '</b> <span>' + esc(i) + '</span>'; if (t && t.split(/\s+/).length >= 6) endTest(); };
+      rec.start();
+      lastCode = '';
+      try { var rg = rec.recog; if (rg) { var oe = rg.onerror; rg.onerror = function (ev) { lastCode = (ev && ev.error) || 'error'; if (ev && ev.message) lastCode += ' ' + ev.message; if (oe) oe(ev); }; } } catch (e) {}   /* 진단용: 원래 오류 코드 */
+      timer = setTimeout(endTest, 8000);
+    }).catch(function (e) {
+      granted = false; testing = false;
+      var m = (e && (e.name + ' ' + e.message)) || String(e);
+      st((/NotAllowed|denied|Permission/i.test(m) ? '마이크 권한이 거부되어 있습니다. ' + (ios ? '아이패드 · 아이폰 설정 › 오캔스픽 › 마이크를 켠 뒤' : '기기 설정에서 오캔스픽의 마이크를 허용한 뒤') + ' 「다시 시도」를 눌러 주세요.' : '마이크를 열지 못했습니다: ' + m), true);
+      if (go) { go.textContent = '다시 시도'; go.disabled = false; }
+    });
+  }
+  function endTest() {
+    if (!rec || !testing) return;
+    testing = false; if (timer) { clearTimeout(timer); timer = null; }
+    var r0 = rec;
+    r0.stop().then(function (r) {
+      try { r0.release(); } catch (e) {}
+      if (rec === r0) rec = null;
+      var m = $('cgMeter'); if (m) m.style.width = '0%';
+      var go = $('cgGo');
+      if (r.transcript) {
+        okText = r.transcript;
+        st('마이크와 음성 인식이 정상입니다.');
+        if (go) { go.textContent = '시작하기'; go.disabled = false; }
+      } else if (/권한/.test(r.sttError || '') || /not-allowed/.test(lastCode)) {
+        st('음성 인식 권한이 거부되어 있습니다. ' + (ios ? '설정 › 오캔스픽 › 음성 인식을 켠 뒤' : '기기 설정에서 음성 인식을 허용한 뒤') + ' 「다시 시도」를 눌러 주세요.', true);
+        if (go) { go.textContent = '다시 시도'; go.disabled = false; }
+      } else {
+        st('목소리가 인식되지 않았습니다' + (lastCode || r.sttError ? ' (오류: ' + (lastCode || r.sttError) + ')' : '') + '. 조용한 곳에서 조금 크게 다시 읽어 주세요. 두 번 해도 안 되면 그대로 시작하고 설정 › 음성 인식 진단을 열어 주세요.', true);
+        if (go) { go.textContent = granted ? '시작하기' : '다시 시도'; go.disabled = false; }
+      }
+    });
+  }
+
+  /* ---------- 음성팩: 동의 뒤 묻지 않고 바로 내려받는다 (sound 1문장 → core 20MB → 나머지는 pkFollow) ---------- */
+  var dlStarted = false;
+  function dlSt(msg) { var d = $('cgDl'); if (d) d.textContent = msg; }
+  function startDownload() {
+    if (dlStarted) return; dlStarted = true;
+    var T = window.ttsPack; if (!T || !T.wanted()) return;
+    if (T.has('core')) { try { T.ensure(['sound'], { toast: false }); } catch (e) {} return; }
+    window.__vpAuto = true;
+    dlSt('영어 음성 내려받는 중… 0%');
+    var go = function () {
+      return T.installCore(function (f, got) { dlSt('영어 음성 내려받는 중… ' + (f > 0 ? Math.min(99, Math.round(f * 100)) + '%' : (got / 1048576).toFixed(1) + 'MB')); });
+    };
+    var wait = function (n) { return (T.ready() || n <= 0) ? Promise.resolve() : new Promise(function (r) { setTimeout(r, 300); }).then(function () { return wait(n - 1); }); };
+    wait(30).then(function () { return T.ensure(['sound'], { toast: false }).catch(function () {}); }).then(go).then(function () { dlSt('영어 음성 준비 완료'); window.__vpAuto = false; }, function () { dlSt('영어 음성을 내려받지 못했습니다. 나중에 다시 시도합니다.'); window.__vpAuto = false; });
+  }
+
+  /* ---------- 마무리: 동의 저장 · AI · 음성팩 · 알림 ---------- */
+  function finish() {
+    stopTest();
+    try { localStorage.setItem(KEY, JSON.stringify({ at: new Date().toISOString(), rows: ROWS.filter(function (r) { return chk[r.id]; }).map(function (r) { return r.id; }), mic: granted, stt: !!okText })); } catch (e) {}
+    try { if (window.aiConsent) window.aiConsent.set(true); localStorage.setItem('opic_ai_asked', '1'); } catch (e) {}
+    try { startDownload(); } catch (e) {}
+    try { if (chk.push && window.push && window.push.supported() && Notification.permission === 'default') { localStorage.setItem('opic_push_asked', '1'); window.push.enable().catch(function () {}); } } catch (e) {}
+    document.dispatchEvent(new CustomEvent('opic:commit'));
+    el.classList.remove('on'); document.documentElement.classList.remove('cg-open');
+    window.metric && window.metric('consent_done');
+  }
+
+  /* ---------- 표시 조건 ---------- */
+  var shown = false;
+  function maybeShow(id) {
+    if (shown || done()) return;
+    if (!id || id === 'sc-first' || id === 'sc-login') return;
+    if (!signedIn()) return;
+    if (navigator.webdriver && !/[?&]consent/.test(location.search)) return;   /* 자동 테스트는 건너뜀 (?consent 로 강제) */
+    shown = true;
+    el = $('cgGate'); if (!el) { el = document.createElement('div'); el.id = 'cgGate'; el.className = 'cg'; document.body.appendChild(el); }
+    el.classList.add('on'); document.documentElement.classList.add('cg-open');
+    step = 1; page1();
+  }
+  document.addEventListener('opic:nav', function (e) { maybeShow(e.detail && e.detail.id); });
+  document.addEventListener('app:signedin', function () { setTimeout(function () { var on = document.querySelector('section.screen.on'); maybeShow(on ? on.id : ''); }, 300); });
+  setTimeout(function () { var on = document.querySelector('section.screen.on'); maybeShow(on ? on.id : ''); }, 1200);
+
+  var CK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+  var CHEV = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>';
+  var BACK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>';
+  var css = document.createElement('style'); css.id = 'cgCss';
+  css.textContent = ".cg{position:fixed;inset:0;z-index:1300;display:none;background:#fff;color:#1c1c1e;overflow:auto;-webkit-overflow-scrolling:touch;font-family:'Pretendard Variable','Pretendard',system-ui,sans-serif;word-break:keep-all}.cg.on{display:block}html.cg-open body{overflow:hidden}"
+    + ".cg-in{max-width:560px;margin:0 auto;min-height:100%;padding:calc(12px + env(safe-area-inset-top,0px)) 24px calc(24px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column}"
+    + ".cg-top{height:44px;display:flex;align-items:center}.cg-back{width:40px;height:40px;margin-left:-10px;border:0;background:none;color:#1c1c1e;cursor:pointer}.cg-back svg{width:26px;height:26px}"
+    + ".cg h1{margin:26px 0 0;font-size:30px;line-height:1.25;letter-spacing:-.04em;font-weight:800}.cg-lead{margin:22px 0 0;font-size:18px;line-height:1.55;letter-spacing:-.02em;color:#2c2c2e}"
+    + ".cg-all{display:flex;align-items:center;justify-content:center;gap:12px;width:100%;height:62px;margin:34px 0 0;border:1.5px solid #8e8e93;border-radius:8px;background:#fff;color:#8e8e93;font:inherit;font-size:21px;font-weight:600;letter-spacing:-.02em;cursor:pointer;position:relative}.cg-all .cg-ck{position:absolute;left:28px}.cg-all.on{border-color:#1c1c1e;color:#1c1c1e}"
+    + ".cg-ck{width:24px;height:24px;flex:none;color:#c7c7cc}.cg-ck svg{width:100%;height:100%}.cg-all.on .cg-ck,.cg-row.on .cg-ck{color:#1c1c1e}"
+    + ".cg-rows{margin:30px 0 0}.cg-row{display:flex;align-items:center;gap:14px;min-height:60px;padding:8px 0;cursor:pointer}.cg-req{flex:none;font-size:18px;font-weight:700;color:#3a3a3c;width:36px}.cg-t{flex:1;font-size:18px;line-height:1.4;letter-spacing:-.02em;color:#48484a}.cg-row.on .cg-t{color:#1c1c1e}.cg-t small{display:block;margin-top:4px;font-size:14px;font-weight:600;color:var(--ac,#6E62B4)}"
+    + ".cg-more{flex:none;width:36px;height:36px;border:0;background:none;color:#8e8e93;cursor:pointer;margin-right:-8px}.cg-more svg{width:24px;height:24px}"
+    + ".cg-foot{margin-top:auto;padding-top:28px}.cg-btn{width:100%;height:60px;border:0;border-radius:999px;background:#20213B;color:#fff;font:inherit;font-size:19px;font-weight:700;letter-spacing:-.02em;cursor:pointer}.cg-btn:disabled{background:#d1d1d6;color:#fff;cursor:default}"
+    + ".cg-sent{margin:26px 0 0;padding:16px 18px;border:1px solid #e5e5ea;border-radius:10px;font-size:17px;line-height:1.6;color:#1c1c1e}.cg-sent b{color:var(--ac,#6E62B4)}.cg-meter{height:8px;margin:16px 0 0;background:#f2f2f7;border-radius:99px;overflow:hidden}.cg-meter i{display:block;height:100%;width:0;background:var(--ac,#6E62B4);transition:width .08s linear}"
+    + ".cg-live{margin:14px 0 0;min-height:52px;padding:12px 14px;background:#f5f5f7;border:1px solid #e5e5ea;border-radius:0;font-size:15.5px;line-height:1.6;color:#8e8e93}.cg-live b{color:#1c1c1e;font-weight:600}.cg-live span{color:#8e8e93}.cg-st{margin:12px 0 0;font-size:14.5px;line-height:1.6;color:#48484a}.cg-st.bad{color:#C2413F}.cg-dl{margin:6px 0 0;font-size:13.5px;color:#8e8e93}"
+    + "@media(max-width:380px){.cg h1{font-size:26px}.cg-lead{font-size:16.5px}.cg-t,.cg-req{font-size:16.5px}.cg-all{font-size:19px}}";
   (document.head || document.documentElement).appendChild(css);
 })();
 
