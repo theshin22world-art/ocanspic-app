@@ -4963,7 +4963,7 @@ html:not([data-theme="light"]) .mhx{border-color:var(--line)}
 #sc-exam .avatar-ring:after{display:none}
 #sc-exam .avatar-ring .avatar{width:72px;height:72px;box-shadow:0 8px 18px -8px rgba(83,70,160,.55)}
 #sc-exam .qbox .qstate{margin:0;font-size:13px;font-weight:600;line-height:20px;color:#5B5E80}
-#sc-exam .ex-pills{gap:9.5px;margin:18px 0 0}
+#sc-exam .ex-pills{gap:9.5px;margin:18px 0 0}#sc-exam .ex-note{margin:8px 0 0;font-size:11.5px;color:var(--dim);text-align:center;letter-spacing:-.2px}
 #sc-exam .ex-pills .btn{display:inline-flex;align-items:center;gap:7px;height:35px;padding:0 13px;border:1px solid #E0DFEA;background:#fff;color:#20213B;font-size:13px;font-weight:600}
 #sc-exam .ex-pills .btn::before{content:'';width:16px;height:16px;flex:none;background:currentColor;-webkit-mask:var(--ic) center/contain no-repeat;mask:var(--ic) center/contain no-repeat}
 #sc-exam #exReplay{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 12a9 9 0 1 0 3-6.7L3 8'/%3E%3Cpath d='M3 3v5h5'/%3E%3C/svg%3E")}
@@ -5091,6 +5091,10 @@ html:not([data-theme="light"]) #sc-exp .xm-card .rv-head{border-bottom-color:var
 #sc-exam .studio-dock{border-top:.75px solid var(--exl)!important}
 #sc-exam .ex-pills .btn{border:.75px solid var(--exl)}
 #sc-exam .ex-len{height:1.5px;background:var(--exl)}
+/* 2026-11-16 답변 분량 바를 두 상자 사이 경계선 자리로: 녹음 패널 위 테두리가 곧 진행 바 */
+#sc-exam .studio-dock{position:relative;border-top:0!important}
+#sc-exam .ex-len{position:absolute;left:0;right:0;top:0;height:2px;margin:0!important;flex:none;min-width:0}
+#sc-exam .ex-dock-cta{justify-content:flex-end}
 #sc-exam .avatar-ring{border:.75px solid var(--exl)}
 #sc-exam .avatar-ring:before{border:.75px solid var(--exl)}
 #sc-exam #exMicErr .mhx{margin-top:16px;background:#fff;border:.75px solid var(--exl)}
@@ -5397,15 +5401,16 @@ html:not([data-theme="light"]) #diffMask #diffSeg button:not(:disabled):hover .d
       <div class="qbox studio">
         <div class="avatar-ring"><div class="avatar" id="exAva"><svg class="hpic" viewBox="0 0 1024 1024" aria-hidden="true"><use href="#hpSym"/></svg></div></div>
         <div class="qstate" id="exState">질문을 주의 깊게 들어보세요</div>
-        <div class="ex-pills"><button class="btn ghost sm" id="exReplay">다시 듣기 (1회)</button><button class="btn ghost sm" id="exShow">문제 스크립트</button></div>
+        <div class="ex-pills"><button class="btn ghost sm" id="exReplay">한 번 더 듣기</button><button class="btn ghost sm" id="exShow">문제 스크립트</button></div><p class="ex-note" id="exReplayNote">*실제 고사장에서도 한 번 더 들을 수 있습니다.</p>
         <div class="qtext hidden" id="exText"></div><div class="qko hidden" id="exKo"></div>
       </div>
       <div class="recpanel studio-dock" id="exRec" style="display:none">
+        <span class="ex-len" aria-hidden="true"><i id="exLen"></i></span>
         <div class="ex-dock-meta"><span class="ex-rec-stat"><span class="recdot"></span><b id="exRecLabel">녹음 중</b></span>
         <span class="tick" id="exTick">0:00</span><span class="tick" id="exStt"></span><span class="right"></span><span class="tick" id="exGuide"></span></div>
         <div class="ex-silk-wrap"><canvas id="exWvc"></canvas></div>
         <div class="meter" style="display:none"><i id="exMeter"></i></div><div class="live hidden" id="exLive"></div>
-        <div class="ex-dock-cta"><span class="ex-len" aria-hidden="true"><i id="exLen"></i></span><span class="ex-lenh" id="exLenHint">충분한 분량까지 차분히 이어가세요</span><button class="btn" id="exNext">답변 마치고 다음 문항</button></div>
+        <div class="ex-dock-cta"><button class="btn" id="exNext">다음 문항</button></div>
       </div></div><div id="exMicErr"></div>
     </div>
   </section>
@@ -14674,8 +14679,9 @@ window.koOf = function (en) {
     $('exKo').textContent = it.ko;
     $('exRec').style.display = 'none';
     $('exReplay').style.display = st.audioMode === 'text' ? 'none' : '';
+    var rn = $('exReplayNote'); if (rn) rn.style.display = st.audioMode === 'text' ? 'none' : '';
     $('exReplay').disabled = false;
-    $('exReplay').textContent = '다시 듣기 (1회)';
+    $('exReplay').textContent = '한 번 더 듣기';
     var showText = st.audioMode !== 'tts_hidden';
     $('exText').classList.toggle('hidden', !showText);
     $('exKo').classList.add('hidden');
@@ -14694,7 +14700,7 @@ window.koOf = function (en) {
       $('exState').textContent = '문제를 재생하고 있습니다…';
       $('exAva').classList.add('talk');
       $('exReplay').disabled = true;
-      $('exReplay').textContent = '다시 듣기';
+      $('exReplay').textContent = '한 번 더 듣기';
       /* 2026-10-29: 1번 문제가 고급 음성 팩(q/_intro)을 받기 전에 재생돼 기기 음성으로 나오던 것 → 첫 문항은 팩을 최대 5초 기다린다 */
       var wait = (EX.i === 0 && EX.packReady) ? Promise.race([EX.packReady, new Promise(function (r) { setTimeout(r, 5000); })]) : Promise.resolve();
       wait.then(function () { return speak(it.en); }).then(function () {
@@ -14707,24 +14713,11 @@ window.koOf = function (en) {
     }
   }
 
-  /* 실제 시험 규칙: 문제를 들은 뒤 5초 안에만 한 번 더 들을 수 있다 (여기서는 10초 유예) */
+  /* 2026-11-16 문항마다 한 번: 답변 중 언제든 한 번 더 들을 수 있다 (예전 10초 제한 삭제). 실제 고사장도 한 번 더 듣기가 된다 */
   function openReplayWindow() {
     if (EX.replayUsed) return;
-    var left = 10;
     $('exReplay').disabled = false;
-    $('exReplay').textContent = '다시 듣기 (' + left + ')';
-    if (EX.replayTimer) clearInterval(EX.replayTimer);
-    var rt = EX.replayTimer = setInterval(function () {
-      left--;
-      if (!EX || EX.replayUsed) { clearInterval(rt); return; }   /* 2026-11-03: 시험이 끝나 EX 가 비면 EX.replayTimer 를 읽다 매초 오류가 났다 */
-      if (left <= 0) {
-        clearInterval(rt);
-        $('exReplay').disabled = true;
-        $('exReplay').textContent = '다시 듣기 시간 종료';
-      } else {
-        $('exReplay').textContent = '다시 듣기 (' + left + ')';
-      }
-    }, 1000);
+    $('exReplay').textContent = '한 번 더 듣기';
   }
 
   function beginAnswer() {
@@ -14738,7 +14731,10 @@ window.koOf = function (en) {
     $('exGuide').textContent = limit ? ('제한 ' + mmss(limit)) : ('권장 ' + mmss(it.guide || 90));
     /* 2026-11-14 답변 분량 줄: 권장(또는 제한) 시간 대비 지금까지 말한 시간 */
     var lenG = limit || it.guide || 90;
-    $('exLen').style.width = '0%'; $('exLenHint').textContent = '충분한 분량까지 차분히 이어가세요';
+    $('exLen').style.width = '0%';
+    /* 2026-11-16 분량 안내는 글자 대신 토스트, 온보딩 첫 7문항에서만 (문항마다 한 번) */
+    EX.lenToast = false;
+    if (EX.onboard && window.toast) window.toast('충분한 분량까지 차분히 이어가세요');
     try {
       rec.onLevel = function (v) { $('exMeter').style.width = Math.min(100, v * 110) + '%'; window.__qzLvl = Math.min(1, v * 5); };
       rec.onText = function (t, i) {
@@ -14760,7 +14756,7 @@ window.koOf = function (en) {
       var e = EX.recording ? rec.elapsed() : (Date.now() - EX.answerStart) / 1000;
       $('exTick').textContent = mmss(e);
       var lp = Math.min(1, e / lenG); $('exLen').style.width = (lp * 100).toFixed(1) + '%';
-      if (lp >= 1) $('exLenHint').textContent = '권장 분량을 채웠어요. 마무리해도 좋아요';
+      if (lp >= 1 && EX.onboard && !EX.lenToast) { EX.lenToast = true; if (window.toast) window.toast('권장 분량을 채웠어요. 마무리해도 좋아요'); }
       if (limit) {
         var left = limit - e;
         $('exTick').textContent = mmss(Math.max(0, left));
@@ -14780,7 +14776,7 @@ window.koOf = function (en) {
     EX.replayUsed = true;
     if (EX.replayTimer) clearInterval(EX.replayTimer);
     $('exReplay').disabled = true;
-    $('exReplay').textContent = '다시 듣기 사용함';
+    $('exReplay').textContent = '한 번 더 듣기 사용함';
     var wasRec = EX.recording;
     if (wasRec) rec.pauseCapture();
     $('exAva').classList.add('talk');
@@ -26686,7 +26682,7 @@ window.DEFAV = [
     load: load, save: save, today: today,
     /* 날이 바뀌었고 다음 Day 가 열려 있으면 넘어간다 (Day 0 · 1 은 “바로 열기”로 당겨 올 수 있다) */
     /* 테스트 모드: 관리자 계정 또는 PC 로컬 서버(localhost)에서만. 날짜를 기다리지 않고 Day 를 넘길 수 있다 */
-    test: function () { try { return (window.isAdmin && window.isAdmin()) || /^(localhost|127\.0\.0\.1)$/.test(location.hostname); } catch (e) { return false; } },
+    test: function () { try { return !!(window.isAdmin && window.isAdmin()); } catch (e) { return false; } },   /* 2026-11-16 관리자만. (예전 localhost 조건은 아이폰 앱(capacitor://localhost)에서 모두에게 테스트 버튼이 보이게 했다) */
     skip: function (n) { var d = load(); d.cur = Math.min(14, n + 1); d.max = Math.max(d.max, d.cur); save(d); },
     reset: function () { save({ cur: 0, max: 0, days: {} }); try { localStorage.removeItem(BK); } catch (e) {} },
     roll: function () { var d = load(); if (d.max > d.cur && (d.cleared !== today() || P.test())) { d.cur = Math.min(14, d.max); save(d); } return d; },
@@ -26982,14 +26978,14 @@ window.DEFAV = [
     rec = new window.Recorder();
     rec.init().then(function () {
       granted = true; testing = true;
-      st('말해 보세요… (8초)');
+      st('말해 보세요… (10초)');
       if (go) { go.textContent = '다시 시도'; go.disabled = false; }
       rec.onLevel = function (v) { var m = $('cgMeter'); if (m) m.style.width = Math.min(100, v * 110) + '%'; };
-      rec.onText = function (t, i) { var l = $('cgLive'); if (l) l.innerHTML = '<b>' + esc(t) + '</b> <span>' + esc(i) + '</span>'; if (t && t.split(/\s+/).length >= 6) endTest(); };
+      rec.onText = function (t, i) { var l = $('cgLive'); if (l) l.innerHTML = '<b>' + esc(t) + '</b> <span>' + esc(i) + '</span>'; if (t && t.split(/\s+/).length >= 16) endTest(); };   /* 문장(20단어)을 거의 다 읽었을 때만 조기 종료. 아니면 10초 타이머 */
       rec.start();
       lastCode = '';
       try { var rg = rec.recog; if (rg) { var oe = rg.onerror; rg.onerror = function (ev) { lastCode = (ev && ev.error) || 'error'; if (ev && ev.message) lastCode += ' ' + ev.message; if (oe) oe(ev); }; } } catch (e) {}   /* 진단용: 원래 오류 코드 */
-      timer = setTimeout(endTest, 8000);
+      timer = setTimeout(endTest, 10000);
     }).catch(function (e) {
       granted = false; testing = false;
       var m = (e && (e.name + ' ' + e.message)) || String(e);
@@ -27113,13 +27109,13 @@ window.DEFAV = [
   css.textContent = ''
     + '#sc-coach{color:#1E2033;word-break:keep-all;user-select:none}#sc-coach.on{display:block;animation:none}'
     + '#sc-coach .obph{max-width:430px;min-height:calc(100dvh - 108px);margin:0 auto;display:flex;flex-direction:column;padding:16px 22px 28px}'
-    + '#sc-coach .obtop{display:flex;align-items:center;gap:16px;height:58px;flex:none;background:#fff;margin:-16px -22px 0;padding:0 20px;border-bottom:1px solid #e8e9f1;box-shadow:0 2px 8px rgba(20,22,32,.04);position:sticky;top:0;z-index:5}'
+    + '#sc-coach .obtop{display:flex;align-items:center;gap:16px;height:58px;flex:none;background:#fff;margin:-16px -22px 0;padding:0 20px;border-bottom:1px solid #e8e9f1;box-shadow:0 2px 8px rgba(20,22,32,.04);position:sticky;top:0;z-index:5}html.storeapp #sc-coach .obtop{top:env(safe-area-inset-top,0px)}'   /* 2026-11-16 아이패드 · 아이폰 앱: 상태 표시줄 아래에 붙게 */
     + '#sc-coach .obx{width:40px;height:40px;border-radius:50%;background:#f3f4f8;border:0;display:grid;place-items:center;cursor:pointer;color:#1E2033;flex:none;padding:0}#sc-coach .obx svg{width:20px;height:20px}'
     + '#sc-coach .obbar{flex:1;height:8px;border-radius:999px;background:#DEDCEA;overflow:hidden;position:relative}'
     + '#sc-coach .obbar i{position:absolute;inset:0;display:block;background:linear-gradient(90deg,#5A2FE4,#6E62F7);border-radius:999px;clip-path:inset(0 100% 0 0 round 999px);transition:clip-path .45s ease}'
     + '#sc-coach .ocday{font-size:13px;font-weight:700;color:#20213B;flex:none;display:inline-flex;align-items:center;gap:4px;height:30px;padding:0 10px;border:1px solid #E4E3F0;border-radius:999px;background:#fff;font-family:inherit;cursor:pointer}#sc-coach .ocday svg{width:12px;height:12px}'   /* 2026-11-13 Part 4: 일차 책갈피 알약 */
     + '#sc-coach .occhk{display:flex;align-items:flex-start;gap:10px;width:100%;text-align:left;background:#fff;border:1px solid #E4E3F0;border-radius:6px;padding:10px 12px;margin-top:8px;font:inherit;font-size:13.5px;line-height:1.55;color:#20213B;cursor:pointer}#sc-coach .occhk i{flex:none;width:18px;height:18px;border:1.5px solid #CFCDE2;border-radius:4px;display:grid;place-items:center;margin-top:1px}#sc-coach .occhk.on i{background:#20213B;border-color:#20213B}#sc-coach .occhk.on i svg{display:block}#sc-coach .occhk i svg{display:none;width:12px;height:12px}'
-    + '#sc-coach .ocviewbar{display:flex;justify-content:center;margin:0 0 12px}#sc-coach .ocdaylist button{display:flex;justify-content:space-between;align-items:center;width:100%;border:0;border-top:1px solid #E4E3F0;background:none;padding:12px 2px;font:inherit;font-size:13.5px;color:#20213B;cursor:pointer;text-align:left}#sc-coach .ocdaylist button b{font-weight:800;margin-right:8px}#sc-coach .ocdaylist button.now{background:#F7F7FD}'
+    + '#sc-coach .ocviewbar{display:flex;justify-content:center;margin:0 0 12px}#sc-coach .ocdaylist button{display:flex;justify-content:space-between;align-items:center;width:100%;border:0;border-top:1px solid #E4E3F0;background:none;padding:12px 2px;font:inherit;font-size:13.5px;color:#20213B;cursor:pointer;text-align:left}#sc-coach .ocdaylist button b{font-weight:800;margin-right:8px}#sc-coach .ocdaylist button.now{background:#F7F7FD}#sc-coach .ocdaylist button svg{width:18px;height:18px;flex:none;color:#20213B}'
     + '#sc-coach .ocseg{display:flex;border-bottom:1px solid #E4E3F0;margin:0 -22px;padding:0 22px;background:#fff}'
     + '#sc-coach .ocseg button{flex:1;height:42px;border:0;background:none;font:inherit;font-size:13.5px;font-weight:600;color:#8B8EAD;cursor:pointer;position:relative}'
     + '#sc-coach .ocseg button.on{color:#20213B;font-weight:800;box-shadow:inset 0 -2px 0 #20213B}'
@@ -27422,13 +27418,21 @@ window.DEFAV = [
   function refreshEnd() {
     var e = log.querySelector('.ocend'); if (!e || cur == null) return;
     var nx = anyEnd(cur); e.parentNode.replaceChild(nx, e); paintHead(cur);
+    if (log.querySelector('.ocend2')) placeMission();
+  }
+  /* 2026-11-16 오늘 몫을 끝낸 날: «오늘의 메인 성취 미션» 상자를 마무리 말풍선(«오늘 몫은 끝!!») 아래로 옮긴다 */
+  function placeMission() {
+    var e = log.querySelector('.ocend'), m = e && e.querySelector('.ocmission'); if (!m) return;
+    var h = log.querySelector('.ocend2');
+    if (!h) { h = document.createElement('div'); h.className = 'ocend v2 ocend2'; }
+    h.innerHTML = ''; h.appendChild(m); log.appendChild(h); scrollEnd();
   }
   function stampLine(n, instant, cb) {
     var st = P.st(n), d = P.load();
     if (!st.main) { if (cb) cb(); return; }
     block('<span class="ocstamp ' + (st.main === 'gold' ? 'gold' : 'pass') + '">' + IC.chk + (st.main === 'gold' ? '골드 스탬프' : '오달이 특별 패스') + (st.lv ? ' · ' + esc(st.lv) : '') + '</span>');
     var next = n >= 14 ? L.finish : (n <= 1 && d.max > d.cur ? L.early : L.doneToday);
-    say((st.main === 'gold' ? L.gold : L.pass) + '|||' + next, cb, instant);
+    say((st.main === 'gold' ? L.gold : L.pass) + '|||' + next, function () { placeMission(); if (cb) cb(); }, instant);
   }
 
   /* ================= 2026-11-13 리빌딩: Day 0 ~ 4 (교재 필수 정독 잠금 · 4단 완전체 템플릿 · 자율 훈련 라운지) ================= */
@@ -27753,7 +27757,7 @@ window.DEFAV = [
       + (Lg.items ? '' : '<button type="button" class="ocp" data-go="split"><span>' + esc(Lg.split) + '</span></button>'
       + (Lg.guide ? '<button type="button" class="ocp" data-go="review"><span>' + esc(Lg.guide.label) + '</span></button>' : '')
       + ('<div class="chips">' + (Lg.exp ? '<button type="button" class="ocp" data-go="xexp">' + esc(Lg.exp.label) + '</button>' : '') + '<button type="button" class="ocp" data-go="home">메인화면으로</button>' + '</div>')
-      + '</div><div class="grp"><h4>오늘의 메인 성취 미션</h4>');
+      + '</div><div class="grp ocmission"><h4>오늘의 메인 성취 미션</h4>');
     D.mains.forEach(function (m, i) {
       var dn = mainDone(n, m), dis = m.go === 'next' && (!st.main || d.cur > 0);
       h += '<button type="button" class="ocp ' + (dn && m.go !== 'next' ? 'done' : (m.pri ? 'pri' : '')) + '" data-go="m' + i + '"' + (dis ? ' disabled' : '') + '><span>' + esc(m.label) + '</span>' + (dn && m.go !== 'next' ? IC.chk : '') + '</button>';
