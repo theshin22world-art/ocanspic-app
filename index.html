@@ -6696,8 +6696,14 @@ Resources:`;for(let t of c){if(!t||typeof t!=`string`)throw Error(`@supabase/aut
 /* ===== 08_version.js ===== */
 /* ===== 버전 · 변경 내역 ===== */
 window.APP_NAME = '오캔스픽';
-window.APP_VERSION = '1.5.0';
+window.APP_VERSION = '1.5.1';
 window.CHANGELOG = [
+  { v: '1.5.1', d: '2026-11-27', items: [
+    '가입 · 결제 화면을 홈페이지 시작하기(start) 하나로 통일',
+    'PC 앱: 창 제목 오캔스픽 · 음성 엔진 준비 화면 새 디자인 · 바탕화면 바로가기 만들기(Windows) · 맥 기본 메뉴(복사 · 붙여넣기 · 종료)',
+    '외부 브라우저에서 결제하고 PC 앱으로 돌아오면 이용권을 바로 확인',
+    '첫날 결제 전 잠금 · 시험 날짜 제한 · Day 3 안내 정리'
+  ] },
   { v: '1.5.0', d: '2026-11-15', items: [
     '이용권 안내를 공식 홈페이지 요금제와 같은 내용으로 정리: 오캔 다이나믹 플러스 · 오캔플러스 혜택 · 영어면접 변환 마스터북은 두 요금제 공통 제공',
     '영어면접 변환 마스터북을 앱 안에서 바로 열람: 설정 › 계정 › «영어면접 변환 마스터북 열람 · 저장» (PC 앱은 인쇄 · PDF 저장)',
@@ -6801,7 +6807,7 @@ window.CLOUD = {
   url: 'https://foumovwrenrydfnutlpl.supabase.co',
   anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZvdW1vdndyZW5yeWRmbnV0bHBsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkxMTU2NTQsImV4cCI6MjEwNDY5MTY1NH0.AJ89jl_v-PITF1I9pVm7uT7XjCHLUUKz_pTuQJwAMpQ',
   site: 'https://www.ocanspic.com',
-  buyPath: '/buy',    // 결제 페이지 (사이트)
+  buyPath: '/start',    // 결제 페이지 (사이트) · 2026-11-27 가입 · 결제 정식 퍼널 start (옛 /buy 는 start 로 넘기는 연결 파일)
   naver: false,       // 네이버 로그인 (출시 후 추가 예정: true 로 바꾸면 버튼이 살아난다)
   ttsBase: '',        // 고품질 음성 팩 위치 (비우면 <url>/storage/v1/object/public/tts/v1/)
   apple: true,        // Apple 로그인 (2026-10-15 Supabase Apple 공급자 설정 완료)
@@ -23580,6 +23586,7 @@ window.OCTC_ODAL_IMG = 'data:image/webp;base64,UklGRm57AABXRUJQVlA4WAoAAAAQAAAAL
         남은 시간이 45분 안쪽이면 먼저 새로 받아서 넘긴다 */
   window.goBuy = function (plan) {
     var c = window.cloud;
+    window.__buyAt = Date.now();   /* 2026-11-27 데스크톱: 결제창을 연 시각 (창 포커스 때 이용권 재확인) */
     if (c && c.enabled && !(c.user && c.user())) {
       var qm = document.getElementById('qsMask'); if (qm) qm.classList.remove('on');
       if (window.auth && window.auth.loginSheet) window.auth.loginSheet({ title: '로그인하고 구매하기', sub: '이용권은 로그인한 계정에 발급돼요. 먼저 로그인해 주세요.' });
@@ -23905,6 +23912,7 @@ window.OCTC_ODAL_IMG = 'data:image/webp;base64,UklGRm57AABXRUJQVlA4WAoAAAAQAAAAL
     try { var pq = new URLSearchParams(location.search); payBack = pq.get('resume_step') || ''; ['payment_done', 'resume_step'].forEach(function (k) { pq.delete(k); }); var ps = pq.toString(); history.replaceState(null, '', location.pathname + (ps ? '?' + ps : '') + location.hash); } catch (e) {}
   }
   function payDone() {
+    window.__buyAt = 0;
     var m = $('qsMask'); if (m) m.classList.remove('on');
     cloud.refreshLicense().then(function () {
       window.toast && window.toast(window.isPro() ? '결제가 확인됐습니다. 모든 기능이 열렸습니다.' : '결제를 확인하는 중입니다. 잠시 뒤 설정 › 계정에서 상태 새로고침을 눌러 주세요.');
@@ -24272,6 +24280,18 @@ window.OCTC_ODAL_IMG = 'data:image/webp;base64,UklGRm57AABXRUJQVlA4WAoAAAAQAAAAL
   }
   function stopTimers() { clearInterval(tSync); clearInterval(tHb); tSync = tHb = null; }
   document.addEventListener('visibilitychange', function () { if (document.hidden) sync.push(false); else if (cur) { heartbeat(); cloud.refreshLicense(); } });
+  /* 2026-11-27 데스크톱(Windows · Mac): 기본 브라우저에서 결제하고 앱 창으로 돌아오면(창 포커스) 껐다 켜지 않아도 이용권을 다시 읽는다.
+     결제창을 연 뒤 2시간 안 · 아직 이용권이 없을 때만 (ocanspic://pay-done 으로 돌아오면 payDone 이 처리) */
+  window.addEventListener('focus', function () {
+    if (!desktop || !cur || !window.__buyAt || Date.now() - window.__buyAt > 2 * 3600000 || window.isPro()) return;
+    if (Date.now() - (window.__licFocusAt || 0) < 5000) return; window.__licFocusAt = Date.now();
+    cloud.refreshLicense().then(function () {
+      if (!window.isPro()) return;
+      window.__buyAt = 0; var m = $('qsMask'); if (m) m.classList.remove('on');
+      window.toast && window.toast('결제가 확인됐습니다. 모든 기능이 열렸습니다.');
+      if (window.auth && window.auth.resumeNext) window.auth.resumeNext();
+    });
+  });
   window.addEventListener('beforeunload', function () { if (window.__acctSwitch || !syncReady) return; try { sync.push(false); } catch (e) {} });
   document.addEventListener('opic:commit', function () { clearTimeout(window.__syncSoon); window.__syncSoon = setTimeout(function () { sync.push(false); }, 4000); });
   /* 기기에 무엇이 저장되든(설정 · 시험 기록 · 트레이닝 · 듣기 · 퀘스트 …) 3초 뒤 서버로 올린다 */
